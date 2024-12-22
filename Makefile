@@ -17,7 +17,7 @@ run: $(LIB_FILE)
 	$(CC) $(FLAGS) main.c -L. $(LIB_FILE) -o s21_decimal
 	./s21_decimal
 
-rebuild: clean all run
+rebuild: clean clang all run 
 
 test: $(LIB_FILE)
 	$(CC) $(FLAGS) $(TEST_FILE) -L. $(LIB_FILE) $(CHECK_FLAGS) -o test
@@ -45,3 +45,5 @@ $(LIB_FILE): $(OBJS)
 clean: 
 	rm -rf *.o *.a report $(FILES_REPORT) s21_decimal test
 
+clang:
+	clang-format -i s21_decimal.c main.c

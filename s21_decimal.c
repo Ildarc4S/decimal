@@ -32,7 +32,8 @@ s21_decimal s21_bin_xor(s21_decimal num1, s21_decimal num2) {
 }
 
 int is_null(s21_decimal num) {
-  return num.bits[0] == 0 && num.bits[1] == 0 && num.bits[2] == 0 && num.bits[3] == 0;
+  return num.bits[0] == 0 && num.bits[1] == 0 && num.bits[2] == 0 &&
+         num.bits[3] == 0;
 }
 
 s21_decimal decimal_shift_left(s21_decimal num, int index) {
@@ -94,11 +95,9 @@ int s21_sravnivatel(s21_decimal num1, s21_decimal num2) {
   int result = 0;
   int stop = 0;
   for (int j = 2; j >= 0 && !stop; j--) {
-    //printf("[%d %d]", num1.bits[j], num2.bits[j]);
     for (int i = 31; i >= 0 && !stop; i--) {
       int byte1 = ((num1.bits[j] >> i) & 1);
       int byte2 = ((num2.bits[j] >> i) & 1);
-      //printf("%d:%d|", byte1, byte2); 
       sravnitel_operations(byte1, byte2, &result, &stop);
     }
     printf("\n");
@@ -144,7 +143,7 @@ s21_decimal s21_sub(s21_decimal num1, s21_decimal num2) {
   int positive = 0;
   int negative = 1;
   s21_decimal res = {0};
-  
+
   int sign_num1 = s21_get_sign(num1);
   int sign_num2 = s21_get_sign(num2);
 
@@ -171,7 +170,19 @@ s21_decimal s21_sub(s21_decimal num1, s21_decimal num2) {
   return res;
 }
 
-
-
-
-
+int s21_floor(s21_decimal value) {
+  int j = 0;
+  int res = 0;
+  int stepen_dvoiki = 0;
+  for (int i = 16; i < 23; i++) {
+    res += stepen_dvoiki;
+    stepen_dvoiki = ((value.bits[3] >> i) & 1);  // нужно ли умножаться
+	printf("%d", )
+    for (int k = 0; k < j; k++) {
+      stepen_dvoiki *= 2;
+    }
+    printf("=%d=", stepen_dvoiki);
+    j++;
+  }
+  return res;
+}
