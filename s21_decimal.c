@@ -8,7 +8,7 @@ void print_bin(int num) {
 }
 
 s21_decimal s21_bin_invert(s21_decimal num) {
-  s21_decimal res = {0};
+  s21_decimal res = num;
   res.bits[0] = ~num.bits[0];
   res.bits[1] = ~num.bits[1];
   res.bits[2] = ~num.bits[2];
@@ -37,16 +37,16 @@ int is_null(s21_decimal num) {
 
 s21_decimal decimal_shift_left(s21_decimal num, int index) {
   s21_decimal res;
-  res.bits[2] = num.bits[2] << index;
+  res.bits[0] = num.bits[0] << index;
 
   res.bits[1] = num.bits[1] << index;
-  if (((1 << 31) & num.bits[2]) != 0) {
+  if (((1 << 31) & num.bits[0]) != 0) {
     res.bits[1] |= 1;
   }
 
-  res.bits[0] = num.bits[0] << index;
+  res.bits[2] = num.bits[2] << index;
   if (((1 << 31) & num.bits[1]) != 0) {
-    res.bits[0] |= 1;
+    res.bits[2] |= 1;
   }
   return res;
 }
@@ -93,12 +93,15 @@ void sravnitel_operations(int byte1, int byte2, int *result, int *stop) {
 int s21_sravnivatel(s21_decimal num1, s21_decimal num2) {
   int result = 0;
   int stop = 0;
-  for (int j = 0; j < 3 && !stop; j++) {
+  for (int j = 2; j >= 0 && !stop; j--) {
+    //printf("[%d %d]", num1.bits[j], num2.bits[j]);
     for (int i = 31; i >= 0 && !stop; i--) {
       int byte1 = ((num1.bits[j] >> i) & 1);
       int byte2 = ((num2.bits[j] >> i) & 1);
+      //printf("%d:%d|", byte1, byte2); 
       sravnitel_operations(byte1, byte2, &result, &stop);
     }
+    printf("\n");
   }
   return result;
 }
@@ -134,14 +137,14 @@ s21_decimal s21_abs(s21_decimal num) {
   return num;
 }
 
-int s21_get_sign(s21_decimal num) { return (num.bits[3] >> 31) & 0x1; }
+int s21_get_sign(s21_decimal num) { return (num.bits[3] >> 31) & 1; }
 
 s21_decimal s21_sub(s21_decimal num1, s21_decimal num2) {
   s21_decimal one = {0, 0, 1, 0};
   int positive = 0;
   int negative = 1;
   s21_decimal res = {0};
-
+  
   int sign_num1 = s21_get_sign(num1);
   int sign_num2 = s21_get_sign(num2);
 
@@ -167,4 +170,8 @@ s21_decimal s21_sub(s21_decimal num1, s21_decimal num2) {
   }
   return res;
 }
+
+
+
+
 
