@@ -1,10 +1,4 @@
-#include <stdio.h>
-
-typedef struct {
-  int bits[4];
-} s21_decimal;
-
-// int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
+#include "s21_decimal.h"
 
 void print_bin(int num) {
   for (int i = 31; i >= 0; i--) {
@@ -174,18 +168,3 @@ s21_decimal s21_sub(s21_decimal num1, s21_decimal num2) {
   return res;
 }
 
-int main() {
-  s21_decimal value_1 = {0, 0, 13, 1 << 31};
-  s21_decimal value_2 = {0, 0, 14, 1 << 31};
-  s21_decimal result;
-  // s21_add(value_1, value_2, &result);
-  print_bin_decimal(value_1);
-  printf("\n");
-  print_bin_decimal(value_2);
-  printf("\n");
-  s21_decimal res = s21_sub(value_1, value_2);
-  print_bin_decimal(res);
-
-
-  print_bin(1 << 1);
-}
