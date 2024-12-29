@@ -1,3 +1,5 @@
+#!/bin/bash
+
 rm -rf ~/Library/Containers/com.docker.docker
 mkdir -p ~/goinfre/Docker/Data
 ln -s ~/goinfre/Docker ~/Library/Containers/com.docker.docker
@@ -9,6 +11,14 @@ while ! docker info >/dev/null 2>&1; do
     sleep 2
 done
 
-docker pull ubuntu
-docker build -t "container" .
-docker run -it -v $PWD:/tmp -w /tmp container
+if [ "$(docker ps -aq -f name=ubuntu_dev)" ]; then
+    echo "Контейнер 'ubuntu_dev' существует. Запуск контейнера 'ubuntu_dev'..."
+    docker start ubuntu_dev
+    docker exec -it ubuntu_dev zsh
+else
+    echo "Контейнер 'ubuntu_dev' не найден. Создание нового образа и запуск контейнера 'ubuntu_dev'..."
+    docker pull ubuntu
+    docker build -t ubuntu_dev .
+    docker run -it -v $PWD:/ubuntu_dev -w /ubuntu_dev --name ubuntu_dev ubuntu_dev
+fi
+
