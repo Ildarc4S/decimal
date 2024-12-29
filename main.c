@@ -6,7 +6,7 @@ int main() {
   s21_decimal result;
   print_bin_decimal(value_1);
   printf("\n");
-  print_bin_decimal(value_2);
+  print_bin_decimal(value_1);
   printf("\n");
   s21_decimal res = s21_sub(value_1, value_2);
   print_bin_decimal(res);

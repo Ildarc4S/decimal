@@ -11,7 +11,7 @@ LIB_FILE = s21_decimal.a
 
 FILES_REPORT = *.gcno *.gcda gcov_test coverage.info gcov_test_lcov report_gcov report_lcov
 
-all: $(LIB_FILE)
+all: $(LIB_FILE) run
 
 run: $(LIB_FILE)
 	$(CC) $(FLAGS) main.c -L. $(LIB_FILE) -o s21_decimal

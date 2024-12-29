@@ -168,3 +168,47 @@ s21_decimal s21_sub(s21_decimal num1, s21_decimal num2) {
   return res;
 }
 
+int is_set_bit(int num, int index) {
+  return (num & (1<<index)) != 0;
+}
+
+int max_bit(int num) {
+  int result = -1;
+  for (int i = 31; i >= 0 && result == -1; i--) {
+     if(is_set_bit(num, i)) {
+         result = i;
+     }
+  }
+  return result;
+}
+
+int add_num(int num1, int num2) {
+  int result = -11;
+  while (result != 0) {
+    result = (num1 & num2) << 1;
+    num1 = num1^num2;
+    num2 = result;
+  }
+  return num1;
+}
+
+int s21_mul(int num1, int num2) {
+  print_bin(num1);
+  print_bin(num2);
+  /*struct { */
+    /*s21_decimal num1 = {{0}},*/
+    /*s21_decimal num2 = {{0}} */
+  /*} big_decimal;*/
+  int res = 0x0;
+  int tmp = num1;
+  int maxb = max_bit(num2);
+  printf("%d", maxb); 
+  for (int i = 0; i <= maxb; i++) {
+    if (is_set_bit(num2, i)) {
+      printf(":");
+      res = add_num(res, tmp);
+    } 
+      tmp <<= 1; 
+  }
+  return res;  
+}

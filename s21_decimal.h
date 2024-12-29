@@ -25,3 +25,4 @@ int s21_is_not_equal(s21_decimal num1, s21_decimal num2);
 s21_decimal s21_abs(s21_decimal num);
 int s21_get_sign(s21_decimal num);
 s21_decimal s21_sub(s21_decimal num1, s21_decimal num2);
+int s21_mul(int num1, int num2);
