@@ -1,9 +1,9 @@
 CC = gcc
-FLAGS = #-Wall -Wextra -std=c11
+FLAGS = -Wall -Werror -Wextra -std=c11
 GCOV_FLAGS = --coverage
 CHECK_FLAGS = -lcheck -lm -lsubunit
 
-CFILES = s21_decimal.c
+CFILES = s21_decimal.c s21_sundaeka.c
 OBJS = $(CFILES:.c=.o)
 
 TEST_FILE = s21_decimal.c 
@@ -17,7 +17,7 @@ run: $(LIB_FILE)
 	$(CC) $(FLAGS) main.c -L. $(LIB_FILE) -o s21_decimal
 	./s21_decimal
 
-rebuild: clean clang all run 
+reb: clean clang all run 
 
 test: $(LIB_FILE)
 	$(CC) $(FLAGS) $(TEST_FILE) -L. $(LIB_FILE) $(CHECK_FLAGS) -o test
