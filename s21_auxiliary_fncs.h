@@ -1,5 +1,6 @@
 #include "s21_decimal.h"
 
+void print_bin(int num);
 int s21_first_mean_one(s21_decimal number);
 void print_bin_decimal(s21_decimal decimal);
 int is_null(s21_decimal num);

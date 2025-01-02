@@ -65,13 +65,32 @@ void sravnitel_operations(int byte1, int byte2, int *result, int *stop) {
 int s21_sravnivatel(s21_decimal num1, s21_decimal num2) {
   int result = 0;
   int stop = 0;
-  for (int j = 2; j >= 0 && !stop; j--) {
-    for (int i = 31; i >= 0 && !stop; i--) {
-      int byte1 = ((num1.bits[j] >> i) & 1);
-      int byte2 = ((num2.bits[j] >> i) & 1);
-      sravnitel_operations(byte1, byte2, &result, &stop);
+  int sign_num1 = s21_get_sign(num1);
+  int sign_num2 = s21_get_sign(num2);
+
+  if (sign_num1 == 1 && sign_num2 == 0) {
+    result = -1;
+  } else if (sign_num1 == 0 && sign_num2 == 1) {
+    result = 1;
+  } else {
+    for (int j = 2; j >= 0 && !stop; j--) {
+      // printf("[%d %d]", num1.bits[j], num2.bits[j]);
+      for (int i = 31; i >= 0 && !stop; i--) {
+        int byte1 = ((num1.bits[j] >> i) & 1);
+        int byte2 = ((num2.bits[j] >> i) & 1);
+        // printf("%d:%d|", byte1, byte2);
+        sravnitel_operations(byte1, byte2, &result, &stop);
+      }
     }
-    // printf("\n");
+    if (result == -1) {
+      if (sign_num1 == 1 && sign_num2 == 1) {
+        result = 1;
+      }
+    } else if (result == 1) {
+      if (sign_num1 == 1 && sign_num2 == 1) {
+        result = -1;
+      }
+    }
   }
   return result;
 }
