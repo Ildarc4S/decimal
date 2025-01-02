@@ -36,19 +36,21 @@ int is_null(s21_decimal num) {
          num.bits[3] == 0;
 }
 
-s21_decimal decimal_shift_left(s21_decimal num, int index) {
-  s21_decimal res = {{0, 0, 0, 0}};
-  res.bits[0] = num.bits[0] << index;
+s21_decimal decimal_shift_left_once(s21_decimal num) {
+  s21_decimal res = num;
 
-  res.bits[1] = num.bits[1] << index;
+  res.bits[0] = num.bits[0] << 1;
+
+  res.bits[1] = num.bits[1] << 1;
   if (((1 << 31) & num.bits[0]) != 0) {
     res.bits[1] |= 1;
   }
 
-  res.bits[2] = num.bits[2] << index;
+  res.bits[2] = num.bits[2] << 1;
   if (((1 << 31) & num.bits[1]) != 0) {
     res.bits[2] |= 1;
   }
+
   return res;
 }
 
@@ -65,7 +67,7 @@ void print_bin_decimal(s21_decimal decimal) {
 s21_decimal s21_add(s21_decimal num1, s21_decimal num2) {
   s21_decimal result = num1;
   while (!is_null(result)) {
-    result = decimal_shift_left(s21_bin_add(num1, num2), 1);
+    result = decimal_shift_left_once(s21_bin_add(num1, num2));
 
     num1 = s21_bin_xor(num1, num2);
     num2 = result;
@@ -102,7 +104,7 @@ int s21_sravnivatel(s21_decimal num1, s21_decimal num2) {
       int byte2 = ((num2.bits[j] >> i) & 1);
       sravnitel_operations(byte1, byte2, &result, &stop);
     }
-    printf("\n");
+    // printf("\n");
   }
   return result;
 }
@@ -141,7 +143,7 @@ s21_decimal s21_abs(s21_decimal num) {
 int s21_get_sign(s21_decimal num) { return (num.bits[3] >> 31) & 1; }
 
 s21_decimal s21_sub(s21_decimal num1, s21_decimal num2) {
-  s21_decimal one = {{0, 0, 1, 0}};
+  s21_decimal one = {{1, 0, 0, 0}};
   int positive = 0;
   int negative = 1;
   s21_decimal res = {0};
