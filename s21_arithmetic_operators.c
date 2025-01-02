@@ -1,16 +1,24 @@
-#include "s21_arithmetic_operators.h"
+#include "s21!_arithmetic_operators.h"
 
+/**
+ * @author majorswe arniefle
+ * @brief складывает один децимал с другим
+ */
 s21_decimal s21_add(s21_decimal num1, s21_decimal num2) {
   s21_decimal result = num1;
-  while (!is_null(result)) {
-    result = decimal_shift_left_once(s21_bin_mul(num1, num2));
+  while (!s21_is_null(result)) {
+    result = s21_decimal_shift_left_once(s21_bin_mul(num1, num2));
 
-    num1 = s21_bin_add(num1, num2);
+    num1 = s21_bin_xor(num1, num2);
     num2 = result;
   }
   return num1;
 }
 
+/**
+ * @author majorswe arniefle
+ * @brief вычитает один децимал из другого
+ */
 s21_decimal s21_sub(s21_decimal num1, s21_decimal num2) {
   s21_decimal one = {{1, 0, 0, 0}};
   int positive = 0;
@@ -44,10 +52,13 @@ s21_decimal s21_sub(s21_decimal num1, s21_decimal num2) {
 }
 
 /**
+ * @author sundaeka
+ * @brief делит один децимал на другой
  * алгоритм типа
  * 1 - сдвигаем до первой значащей
  *
  */
+// надо еще добавить функционал деления маленького на большое
 s21_decimal s21_div(s21_decimal dividend, s21_decimal divider) {
   int res_index = 0;
   s21_decimal res = {{0, 0, 0, 0}};
@@ -57,38 +68,42 @@ s21_decimal s21_div(s21_decimal dividend, s21_decimal divider) {
   // printf("\n---%d\n", divider_shift);
   if (divider_shift == -1) {
   }  // то происходит это говно
-  divider =
-      decimal_shift_cycle(divider, divider_shift, decimal_shift_left_once);
+  divider = s21_decimal_shift_cycle(divider, divider_shift,
+                                    s21_decimal_shift_left_once);
   s21_decimal chos = s21_sub(dividend, divider);
 
   while (divider_shift >= 0) {
     // записываем 0 или 1 в результат частного
-    res = decimal_shift_left_once(res);
+    res = s21_decimal_shift_left_once(res);
     res_index++;
-    if (!(chos.bits[3] & (1 << 31))) {  // если остаток отриц.
+    if (!(chos.bits[3] & (HEAD_ONE))) {  // если остаток отриц.
       res.bits[0] = res.bits[0] | 1;
     }
     // print_bin_decimal(res);
 
-    chos = decimal_shift_left_once(chos);
-    if (!(chos.bits[3] & (1 << 31))) {  // если остаток полож.
+    chos = s21_decimal_shift_left_once(chos);
+    if (!(chos.bits[3] & (HEAD_ONE))) {  // если остаток полож.
       chos = s21_sub(chos, divider);
-    } else {  // если отрицат.
-      chos.bits[3] = chos.bits[3] & (0 << 31);
+    } else {                            // если отрицат.
+      chos.bits[3] = chos.bits[3] & 0;  // 0 << 31
       chos = s21_sub(divider, chos);
     }
     divider_shift--;
   }
   printf("СТАРЫЙ ОСТАТОК -v-\n");
-  print_bin_decimal(chos);
+  s21_print_bin_decimal(chos);
   chos = s21_add(chos, divider);
-  chos = decimal_shift_cycle(chos, temp_divider_shift + 1,
-                             decimal_shift_right_once);
+  chos = s21_decimal_shift_cycle(chos, temp_divider_shift + 1,
+                                 s21_decimal_shift_right_once);
   printf("НОВЫЙ ОСТАТОК -v-\n");
-  print_bin_decimal(chos);
+  s21_print_bin_decimal(chos);
   return res;
 }
 
+/**
+ * @author majorswe
+ * @brief умножает децималы
+ */
 // надо потом мелкие функции раскидать по соответсвующим файлам
 int is_set_bit(int num, int index) { return (num & (1 << index)) != 0; }
 
@@ -113,8 +128,8 @@ int add_num(int num1, int num2) {
 }
 
 int s21_mul(int num1, int num2) {
-  print_bin(num1);
-  print_bin(num2);
+  s21_print_bin(num1);
+  s21_print_bin(num2);
   /*struct { */
   /*s21_decimal num1 = {{0}},*/
   /*s21_decimal num2 = {{0}} */

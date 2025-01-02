@@ -3,7 +3,7 @@ FLAGS = -Wall -Werror -Wextra -std=c11
 GCOV_FLAGS = --coverage
 CHECK_FLAGS = -lcheck -lm -lsubunit
 
-CFILES = s21_arithmetic_operators.c s21_auxiliary_fncs.c s21_binary_operations.c s21_comparison.c s21_other_fncs.c s21_shift.c sundaeka_main.c
+CFILES = s21_arithmetic_operators.c s21_auxiliary_fncs.c s21_binary_operations.c s21_comparison.c s21_other_fncs.c s21_shift.c s21_!sundaeka_main.c
 OBJS = $(CFILES:.c=.o)
 
 TEST_FILE = s21_arithmetic_operators.c
@@ -14,7 +14,7 @@ FILES_REPORT = *.gcno *.gcda gcov_test coverage.info gcov_test_lcov report_gcov 
 all: $(LIB_FILE)
 
 run: $(LIB_FILE)
-	$(CC) $(FLAGS) sundaeka_main.c -L. $(LIB_FILE) -o s21_decimal
+	$(CC) $(FLAGS) s21_!sundaeka_main.c -L. $(LIB_FILE) -o s21_decimal
 	./s21_decimal
 
 reb: clean clang all run clean

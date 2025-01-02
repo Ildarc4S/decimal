@@ -1,14 +1,32 @@
-#include "s21_decimal.h"
+#include "s21!_decimal.h"
 
-void print_bin(int num) {
+/**
+ * @author majorswe arniefle
+ * @brief печатает в терминал биты определенного байта инта
+ */
+void s21_print_bin(int num) {
   for (int i = 31; i >= 0; i--) {
     printf("%d", (num >> i) & 1);
   }
   printf("   ");
 }
+/**
+ * @author majorswe arniefle
+ * @brief печатает в терминал децимал
+ */
+void s21_print_bin_decimal(s21_decimal decimal) {
+  printf("\t\t[2]\t\t\t\t  [1]\t\t\t\t    [0]\t\t\t\t\t[3]\n");
+  s21_print_bin(decimal.bits[2]);
+  s21_print_bin(decimal.bits[1]);
+  s21_print_bin(decimal.bits[0]);
+  printf(":");
+  s21_print_bin(decimal.bits[3]);
+  printf("\n");
+}
 
 /**
- * должна возвращать индекс первого значащего элемента(единички)
+ * @author sundaeka
+ * @brief должна возвращать индекс первого значащего элемента(единички)
  */
 int s21_first_mean_one(s21_decimal number) {
   int res = -1;
@@ -22,27 +40,35 @@ int s21_first_mean_one(s21_decimal number) {
   return res;
 }
 
-void print_bin_decimal(s21_decimal decimal) {
-  printf("\t\t[2]\t\t\t\t  [1]\t\t\t\t    [0]\t\t\t\t\t[3]\n");
-  print_bin(decimal.bits[2]);
-  print_bin(decimal.bits[1]);
-  print_bin(decimal.bits[0]);
-  printf(":");
-  print_bin(decimal.bits[3]);
-  printf("\n");
-}
-int is_null(s21_decimal num) {
+/**
+ * @author majorswe arniefle
+ * @brief проверяет состоит ли децимал только из нулей
+ */
+int s21_is_null(s21_decimal num) {
   return num.bits[0] == 0 && num.bits[1] == 0 && num.bits[2] == 0 &&
          num.bits[3] == 0;
 }
 
-int s21_get_sign(s21_decimal num) { return (num.bits[3] >> 31) & 1; }
+/**
+ * @author majorswe arniefle
+ * @brief возвращает знак
+ */
+int s21_get_sign(s21_decimal num) { return (num.bits[3]) & (HEAD_ONE); }
 
+/**
+ * @author majorswe arniefle
+ * @brief возвращает модуль децимала
+ */
 s21_decimal s21_abs(s21_decimal num) {
   num.bits[3] &= ~(HEAD_ONE);
   return num;
 }
-void sravnitel_operations(int byte1, int byte2, int *result, int *stop) {
+
+/**
+ * @author majorswe arniefle
+ * @brief пишите описание
+ */
+void s21_sravnitel_operations(int byte1, int byte2, int *result, int *stop) {
   if (byte1 <= byte2) {
     if (byte1 < byte2) {
       *result = -1;
@@ -62,6 +88,10 @@ void sravnitel_operations(int byte1, int byte2, int *result, int *stop) {
   }
 }
 
+/**
+ * @author majorswe arniefle
+ * @brief пишите описание
+ */
 int s21_sravnivatel(s21_decimal num1, s21_decimal num2) {
   int result = 0;
   int stop = 0;
@@ -79,7 +109,7 @@ int s21_sravnivatel(s21_decimal num1, s21_decimal num2) {
         int byte1 = ((num1.bits[j] >> i) & 1);
         int byte2 = ((num2.bits[j] >> i) & 1);
         // printf("%d:%d|", byte1, byte2);
-        sravnitel_operations(byte1, byte2, &result, &stop);
+        s21_sravnitel_operations(byte1, byte2, &result, &stop);
       }
     }
     if (result == -1) {
@@ -96,9 +126,9 @@ int s21_sravnivatel(s21_decimal num1, s21_decimal num2) {
 }
 
 /**
- * хз зачем я написал эту функцию, в общем она отдает
- * в формате инт положение запятой в децимале,
- * юзайте пожалуйста, я что зря писал
+ * @author sundaeka
+ * @brief хз зачем я написал эту функцию, в общем она возвращает инт, положение
+ * запятой в децимале, юзайте пожалуйста, я что зря писал??!!
  */
 // int fun1(s21_decimal value) {
 //   int j = 0;

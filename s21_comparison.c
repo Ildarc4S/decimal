@@ -1,5 +1,11 @@
-#include "s21_comparison.h"
+#include "s21!_comparison.h"
 
+/*НЕ ТРЕБУЕТ РЕДАКТИРОВАНИЯ(скорее всего)*/
+
+/**
+ * @author majorswe arniefle
+ * @brief операции сравнивающие два децимала
+ */
 int s21_is_less(s21_decimal num1, s21_decimal num2) {
   return s21_sravnivatel(num1, num2) == -1;
 }
