@@ -43,7 +43,8 @@ $(LIB_FILE): $(OBJS)
 	$(CC) $(FLAGS) -c $< -o $@
 
 clean: 
-	rm -rf *.o *.a report $(FILES_REPORT) s21_decimal test
+	rm -rf *.o *.a report $(FILES_REPORT) s21_decimal 
+#  test
 
 clang:
 	clang-format -i *.h *.c
