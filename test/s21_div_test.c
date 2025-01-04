@@ -19,33 +19,13 @@ void div_test_template(s21_decimal dividend, s21_decimal divider,
   }                                                              \
   END_TEST
 
-DIV_TEST(test_1, ((s21_decimal){{0, 0, 0, 0}}),
-         ((s21_decimal){{434213, 0, 0, 0}}), ((s21_decimal){{12312, 0, 0, 0}}))
-
-DIV_TEST(test_2, ((s21_decimal){{0, 0, 0, 0}}),
-         ((s21_decimal){{434213, 0, 0, 0}}), ((s21_decimal){{12312, 0, 0, 0}}))
-
-DIV_TEST(test_3, ((s21_decimal){{0, 0, 0, 0}}),
-         ((s21_decimal){{434213, 0, 0, 0}}), ((s21_decimal){{12312, 0, 0, 0}}))
-
-DIV_TEST(test_4, ((s21_decimal){{0, 0, 0, 0}}),
-         ((s21_decimal){{434213, 0, 0, 0}}), ((s21_decimal){{12312, 0, 0, 0}}))
-
-DIV_TEST(test_5, ((s21_decimal){{0, 0, 0, 0}}),
-         ((s21_decimal){{434213, 0, 0, 0}}), ((s21_decimal){{12312, 0, 0, 0}}))
-
-DIV_TEST(test_6, ((s21_decimal){{0, 0, 0, 0}}),
-         ((s21_decimal){{434213, 0, 0, 0}}), ((s21_decimal){{12312, 0, 0, 0}}))
-
-DIV_TEST(test_7, ((s21_decimal){{0, 0, 0, 0}}),
-         ((s21_decimal){{434213, 0, 0, 0}}), ((s21_decimal){{12312, 0, 0, 0}}))
-
-DIV_TEST(test_8, ((s21_decimal){{0, 0, 0, 0}}),
-         ((s21_decimal){{434213, 0, 0, 0}}), ((s21_decimal){{12312, 0, 0, 0}}))
+DIV_TEST(test_1, ((s21_decimal){{0, 0, 0, 0}}),  // ожидаемый результат
+         ((s21_decimal){{434213, 0, 0, 0}}),  // делимое
+         ((s21_decimal){{12312, 0, 0, 0}}))   // делитель
 
 Suite *div_test_fun(void) {
-  Suite *div_suite = suite_create("DECIMAL");
-  TCase *div_tcase = tcase_create("DIV_AR");
+  Suite *div_suite = suite_create("DIV_SUITE");
+  TCase *div_tcase = tcase_create("DIV_TCASE");
 
   tcase_add_test(div_tcase, test_1);
 

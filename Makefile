@@ -2,8 +2,8 @@ CC = gcc
 FLAGS = -Wall -Werror -Wextra -std=c11
 GCOV_FLAGS = --coverage
 CHECK_FLAGS = -lcheck -lm -lsubunit
-
-CFILES = s21_arithmetic_operators.c s21_auxiliary_fncs.c s21_binary_operations.c s21_comparison.c s21_other_fncs.c s21_shift.c s21_!sundaeka_main.c
+UT_FUN_PATH = s21_utility_fncs/
+CFILES = s21_arithmetic_operators.c $(UT_FUN_PATH)s21_auxiliary_fncs.c $(UT_FUN_PATH)s21_binary_operations.c s21_comparison.c s21_other_fncs.c $(UT_FUN_PATH)s21_shift.c s21_!sundaeka_main.c
 OBJS = $(CFILES:.c=.o)
 
 TEST_FILE = s21_arithmetic_operators.c
@@ -43,7 +43,7 @@ $(LIB_FILE): $(OBJS)
 	$(CC) $(FLAGS) -c $< -o $@
 
 clean: 
-	rm -rf *.o *.a report $(FILES_REPORT) s21_decimal 
+	rm -rf *.o *.a report $(FILES_REPORT) s21_decimal s21_utility_fncs/*.o s21_utility_fncs/*.a 
 #  test
 
 clang:

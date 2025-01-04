@@ -1,4 +1,4 @@
-#include "s21!_arithmetic_operators.h"
+#include "s21_arithmetic_operators.h"
 
 /**
  * @author majorswe arniefle
@@ -59,9 +59,23 @@ s21_decimal s21_sub(s21_decimal num1, s21_decimal num2) {
  *
  */
 // надо еще добавить функционал деления маленького на большое
-s21_decimal s21_div(s21_decimal dividend, s21_decimal divider) {
-  int res_index = 0;
-  s21_decimal res = {{0, 0, 0, 0}};
+int s21_div(s21_decimal dividend, s21_decimal divider, s21_decimal *res) {
+  int res_index = 0, er_code = OK;
+  *res = s21_dec_init();
+  if (s21_is_equal(divider, *res)) {
+    er_code = DIV_ON_ZERO;
+  } else if (s21_get_exponent_dec(dividend) == -1 ||
+             s21_get_exponent_dec(divider) == -1) {
+    er_code = DEC_IS_SMALL;
+  }
+  // else if (1) {
+  //   er_code = DEC_IS_BIG;
+  // }
+
+  if (er_code != OK) {
+    return er_code;
+  }
+
   int divider_shift =
       s21_first_mean_one(dividend) - s21_first_mean_one(divider);
   int temp_divider_shift = divider_shift;
@@ -74,10 +88,10 @@ s21_decimal s21_div(s21_decimal dividend, s21_decimal divider) {
 
   while (divider_shift >= 0) {
     // записываем 0 или 1 в результат частного
-    res = s21_decimal_shift_left_once(res);
+    *res = s21_decimal_shift_left_once(*res);
     res_index++;
     if (!(chos.bits[3] & (HEAD_ONE))) {  // если остаток отриц.
-      res.bits[0] = res.bits[0] | 1;
+      res->bits[0] = res->bits[0] | 1;
     }
     // print_bin_decimal(res);
 
@@ -90,14 +104,14 @@ s21_decimal s21_div(s21_decimal dividend, s21_decimal divider) {
     }
     divider_shift--;
   }
-  printf("СТАРЫЙ ОСТАТОК -v-\n");
-  s21_print_bin_decimal(chos);
+  // printf("СТАРЫЙ ОСТАТОК -v-\n");
+  // s21_print_bin_decimal(chos);
   chos = s21_add(chos, divider);
   chos = s21_decimal_shift_cycle(chos, temp_divider_shift + 1,
                                  s21_decimal_shift_right_once);
-  printf("НОВЫЙ ОСТАТОК -v-\n");
-  s21_print_bin_decimal(chos);
-  return res;
+  // printf("НОВЫЙ ОСТАТОК -v-\n");
+  // s21_print_bin_decimal(chos);
+  return er_code;
 }
 
 /**

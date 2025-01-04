@@ -1,2 +1,2 @@
-#include "s21!_decimal.h"
+#include "s21_decimal.h"
 // int s21_floor(s21_decimal value);

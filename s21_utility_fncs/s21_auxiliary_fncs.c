@@ -1,4 +1,38 @@
-#include "s21!_decimal.h"
+#include "../s21_decimal.h"
+
+/**
+ * Настоятельно рекомендую писать маленькие функции, размером в несколько строк
+ * в начале этого файла
+ */
+
+s21_decimal s21_dec_init() {
+  s21_decimal init = {{0, 0, 0, 0}};
+  return init;
+}
+
+/**
+ * @author majorswe arniefle
+ * @brief проверяет состоит ли децимал только из нулей
+ */
+int s21_is_null(s21_decimal num) {
+  return num.bits[0] == 0 && num.bits[1] == 0 && num.bits[2] == 0 &&
+         num.bits[3] == 0;
+}
+
+/**
+ * @author majorswe arniefle
+ * @brief возвращает знак
+ */
+int s21_get_sign(s21_decimal num) { return (num.bits[3]) & (HEAD_ONE); }
+
+/**
+ * @author majorswe arniefle
+ * @brief возвращает модуль децимала
+ */
+s21_decimal s21_abs(s21_decimal num) {
+  num.bits[3] &= ~(HEAD_ONE);
+  return num;
+}
 
 /**
  * @author majorswe arniefle
@@ -38,30 +72,6 @@ int s21_first_mean_one(s21_decimal number) {
     }
   }
   return res;
-}
-
-/**
- * @author majorswe arniefle
- * @brief проверяет состоит ли децимал только из нулей
- */
-int s21_is_null(s21_decimal num) {
-  return num.bits[0] == 0 && num.bits[1] == 0 && num.bits[2] == 0 &&
-         num.bits[3] == 0;
-}
-
-/**
- * @author majorswe arniefle
- * @brief возвращает знак
- */
-int s21_get_sign(s21_decimal num) { return (num.bits[3]) & (HEAD_ONE); }
-
-/**
- * @author majorswe arniefle
- * @brief возвращает модуль децимала
- */
-s21_decimal s21_abs(s21_decimal num) {
-  num.bits[3] &= ~(HEAD_ONE);
-  return num;
 }
 
 /**
@@ -127,24 +137,33 @@ int s21_sravnivatel(s21_decimal num1, s21_decimal num2) {
 
 /**
  * @author sundaeka
- * @brief хз зачем я написал эту функцию, в общем она возвращает инт, положение
- * запятой в децимале, юзайте пожалуйста, я что зря писал??!!
+ * @brief возвращает порядок числа(экспоненту, степень десятки), положение
+ * запятой в децимале
  */
-// int fun1(s21_decimal value) {
-//   int j = 0;
-//   int res = 0;
-//   int stepen_dvoiki = 0;
-//   for (int i = 16; i < 23; i++) {
-//     if (res + stepen_dvoiki < 28) {
-//       res += stepen_dvoiki;
-//     } else {
-//       return -60065;
-//     }
-//     stepen_dvoiki = ((value.bits[3] >> i) & 1);  // нужно ли умножаться
-//     for (int k = 0; k < j; k++) {
-//       stepen_dvoiki *= 2;
-//     }
-//     j++;
-//   }
+int s21_get_exponent_dec(s21_decimal value) {
+  int j = 0, res = 0, stepen_dvoiki = 0;
+  for (int i = 16; i < 23 && res != -1; i++) {
+    if (res + stepen_dvoiki < 28) {
+      res += stepen_dvoiki;
+    } else {
+      res = -1;
+    }
+    stepen_dvoiki = ((value.bits[3] >> i) & 1);  // нужно ли умножаться
+    for (int k = 0; k < j; k++) {
+      stepen_dvoiki *= 2;
+    }
+    j++;
+  }
+  return res;
+}
+
+/**
+ * @author sundaeka
+ * @brief функция нормализации биг_децимала
+ * нужны перевод инт-децимал
+ */
+// s21_big_decimal s21_dec_normalization(s21_big_decimal num) {
+//   s21_big_decimal res = num;
+
 //   return res;
 // }

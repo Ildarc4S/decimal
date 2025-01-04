@@ -1,4 +1,4 @@
-#include "s21!_comparison.h"
+#include "s21_comparison.h"
 
 /*НЕ ТРЕБУЕТ РЕДАКТИРОВАНИЯ(скорее всего)*/
 
