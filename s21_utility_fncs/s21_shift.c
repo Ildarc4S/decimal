@@ -6,8 +6,9 @@
  *
  * ВОЗМОЖНО НАДО СОВМЕСТИТЬ КОД СДВИГА ВПРАВО И ВЛЕВО В ОДНУ ФУНКЦИЮ
  */
-s21_decimal s21_decimal_shift_left_once(s21_decimal num) {
-  s21_decimal res = num;
+// пока переделано под биг_децимал
+s21_big_decimal s21_decimal_shift_left_once(s21_big_decimal num) {
+  s21_big_decimal res = num;
 
   res.bits[0] = num.bits[0] << 1;
 
@@ -24,8 +25,8 @@ s21_decimal s21_decimal_shift_left_once(s21_decimal num) {
   return res;
 }
 
-s21_decimal s21_decimal_shift_right_once(s21_decimal num) {
-  s21_decimal res = num;
+s21_big_decimal s21_decimal_shift_right_once(s21_big_decimal num) {
+  s21_big_decimal res = num;
 
   res.bits[2] = num.bits[2] >> 1;
 
@@ -42,8 +43,9 @@ s21_decimal s21_decimal_shift_right_once(s21_decimal num) {
   return res;
 }
 
-s21_decimal s21_decimal_shift_cycle(
-    s21_decimal num, int index, s21_decimal (*shift_func)(s21_decimal num)) {
+s21_big_decimal s21_decimal_shift_cycle(
+    s21_big_decimal num, int index,
+    s21_big_decimal (*shift_func)(s21_big_decimal num)) {
   for (int i = 0; i < index; i++) {
     num = shift_func(num);  // Вызываем колбэк-функцию
   }

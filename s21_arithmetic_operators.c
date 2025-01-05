@@ -58,59 +58,35 @@ s21_decimal s21_sub(s21_decimal num1, s21_decimal num2) {
  * 1 - сдвигаем до первой значащей
  *
  */
-// надо еще добавить функционал деления маленького на большое
+/** надо еще добавить функционал деления маленького на большое
+ * по идее результат деления мы узнаем из бинарной версии деления, тут только
+ * надо вернуть "код" деления, может исправим позже, но получать код пока что
+ * полезно
+ *
+ */
 int s21_div(s21_decimal dividend, s21_decimal divider, s21_decimal *res) {
-  int res_index = 0, er_code = OK;
   *res = s21_dec_init();
+  s21_big_decimal bdividend = s21_dec_bdec_convers(dividend);
+  s21_big_decimal bdivider = s21_dec_bdec_convers(dividend);
+  s21_big_decimal bres = s21_dec_bdec_convers(*res);
+
+  int er_code = OK;
   if (s21_is_equal(divider, *res)) {
     er_code = DIV_ON_ZERO;
-  } else if (s21_get_exponent_dec(dividend) == -1 ||
-             s21_get_exponent_dec(divider) == -1) {
-    er_code = DEC_IS_SMALL;
   }
+  //  else if () {
+  //   er_code = DEC_IS_SMALL;
+  // }
   // else if (1) {
   //   er_code = DEC_IS_BIG;
   // }
-
   if (er_code != OK) {
     return er_code;
   }
 
-  int divider_shift =
-      s21_first_mean_one(dividend) - s21_first_mean_one(divider);
-  int temp_divider_shift = divider_shift;
-  // printf("\n---%d\n", divider_shift);
-  if (divider_shift == -1) {
-  }  // то происходит это говно
-  divider = s21_decimal_shift_cycle(divider, divider_shift,
-                                    s21_decimal_shift_left_once);
-  s21_decimal chos = s21_sub(dividend, divider);
-
-  while (divider_shift >= 0) {
-    // записываем 0 или 1 в результат частного
-    *res = s21_decimal_shift_left_once(*res);
-    res_index++;
-    if (!(chos.bits[3] & (HEAD_ONE))) {  // если остаток отриц.
-      res->bits[0] = res->bits[0] | 1;
-    }
-    // print_bin_decimal(res);
-
-    chos = s21_decimal_shift_left_once(chos);
-    if (!(chos.bits[3] & (HEAD_ONE))) {  // если остаток полож.
-      chos = s21_sub(chos, divider);
-    } else {                            // если отрицат.
-      chos.bits[3] = chos.bits[3] & 0;  // 0 << 31
-      chos = s21_sub(divider, chos);
-    }
-    divider_shift--;
-  }
-  // printf("СТАРЫЙ ОСТАТОК -v-\n");
-  // s21_print_bin_decimal(chos);
-  chos = s21_add(chos, divider);
-  chos = s21_decimal_shift_cycle(chos, temp_divider_shift + 1,
-                                 s21_decimal_shift_right_once);
-  // printf("НОВЫЙ ОСТАТОК -v-\n");
-  // s21_print_bin_decimal(chos);
+  s21_bin_div(bdividend, bdivider, bres);
+  // функция валидности bres'а
+  *res = s21_bdec_dec_convers(bres);
   return er_code;
 }
 

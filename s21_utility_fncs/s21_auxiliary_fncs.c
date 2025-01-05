@@ -10,6 +10,11 @@ s21_decimal s21_dec_init() {
   return init;
 }
 
+s21_big_decimal s21_big_dec_init() {
+  s21_big_decimal init = {{0, 0, 0, 0, 0, 0, 0}};
+  return init;
+}
+
 /**
  * @author majorswe arniefle
  * @brief проверяет состоит ли децимал только из нулей
@@ -62,11 +67,12 @@ void s21_print_bin_decimal(s21_decimal decimal) {
  * @author sundaeka
  * @brief должна возвращать индекс первого значащего элемента(единички)
  */
-int s21_first_mean_one(s21_decimal number) {
-  int res = -1;
-  int flag = 1;
+// пока что изменена под биг_децимал, вдруг пригодится для обычного позже, пока
+// не могу знать
+int s21_first_mean_one(s21_big_decimal num) {
+  int res = -1, flag = 1;
   for (int i = 96 - 1; i >= 0 && flag; i--) {
-    if (!!((1 << (i % 32)) & number.bits[(i / 32)])) {
+    if (!!((1 << (i % 32)) & num.bits[(i / 32)])) {
       res = i;
       flag = 0;
     }

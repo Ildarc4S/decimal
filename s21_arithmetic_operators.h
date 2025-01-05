@@ -2,6 +2,7 @@
 #include "s21_decimal.h"
 #include "s21_utility_fncs/s21_auxiliary_fncs.h"
 #include "s21_utility_fncs/s21_binary_operations.h"
+#include "s21_utility_fncs/s21_dec_bdec_convers.h"
 #include "s21_utility_fncs/s21_shift.h"
 
 #define OK 0
