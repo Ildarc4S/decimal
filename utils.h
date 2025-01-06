@@ -8,7 +8,7 @@ int is_null(s21_big_decimal num);
 void null_decimal(s21_decimal* num);
 
 int get_sign(s21_decimal num);
-int get_scale(s21_decimal num);
+int get_scale(s21_big_decimal num);
 int get_bit(s21_decimal num, int bit);
 
 void set_sign(s21_decimal* num, int sign_value);

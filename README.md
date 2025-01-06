@@ -1,5 +1,8 @@
-Для запуска конкретного make-файла используйте флаг `-f`:
-`make -f Makefiletest rebuild`
+Для запуска конкретного make-файла используйте флаг `-f`  
+`make -f Makefiletest rebuild`  
+На данный момент тестирую нормализацию. Для его сборки используй:  
+`make -f MakefileTestNormalization rebuild`
+
 
 ## Исходники: 
 
