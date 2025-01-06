@@ -1,6 +1,8 @@
 Для запуска конкретного make-файла используйте флаг `-f`:
 `make -f Makefiletest rebuild`
 
+## Исходники: 
+
 ### arithmetic.c
 
 1. int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);❌
@@ -12,7 +14,7 @@
 7. int s21_mul_util(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);❌
 8. int s21_div_util(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);❌
 
-### binary_operatos.c
+### binary_operators.c
 
 1. int s21_bin_operator_and(int num_one, int num_two); ✅
 2. int s21_bin_operator_or(int num_one, int num_two); ✅
@@ -41,7 +43,8 @@
 10. void print_bin_decimal(s21_decimal num); ✅
 11.void print_bin_big_decimal(s21_big_decimal num); ✅
 
-##Заголовочные файлы:
+## Заголовочные файлы:
+
 ### type.h
 ### binary_operators.h
 ### arithmetic.h
