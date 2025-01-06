@@ -1,6 +1,14 @@
 #include "./utils.h"
 
-int is_null(s21_decimal num) {}
+int is_null(s21_big_decimal num) {
+  int result = 1;
+  for(int i = 0; i < BIG_DECIMAL_LENGTH - 1 && result; i++) {
+    if (num.bits[i] != 0) {
+      result = 0;
+    }
+  }
+  return result;
+}
 void null_decimal(s21_decimal* num) {}
 
 int get_sign(s21_decimal num) {}

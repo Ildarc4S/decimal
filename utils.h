@@ -4,7 +4,7 @@
 #include "./type.h"
 #include <stdio.h>
 
-int is_null(s21_decimal num);
+int is_null(s21_big_decimal num);
 void null_decimal(s21_decimal* num);
 
 int get_sign(s21_decimal num);
