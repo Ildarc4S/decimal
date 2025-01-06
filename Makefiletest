@@ -1,0 +1,16 @@
+CC = gcc
+
+TEST_FILE = test_bin_operators.c
+TEST_EXEC = test_bin_operators
+SRC_FILES = utils.c binary_operators.c 
+TEST_FLAGS = -lcheck -lm -lsubunit
+
+all: test_bin_operators
+rebuild: clean all
+
+test_bin_operators:
+	$(CC) $(TEST_FILE) $(SRC_FILES) $(TEST_FLAGS) -o $(TEST_EXEC)
+	./$(TEST_EXEC)
+
+clean:
+	rm -rf $(TEST_EXEC)
