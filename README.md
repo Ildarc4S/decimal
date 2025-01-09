@@ -17,6 +17,10 @@
 7. int s21_mul_util(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);❌
 8. int s21_div_util(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);❌
 
+1. void s21_binary_add(s21_big_decimal num_one, s21_big_decimal num_two, s21_big_decimal* result); ✅              
+2. void s21_binary_sub(s21_big_decimal num_one, s21_big_decimal num_two, s21_big_decimal* result);✅
+3. void s21_binary_mul(s21_big_decimal num_one, s21_big_decimal num_two, s21_big_decimal* result);✅
+4. void s21_binary_div(s21_big_decimal num_one, s21_big_decimal num_two, s21_big_decimal* result);✅
 ### binary_operators.c
 
 1. int s21_bin_operator_and(int num_one, int num_two); ✅
