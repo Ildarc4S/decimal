@@ -38,7 +38,9 @@ int get_max_bit(s21_big_decimal num) {
 }
 
 void set_sign(s21_decimal* num, int sign_value) {}
-void set_scale(s21_decimal* num, int scale_value) {}
+void set_scale(s21_big_decimal* num, int scale_value) {
+  num->bits[6] |= (scale_value << 16);
+}
 void set_bit(s21_decimal* num, int bit, int value) {}
 
 void print_bin_num(int num, int symbol_count) {
@@ -64,4 +66,13 @@ void print_bin_big_decimal(s21_big_decimal num) {
   printf("\n");
 }
 
-
+void s21_normalization(s21_big_decimal* num_one, s21_big_decimal* num_two) {
+  int scale_one = get_scale(*num_one);                       int scale_two = get_scale(*num_two);                                                                                  while (scale_one < scale_two) {                              scale_one++;
+    s21_mul_to_ten(num_one);
+  }
+  while (scale_one > scale_two) {
+    scale_two++;
+    s21_mul_to_ten(num_two);
+  }                                                          set_scale(num_one, scale_one);
+  set_scale(num_two, scale_two);
+}
