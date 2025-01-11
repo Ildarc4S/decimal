@@ -20,8 +20,15 @@ void s21_big_decimal_to_decimal(s21_big_decimal num, s21_decimal* result) {
 
 void s21_null_decimal(s21_decimal* num) {
   for (int i = 0; i < DECIMAL_LENGTH; i++) {
-    num->bits[2] = 0;
+    num->bits[i] = 0;
   }
+}
+
+void s21_single_decimal(s21_decimal* num) {
+  for (int i = 0; i < DECIMAL_LENGTH; i++) {
+    num->bits[i] = 0;
+  }
+  num->bits[2] = 1;
 }
 
 int s21_is_null(s21_big_decimal num) {
@@ -65,7 +72,15 @@ int s21_get_max_bit(s21_big_decimal num) {
   return result;
 }
 
-void s21_set_sign(s21_decimal* num, int sign_value) {
+void s21_set_big_decimal_sign(s21_big_decimal* num, int sign_value) {
+  if (sign_value == 1) {
+    num->bits[BIG_DECIMAL_LENGTH - 1] |= (1U << 31);     
+  } else if (sign_value == 0) {
+    num->bits[BIG_DECIMAL_LENGTH - 1] &= ~(1U << 31);
+  }
+}
+
+void s21_set_decimal_sign(s21_decimal* num, int sign_value) {
   if (sign_value == 1) {
     num->bits[DECIMAL_LENGTH - 1] |= (1U << 31);     
   } else if (sign_value == 0) {
