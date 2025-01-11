@@ -3,7 +3,7 @@
 void s21_binary_add(s21_big_decimal num_one, s21_big_decimal num_two, s21_big_decimal* result) {
   s21_big_decimal temp_decimal = num_one; 
   int decimal_is_null = 1;
-  while (!is_null(temp_decimal)) {
+  while (!s21_is_null(temp_decimal)) {
     decimal_is_null = 0;
     s21_bin_and(num_one, num_two, &temp_decimal);
     s21_bin_shift_left_one(&temp_decimal);
@@ -34,9 +34,9 @@ void s21_binary_sub(s21_big_decimal num_one, s21_big_decimal num_two, s21_big_de
 
 void s21_binary_mul(s21_big_decimal num_one, s21_big_decimal num_two, s21_big_decimal* result) {
   s21_big_decimal temp = num_one;
-  int max_bit_index = get_max_bit(num_two);
+  int max_bit_index = s21_get_max_bit(num_two);
   for (int i = 0; i <= max_bit_index; i++) {
-    if (is_set_bit(num_two.bits[i/32], i % 32)) {
+    if (s21_is_set_bit(num_two.bits[i/32], i % 32)) {
       s21_binary_add(*result, temp, result);    
     }
     s21_bin_shift_left_one(&temp);
@@ -65,4 +65,19 @@ int s21_div_to_ten(s21_big_decimal* num) {
     num->bits[i] = current / 10;
   }
   return remainder;
+}
+
+void s21_normalization(s21_big_decimal* num_one, s21_big_decimal* num_two) {
+  int scale_one = s21_get_scale(*num_one);
+  int scale_two = s21_get_scale(*num_two);
+  while (scale_one < scale_two) {
+    scale_one++;
+    s21_mul_to_ten(num_one);
+  }
+  while (scale_one > scale_two) {
+    scale_two++;
+    s21_mul_to_ten(num_two);
+  }
+  s21_set_scale(num_one, scale_one);
+  s21_set_scale(num_two, scale_two);
 }

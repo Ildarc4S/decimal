@@ -1,3 +1,6 @@
+#ifndef ARITHMETIC_H
+#define ARITHMETIC_H
+
 #include "./type.h"
 #include "./binary_operators.h"
 #include "./utils.h"
@@ -19,3 +22,5 @@ void s21_binary_div(s21_big_decimal num_one, s21_big_decimal num_two, s21_big_de
 
 void s21_mul_to_ten(s21_big_decimal* num);
 int s21_div_to_ten(s21_big_decimal* num); 
+
+#endif

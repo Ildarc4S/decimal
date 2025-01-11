@@ -1,6 +1,30 @@
 #include "./utils.h"
 
-int is_null(s21_big_decimal num) {
+void s21_decimal_to_big_decimal(s21_decimal num, s21_big_decimal* result) {
+  int mask = 0xffffffff;
+  for (int i = 0; i < DECIMAL_LENGTH; i++) {
+    result->bits[i] = num.bits[i] & mask;
+  }
+}
+
+void s21_big_decimal_to_decimal(s21_big_decimal num, s21_decimal* result) {
+  int big_decimal_len = s21_get_max_bit(num);
+  if (big_decimal_len > 96) {
+    // ocruglenie 
+  }
+  int mask = 0xffffffff;
+  for (int i = 0; i < DECIMAL_LENGTH; i++) {
+     result->bits[i] = num.bits[i] & mask;
+  }
+}
+
+void s21_null_decimal(s21_decimal* num) {
+  for (int i = 0; i < DECIMAL_LENGTH; i++) {
+    num->bits[2] = 0;
+  }
+}
+
+int s21_is_null(s21_big_decimal num) {
   int result = 1;
   for(int i = 0; i < BIG_DECIMAL_LENGTH - 1 && result; i++) {
     if (num.bits[i] != 0) {
@@ -10,25 +34,24 @@ int is_null(s21_big_decimal num) {
   return result;
 }
 
-int is_set_bit(int num, int index) {
+int s21_is_set_bit(int num, int index) {
   return (num & (1<<index)) != 0;
 }
 
-void null_decimal(s21_decimal* num) {}
+int s21_get_sign(s21_decimal num) {
+  return (num.bits[3] >> 31) & 0x1;
+}
 
-int get_sign(s21_decimal num) {}
-int get_scale(s21_big_decimal num) {
+int s21_get_scale(s21_big_decimal num) {
   int res = ((num.bits[6] & (0xffffffff << 16)) >> 16);  
   return res;
 }
 
-int get_bit(s21_decimal num, int bit) {}
-
-int get_max_bit(s21_big_decimal num) {
+int s21_get_max_bit(s21_big_decimal num) {
   int result = -1;
   for (int i = BIG_DECIMAL_LENGTH - 2; i >= 0 && result == -1; i--) {
     for (int index = 31; index >= 0 && result == -1; index--) {
-      if (is_set_bit(num.bits[i], index)) {
+      if (s21_is_set_bit(num.bits[i], index)) {
         printf("{%d, %d}\n", i, index);
         result = (i-1 < 0 ? 0: i-1)*32 + index;
       }
@@ -37,42 +60,52 @@ int get_max_bit(s21_big_decimal num) {
   return result;
 }
 
-void set_sign(s21_decimal* num, int sign_value) {}
-void set_scale(s21_big_decimal* num, int scale_value) {
+void s21_set_sign(s21_decimal* num, int sign_value) {
+  if (sign_value == 1) {
+    num->bits[DECIMAL_LENGTH - 1] |= (1U << 31);     
+  } else if (sign_value == 0) {
+    num->bits[DECIMAL_LENGTH - 1] &= ~(1U << 31);
+  }
+}
+
+void s21_set_scale(s21_big_decimal* num, int scale_value) {
   num->bits[6] |= (scale_value << 16);
 }
-void set_bit(s21_decimal* num, int bit, int value) {}
+void s21_set_bit(s21_decimal* num, int bit, int value) {
+  if (value == 1) {
+    num->bits[bit/32] |= (1U << (bit%32));     
+  } else if(value == 0) {
+    num->bits[bit/32] &= ~(1U << (bit%32));
+  }
+}
 
-void print_bin_num(int num, int symbol_count) {
+int s21_negate(s21_decimal value, s21_decimal *result) {
+  value.bits[DECIMAL_LENGTH - 1] ^= (1U << 31);
+  *result = value;
+  return 1;
+}
+
+void s21_print_bin_num(int num, int symbol_count) {
   for (int i = symbol_count; i >= 0; i--) {
     printf("%d", (num >> i) & 1);
   }
   printf("\n");
 }
 
-void print_bin_decimal(s21_decimal num) {
+void s21_print_bin_decimal(s21_decimal num) {
   for(int i = 0; i < 3; i++) {
     printf("[%d] ", i); 
-    print_bin_num(num.bits[i], 31);
+    s21_print_bin_num(num.bits[i], 31);
   } 
   printf("\n");
 }
 
-void print_bin_big_decimal(s21_big_decimal num) {
+void s21_print_bin_big_decimal(s21_big_decimal num) {
   for(int i = 0; i < 7; i++) {
     printf("[%d] ", i); 
-    print_bin_num(num.bits[i], 31);
+    s21_print_bin_num(num.bits[i], 31);
   } 
   printf("\n");
 }
 
-void s21_normalization(s21_big_decimal* num_one, s21_big_decimal* num_two) {
-  int scale_one = get_scale(*num_one);                       int scale_two = get_scale(*num_two);                                                                                  while (scale_one < scale_two) {                              scale_one++;
-    s21_mul_to_ten(num_one);
-  }
-  while (scale_one > scale_two) {
-    scale_two++;
-    s21_mul_to_ten(num_two);
-  }                                                          set_scale(num_one, scale_one);
-  set_scale(num_two, scale_two);
-}
+

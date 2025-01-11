@@ -1,3 +1,6 @@
+#ifndef BIN_OPERATORS_H
+#define BIN_OPERATORS_H
+
 #include "./type.h"
 
 int s21_bin_operator_and(int num_one, int num_two);
@@ -14,3 +17,5 @@ void s21_bin_xor(s21_big_decimal num_one, s21_big_decimal num_two, s21_big_decim
 void s21_bin_invert(s21_big_decimal* num);
 void s21_bin_shift_left_one(s21_big_decimal* num);
 void s21_bin_shift_left(s21_big_decimal* num, int shift); 
+
+#endif

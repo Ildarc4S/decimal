@@ -3,24 +3,25 @@
 
 #include "./type.h"
 #include <stdio.h>
-#include "./arithmetic.h"
 
-int is_null(s21_big_decimal num);
-void null_decimal(s21_decimal* num);
-int is_set_bit(int num, int index); 
+int s21_is_null(s21_big_decimal num);
+void s21_null_decimal(s21_decimal* num);
+int s21_is_set_bit(int num, int index); 
 
-int get_sign(s21_decimal num);
-int get_scale(s21_big_decimal num);
-int get_bit(s21_decimal num, int bit);
-int get_max_bit(s21_big_decimal num); 
+int s21_get_sign(s21_decimal num);
+int s21_get_scale(s21_big_decimal num);
+int s21_get_bit(s21_decimal num, int bit);
+int s21_get_max_bit(s21_big_decimal num); 
 
-void set_sign(s21_decimal* num, int sign_value);
-void set_scale(s21_big_decimal* num, int scale_value);
-void set_bit(s21_decimal* num, int bit, int value);
+void s21_set_sign(s21_decimal* num, int sign_value);
+void s21_set_scale(s21_big_decimal* num, int scale_value);
+void s21_set_bit(s21_decimal* num, int bit, int value);
 
-void print_bin_num(int num, int symbol_count);
-void print_bin_decimal(s21_decimal num);
-void print_bin_big_decimal(s21_big_decimal num);
+int s21_negate(s21_decimal value, s21_decimal *result);
+
+void s21_print_bin_num(int num, int symbol_count);
+void s21_print_bin_decimal(s21_decimal num);
+void s21_print_bin_big_decimal(s21_big_decimal num);
 
 void s21_normalization(s21_big_decimal* num_one, s21_big_decimal* num_two);
 #endif
