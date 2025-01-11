@@ -91,6 +91,7 @@ void s21_set_decimal_sign(s21_decimal* num, int sign_value) {
 void s21_set_scale(s21_big_decimal* num, int scale_value) {
   num->bits[6] |= (scale_value << 16);
 }
+
 void s21_set_bit(s21_decimal* num, int bit, int value) {
   if (value == 1) {
     num->bits[bit/32] |= (1U << (bit%32));     
