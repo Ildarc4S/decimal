@@ -43,8 +43,9 @@ void s21_binary_mul(s21_big_decimal num_one, s21_big_decimal num_two, s21_big_de
   }
 }
 
-void s21_binary_div(s21_big_decimal num_one, s21_big_decimal num_two, s21_big_decimal* result) {} 
-
+void s21_binary_div(s21_big_decimal num_one, s21_big_decimal num_two, s21_big_decimal* result) {
+   
+} 
 
 
 void s21_mul_to_ten(s21_big_decimal* num) {
