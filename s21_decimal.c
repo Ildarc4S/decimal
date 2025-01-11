@@ -1,6 +1,6 @@
 #include "s21_decimal.h"
 
-void print_bin(int num) {
+ void s21_print_bin(int num) {
   for (int i = 31; i >= 0; i--) {
     printf("%d", (num >> i) & 1);
   }
@@ -31,12 +31,12 @@ s21_decimal s21_bin_xor(s21_decimal num1, s21_decimal num2) {
   return res;
 }
 
-int is_null(s21_decimal num) {
+int s21_is_null(s21_decimal num) {
   return num.bits[0] == 0 && num.bits[1] == 0 && num.bits[2] == 0 &&
          num.bits[3] == 0;
 }
 
-s21_decimal decimal_shift_left(s21_decimal num, int index) {
+s21_decimal s21_decimal_shift_left(s21_decimal num, int index) {
   s21_decimal res;
   res.bits[0] = num.bits[0] << index;
 
@@ -52,7 +52,7 @@ s21_decimal decimal_shift_left(s21_decimal num, int index) {
   return res;
 }
 
-void print_bin_decimal(s21_decimal decimal) {
+ void s21_print_bin_decimal(s21_decimal decimal) {
   print_bin(decimal.bits[2]);
   print_bin(decimal.bits[1]);
   print_bin(decimal.bits[0]);
@@ -72,7 +72,7 @@ s21_decimal s21_add(s21_decimal num1, s21_decimal num2) {
   return num1;
 }
 
-void sravnitel_operations(int byte1, int byte2, int *result, int *stop) {
+ void s21_sravnitel_operations(int byte1, int byte2, int *result, int *stop) {
   if (byte1 <= byte2) {
     if (byte1 < byte2) {
       *result = -1;
@@ -195,21 +195,21 @@ s21_decimal s21_sub(s21_decimal num1, s21_decimal num2) {
   return res;
 }
 
-int is_set_bit(int num, int index) {
+int s21_is_set_bit(int num, int index) {
   return (num & (1<<index)) != 0;
 }
 
-int max_bit(int num) {
+int s21_max_bit(int num) {
   int result = -1;
   for (int i = 31; i >= 0 && result == -1; i--) {
-     if(is_set_bit(num, i)) {
+     if(s21_is_set_bit(num, i)) {
          result = i;
      }
   }
   return result;
 }
 
-int add_num(int num1, int num2) {
+int s21_add_num(int num1, int num2) {
   int result = -11;
   while (result != 0) {
     result = (num1 & num2) << 1;
@@ -228,12 +228,12 @@ int s21_mul(int num1, int num2) {
   /*} big_decimal;*/
   int res = 0x0;
   int tmp = num1;
-  int maxb = max_bit(num2);
+  int maxb = s21_max_bit(num2);
   printf("%d", maxb); 
   for (int i = 0; i <= maxb; i++) {
-    if (is_set_bit(num2, i)) {
+    if (s21_is_set_bit(num2, i)) {
       printf(":");
-      res = add_num(res, tmp);
+      res = s21_add_num(res, tmp);
     } 
       tmp <<= 1; 
   }
