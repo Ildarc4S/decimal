@@ -5,6 +5,14 @@
 #include "./binary_operators.h"
 #include "./utils.h"
 
+typedef enum {
+  kCodeOK = 0,
+  kCodeBig = 1,
+  kCodeSmall = 2,
+  kCodeZerroDiv = 3,
+  // kCodeError = 4 
+} S21ArithmeticResultCode;
+
 int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
 int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
 int s21_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
