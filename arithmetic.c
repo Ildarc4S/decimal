@@ -13,13 +13,22 @@ int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
   /*} else {*/
     int sign_one = s21_get_sign(value_1);
     int sign_two = s21_get_sign(value_2);
-    if (sign_one == 0 && sign_one == 0) {
+    if (sign_one == 0 && sign_two == 0) {
        result_code = s21_add_util(value_1, value_2, result);
     }
   /*}*/
   return result_code;
 }
-int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) { }
+int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
+  S21ArithmeticResultCode result_code = kCodeOK;
+  int sign_one = s21_get_sign(value_1);
+  int sign_two = s21_get_sign(value_2);
+  if (sign_one == 0 && sign_one == 0) {
+    result_code = s21_sub_util(value_1, value_2, result);
+  }
+  return result_code;
+}
+
 int s21_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) { }
 int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) { }
 
@@ -46,15 +55,49 @@ int s21_add_util(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) 
   while (s21_get_max_bit(big_value_1) >= 96 && s21_get_big_decimal_scale(big_value_1) > 0) {
     s21_div_to_ten(&big_value_1);
   }
+  printf("(%d)", s21_get_max_bit(big_value_1));
   if (s21_get_max_bit(big_value_1) >= 96) {
-    result_code = 5; 
+    result_code = kCodeBig; 
   }
   s21_big_decimal_to_decimal(big_value_1, result);
   s21_print_bin_decimal(*result);
   return result_code;
 }
 
-int s21_sub_util(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) { }
+int s21_sub_util(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) { 
+  S21ArithmeticResultCode result_code = kCodeOK;
+  s21_big_decimal big_value_1, big_value_2;
+
+  s21_decimal_to_big_decimal(value_1, &big_value_1);
+  s21_decimal_to_big_decimal(value_2, &big_value_2);
+  
+  int scale1 = s21_get_big_decimal_scale(big_value_1);
+  int scale2 = s21_get_big_decimal_scale(big_value_2);
+  int diff = (scale1 - scale2) > 0 ? (scale1 - scale2) : (scale2 - scale1);
+  printf("|%d|\n", diff);
+
+  s21_normalization(&big_value_1, &big_value_2); 
+  s21_binary_sub(big_value_1, big_value_2, &big_value_1);
+  s21_print_bin_big_decimal(big_value_1);
+
+  scale1 = s21_get_big_decimal_scale(big_value_1);
+  while (diff--) {
+    s21_div_to_ten(&big_value_1);
+    s21_set_scale(&big_value_1, --scale1); 
+  }
+
+  while (s21_get_max_bit(big_value_1) >= 96 && s21_get_big_decimal_scale(big_value_1) > 0) {
+    s21_div_to_ten(&big_value_1);
+  }
+  if (s21_get_max_bit(big_value_1) >= 96) {
+    result_code = 5; 
+  }
+
+  s21_big_decimal_to_decimal(big_value_1, result);
+  s21_print_bin_decimal(*result);
+  return result_code;
+}
+
 int s21_mul_util(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) { }
 int s21_div_util(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) { }
 

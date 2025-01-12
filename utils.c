@@ -81,7 +81,8 @@ int s21_get_max_bit(s21_big_decimal num) {
     for (int index = 31; index >= 0 && result == -1; index--) {
       if (s21_is_set_bit(num.bits[i], index)) {
         printf("{%d, %d}\n", i, index);
-        result = (i-1 < 0 ? 0: i-1)*32 + index;
+        /*result = (i-1 < 0 ? 0: i-1)*32 + index;*/
+        result = i*32 + index;
       }
     }
   }
