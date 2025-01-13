@@ -5,6 +5,9 @@
 #include "./binary_operators.h"
 #include "./utils.h"
 
+#define POSITIVE 0
+#define NEGATIVE 1
+
 typedef enum {
   kCodeOK = 0,
   kCodeBig = 1,
