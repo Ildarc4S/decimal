@@ -24,13 +24,11 @@ void sravnitel_operations(int byte1, int byte2, int *result, int *stop) {
 int s21_sravnivatel(s21_decimal num1, s21_decimal num2) {
   int result = 0;
   int stop = 0;
-  int sign_num1 = s21_get_decimal_scale(num1);
-  int sign_num2 = s21_get_decimal_scale(num2);
+  int sign_num1 = s21_get_sign(num1);
+  int sign_num2 = s21_get_sign(num2);
   // -> big
+  printf("Signs: %d, %d\n", sign_num1, sign_num2);
   s21_big_decimal num1_big, num2_big;
-  s21_null_big_decimal(&num1_big);
-  s21_null_big_decimal(&num2_big);
-
   s21_decimal_to_big_decimal(num1, &num1_big);
   s21_decimal_to_big_decimal(num2, &num2_big);
   // norm

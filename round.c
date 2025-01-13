@@ -17,18 +17,18 @@ int s21_floor(s21_decimal value, s21_decimal *result) {
 
   s21_truncate(temp_value, &temp_value);
   s21_sub(value, temp_value, &value);
-  
+
   if (sign == 1 && s21_is_greater(value, zero)) {
     s21_add(value, one, &value);
   }
-  
+
   s21_set_sign(&value, sign);
   *result = value;
   return func_result_code;
 }
 
-int s21_round(s21_decimal value, s21_decimal *result) { }
-void s21_banck_round(s21_decimal value, s21_decimal *result) { }
+int s21_round(s21_decimal value, s21_decimal *result) {}
+void s21_banck_round(s21_decimal value, s21_decimal *result) {}
 
 int s21_truncate(s21_decimal value, s21_decimal *result) {
   s21_big_decimal big_value;
@@ -41,5 +41,3 @@ int s21_truncate(s21_decimal value, s21_decimal *result) {
   s21_big_decimal_to_decimal(big_value, result);
   return 0;
 }
-
-

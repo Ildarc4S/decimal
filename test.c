@@ -1,8 +1,9 @@
 #include <stdio.h>
-#include "type.h"
+
+#include "./arithmetic.h"
 #include "./binary_operators.h"
 #include "./utils.h"
-#include "./arithmetic.h"
+#include "type.h"
 
 void s21_decimal_to_big_decimal(s21_decimal num, s21_big_decimal* result) {
   int mask = 0xffffffff;
@@ -25,10 +26,10 @@ int del(int n1, int n2) {
   int res = 0;
   int l1 = iget_max_bit(n1);
   int l2 = iget_max_bit(n2);
-  int dif = l1 - l2 > 0 ? l1-l2: l2-l1;
+  int dif = l1 - l2 > 0 ? l1 - l2 : l2 - l1;
   dif += 1;
   printf("%d)\n", dif);
-  while(dif) {
+  while (dif) {
     if (n1 >= (n2 << dif)) {
       n1 -= (n2 << dif);
       res |= 1;
@@ -41,10 +42,10 @@ int del(int n1, int n2) {
 }
 
 int main() {
-  s21_big_decimal d1 = {2, 0, 0, 0, 0, 0, 1<<16};
-  s21_big_decimal d2 = {20, 0, 0, 0, 0, 0, 3<<16};
-  s21_big_decimal res = {{0,0,0,0,0,0,0}}; 
- 
+  s21_big_decimal d1 = {2, 0, 0, 0, 0, 0, 1 << 16};
+  s21_big_decimal d2 = {20, 0, 0, 0, 0, 0, 3 << 16};
+  s21_big_decimal res = {{0, 0, 0, 0, 0, 0, 0}};
+
   int n1 = 0b10100;
   int n2 = 0b1000;
 
@@ -55,11 +56,11 @@ int main() {
 // 123.4 = 1234/10^1
 // 1.234 = 1234/10^3
 //
-//normalization
+// normalization
 // 123400/10^3
 // 1234/10^3
 //
-//addition
+// addition
 //  123400
 //+   1234
 //= 124634

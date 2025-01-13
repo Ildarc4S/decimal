@@ -1,13 +1,11 @@
 #ifndef TYPE_H
 #define TYPE_H
 
-typedef struct 
-{
+typedef struct {
     int bits[4];
 } s21_decimal;
 
-typedef struct
-{
+typedef struct {
     int bits[7];
 } s21_big_decimal;
 
