@@ -24,11 +24,12 @@ int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal* result) {
   } else if (sign_one == NEGATIVE && sign_two == NEGATIVE) {
     result_code = s21_add_util(value_1, value_2, result);
   } else if (sign_one == POSITIVE && sign_two == NEGATIVE) {
-    printf("PN\n");
+    /*printf("PN\n");*/
     s21_set_sign(&value_2, 0);
-    printf("Val2:");
-    s21_print_bin_decimal(value_2);
+    /*printf("Val2:\n");*/
+    /*s21_print_bin_decimal(value_2);*/
     if (s21_is_greater_or_equal(value_1, value_2)) { // 4 - 2 = sub(4,2) 
+      /*printf("YES, great\n");*/
       result_code = s21_sub_util(value_1, value_2, result);
     } else {
       result_code = s21_sub_util(value_2, value_1, result);
@@ -153,7 +154,7 @@ int s21_sub_util(s21_decimal value_1, s21_decimal value_2,
   s21_normalization(&big_value_1, &big_value_2);
   s21_binary_sub(big_value_1, big_value_2, &big_result);
 
-  s21_print_bin_big_decimal(big_result);
+  /*s21_print_bin_big_decimal(big_result);*/
   while (s21_get_max_bit(big_result) >= 96 &&
          s21_get_big_decimal_scale(big_result) > 0) {
     s21_div_to_ten(&big_result);
@@ -162,8 +163,8 @@ int s21_sub_util(s21_decimal value_1, s21_decimal value_2,
     result_code = kCodeBig;
   }
 
-  s21_print_bin_big_decimal(big_result);
-  s21_print_bin_decimal(*result);
+  /*s21_print_bin_big_decimal(big_result);*/
+  /*s21_print_bin_decimal(*result);*/
 
   s21_big_decimal_to_decimal(big_result, result);
   return result_code;

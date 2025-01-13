@@ -31,7 +31,7 @@ void s21_big_decimal_to_decimal(s21_big_decimal num, s21_decimal* result) {
     result->bits[i] = num.bits[i];// & mask;
   }
   result->bits[DECIMAL_LENGTH - 1] = num.bits[BIG_DECIMAL_LENGTH - 1];// & mask;
-  s21_print_bin_decimal(*result);
+  /*s21_print_bin_decimal(*result);*/
 }
 
 void s21_null_decimal(s21_decimal* num) {
