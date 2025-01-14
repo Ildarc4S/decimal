@@ -2,7 +2,7 @@
 #define SRC_TESTS__HELPERS__DEBUG_H_
 
 #include "s21_decimal.h"
-
+#include <inttypes.h>
 #define GREEN   "\033[0;32m"
 #define RED     "\033[0;31m"
 #define YELLOW  "\033[93m"

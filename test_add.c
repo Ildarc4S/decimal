@@ -43357,7 +43357,7 @@ void test_add_fail(s21_decimal decimal1, s21_decimal decimal2, int check) {
 
     #if defined(__DEBUG)
     printf("---------------------------------\n");
-    printf("\n\nTests:\n");
+    printf("\n\nTests Fail:\n");
     s21_print_decimal_bits(decimal1);
     s21_print_decimal_string(decimal1);
     s21_print_decimal_bits(decimal2);
