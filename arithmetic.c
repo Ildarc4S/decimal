@@ -125,12 +125,14 @@ int s21_add_util(s21_decimal value_1, s21_decimal value_2,
   /*}*/
   /*s21_print_bin_big_decimal(big_value_1);*/
   /*printf("{%d}", s21_get_max_bit(big_value_1));*/
-  while (s21_get_max_bit(big_value_1) >= 96 &&
+  while (s21_get_max_bit(big_value_1) > 96 &&
          s21_get_big_decimal_scale(big_value_1) > 0) {
     s21_div_to_ten(&big_value_1);
     s21_set_scale(&big_value_1, s21_get_big_decimal_scale(big_value_1)-1);
   }
-  
+  if (s21_get_max_bit(big_value_1) = 96) {
+    s21_banck_round(big_value_1, &big_result);
+  }
   /*printf("{%d}", s21_get_max_bit(big_value_1));*/
   if (s21_get_max_bit(big_value_1) >= 96) {
     result_code = kCodeBig;
@@ -155,10 +157,25 @@ int s21_sub_util(s21_decimal value_1, s21_decimal value_2,
   s21_binary_sub(big_value_1, big_value_2, &big_result);
 
   /*s21_print_bin_big_decimal(big_result);*/
-  while (s21_get_max_bit(big_result) >= 96 &&
+  while (s21_get_max_bit(big_result) > 96 &&
          s21_get_big_decimal_scale(big_result) > 0) {
     s21_div_to_ten(&big_result);
   }
+
+  if (s21_get_max_bit(big_result) == 96) {
+    s21_big_decimal trunc_big_decimal = big_result;
+    s21_big_decimal_truncate(&trunc_big_decimal);
+
+    s21_big_decimal big_remainder;
+    s21_null_big_decimal(&big_remainder);
+
+    s21_normalization(&big_result, &trunc_big_decimal);
+    s21_binary_sub(big_result, trunc_big_decimal, &big_remainder);
+ 
+    s21_banck_round(&big_result, big_remainder);
+
+  }
+
   if (s21_get_max_bit(big_result) >= 96) {
     result_code = kCodeBig;
   }

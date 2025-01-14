@@ -28,16 +28,37 @@ int s21_floor(s21_decimal value, s21_decimal *result) {
 }
 
 int s21_round(s21_decimal value, s21_decimal *result) {}
-void s21_banck_round(s21_decimal value, s21_decimal *result) {}
+
+void s21_banck_round(s21_big_decimal* value, s21_big_decimal remaind) {
+  s21_decimal five = {{5, 0, 0, 0}};
+  s21_set_decimal_scale(&five, 1);
+
+  s21_decimal rem;
+  s21_null_decimal(&rem);
+
+  s21_big_decimal_to_decimal(remaind, &rem); 
+  if (s21_is_equal(five, rem)) {
+    if (!s21_is_even()) { // write s21_is_even()
+      s21_big_decimal one = {{1, 0, 0, 0, 0, 0, 0}};
+      s21_binary_add(*value, one, value); // problem with 99999999999.999 + 1
+    }
+  } else if (
+}
+
+void s21_big_decimal_truncate(s21_big_decimal *num) {
+  int exponent_len = s21_get_big_decimal_scale(*num);
+  while (exponent_len--) {
+    s21_div_to_ten(num);
+  }
+  s21_set_scale(num, exponent_len);
+}
 
 int s21_truncate(s21_decimal value, s21_decimal *result) {
   s21_big_decimal big_value;
   s21_decimal_to_big_decimal(value, &big_value);
-  int exponent_len = s21_get_big_decimal_scale(big_value);
-  while (exponent_len--) {
-    s21_div_to_ten(&big_value);
-  }
-  s21_set_scale(&big_value, exponent_len);
+
+  s21_big_decimal_truncate(&big_value);
+
   s21_big_decimal_to_decimal(big_value, result);
   return 0;
 }
