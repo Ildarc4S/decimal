@@ -21,12 +21,21 @@ void s21_binary_add(s21_big_decimal num_one, s21_big_decimal num_two,
 
 void s21_binary_sub(s21_big_decimal num_one, s21_big_decimal num_two,
                     s21_big_decimal* result) {
-  s21_big_decimal singular = {{1, 0, 0, 0, 0, 0, 0}};
+  s21_big_decimal singular = {{1, 0, 0, 0, 0, 0}};
   s21_bin_invert(&num_two);
-  s21_binary_add(num_two, singular, &num_two);
-  s21_binary_add(num_one, num_two, result);
-}
 
+  printf("Invert\n");
+  s21_print_bin_big_decimal(num_two);
+
+  s21_binary_add(num_two, singular, &num_two);
+  printf("Add one\n");
+  s21_print_bin_big_decimal(num_two);
+
+  s21_binary_add(num_one, num_two, result);
+  printf("Add\n");
+  s21_print_bin_big_decimal(*result);
+}
+// res = s21_add(num1, s21_add(s21_bin_invert(num2), one));
 /*
  * (DECIMAL_LENGTH - i - 1)*31 + index = 59
  *

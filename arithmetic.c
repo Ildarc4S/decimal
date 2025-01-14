@@ -131,18 +131,47 @@ int s21_sub_util(s21_decimal value_1, s21_decimal value_2,
   s21_decimal_to_big_decimal(*result, &big_result);
 
   s21_normalization(&big_value_1, &big_value_2);
-
-  s21_print_bin_big_decimal(big_value_1);
-  s21_print_bin_big_decimal(big_value_2);
+  /*printf("Normal:\n");*/
+  /*s21_print_bin_big_decimal(big_value_1);*/
+  /*s21_print_bin_big_decimal(big_value_2);*/
 
   s21_binary_sub(big_value_1, big_value_2, &big_result);
-  s21_print_bin_big_decimal(big_result); 
+  /*s21_print_bin_big_decimal(big_result);*/
+
+  s21_big_decimal temp = big_result;
+  s21_div_to_ten(&temp);
+  int scale = s21_get_big_decimal_scale(big_result);
+  
+  while(s21_get_max_bit(temp) > 96 && scale > 0) {
+    s21_div_to_ten(&temp);
+    /*printf("D");*/
+    s21_div_to_ten(&big_result);
+    scale--;
+  }
+  if (s21_get_max_bit(big_result) >= 96 && scale > 0) {
+    s21_set_scale(&big_result, scale);
+    s21_big_decimal big_truncate_decimal = big_result;
+    /*printf("Big_trunc_dec\n");*/
+    /*s21_print_bin_big_decimal(big_truncate_decimal);*/
+
+    s21_big_decimal remaind;
+    s21_null_big_decimal(&remaind);
+
+    s21_big_decimal_truncate(&big_truncate_decimal);
+    /*s21_print_bin_big_decimal(big_truncate_decimal);*/
+
+    s21_binary_sub(big_result, big_truncate_decimal, &remaind); 
+     
+
+    s21_banck_round(&big_result, remaind);
+  }
+
   if (s21_get_max_bit(big_result) >= 96) {
     result_code = kCodeBig;
   }
 
   s21_big_decimal_to_decimal(big_result, result);
-  s21_print_decimal_string(*result);
+  /*s21_print_decimal_string(*result);*/
   return result_code;
 }
 
@@ -178,15 +207,15 @@ int s21_div_util(s21_decimal value_1, s21_decimal value_2,
 void s21_normalization(s21_big_decimal* num_one, s21_big_decimal* num_two) {
   int scale_one = s21_get_big_decimal_scale(*num_one);
   int scale_two = s21_get_big_decimal_scale(*num_two);
-
+  printf("{%d, %d}", scale_one, scale_two);
   while (scale_one < scale_two) {
-    printf("One\n");
+    /*printf("One\n");*/
     scale_one++;
     s21_mul_to_ten(num_one);
   }
 
   while (scale_one > scale_two) {
-    printf("Two\n");
+    /*printf("Two\n");*/
     scale_two++;
     s21_mul_to_ten(num_two);
   }

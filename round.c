@@ -54,9 +54,8 @@ void s21_big_decimal_truncate(s21_big_decimal *num) {
     s21_div_to_ten(num);
     exponent_len--;
   }
-  printf("TTruncate\n");
-  s21_print_bin_big_decimal(*num);
-  printf("Exp:%d", exponent_len);
+  /*printf("TTruncate\n");*/
+  /*s21_print_bin_big_decimal(*num);*/
   s21_set_scale(num, exponent_len);
 }
 

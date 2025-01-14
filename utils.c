@@ -77,7 +77,7 @@ int s21_get_big_decimal_sign(s21_big_decimal num) {
   return (num.bits[6] & 0x80000000) ? 1 : 0; 
 }
 int s21_get_big_decimal_scale(s21_big_decimal num) {
-  int res = ((num.bits[BIG_DECIMAL_LENGTH - 1] & (0xffffffff << 16)) >> 16);
+  int res = (num.bits[BIG_DECIMAL_LENGTH - 1] >> 16) & 0xFF;
   return res;
 }
 
