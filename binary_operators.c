@@ -6,6 +6,12 @@ void s21_bin_invert(s21_big_decimal* num) {
   }
 }
 
+void s21_bin_invert_ne(s21_big_decimal* num) {
+  for (int i = 0; i < DECIMAL_LENGTH; i++) {
+    num->bits[i] = ~num->bits[i];
+  }
+}
+
 int s21_bin_operator_and(int num_one, int num_two) { return num_one & num_two; }
 
 int s21_bin_operator_or(int num_one, int num_two) { return num_one | num_two; }

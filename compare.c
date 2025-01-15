@@ -24,10 +24,13 @@ void sravnitel_operations(int byte1, int byte2, int *result, int *stop) {
 int s21_big_sravnivatel(s21_big_decimal num1, s21_big_decimal num2) {
   int result = 0;
   int stop = 0;
+  s21_print_bin_big_decimal(num1);
+  s21_print_bin_big_decimal(num2);
   int sign_num1 = s21_get_big_decimal_sign(num1);
   int sign_num2 = s21_get_big_decimal_sign(num2);
-  // norm
+
   s21_normalization(&num1, &num2);
+  
   if (sign_num1 == 1 && sign_num2 == 0) {
     result = -1;
   } else if (sign_num1 == 0 && sign_num2 == 1) {
@@ -37,7 +40,6 @@ int s21_big_sravnivatel(s21_big_decimal num1, s21_big_decimal num2) {
         for (int i = 31; i >= 0 && !stop; i--) {
             int byte1 = (num1.bits[j] & (1 << i)) != 0 ? 1 : 0; 
             int byte2 = (num2.bits[j] & (1 << i)) != 0 ? 1 : 0; 
-
             sravnitel_operations(byte1, byte2, &result, &stop);
         }
     }
