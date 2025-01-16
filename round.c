@@ -1,5 +1,5 @@
 #include "./round.h"
-
+#include "_debug.h"
 /*
  *
  * Нет операций s21_sub s21_add и сравнений
@@ -11,6 +11,7 @@
 
   /*s21_decimal zero, one;*/
   /*s21_null_decimal(&zero);*/
+
   /*s21_single_decimal(&one);*/
 
   /*s21_decimal temp_value = value;*/
@@ -30,19 +31,17 @@
 int s21_round(s21_decimal value, s21_decimal *result) {}
 
 void s21_banck_round(s21_big_decimal* value, s21_big_decimal remaind) {
-  s21_decimal five = {{5, 0, 0, 0}};
-  s21_set_decimal_scale(&five, 1);
+  s21_big_decimal five = {{5, 0, 0, 0, 0, 0}};
+  s21_set_scale(&five, 1);
 
-  s21_decimal rem;
-  s21_null_decimal(&rem);
-
-  s21_big_decimal_to_decimal(remaind, &rem); 
-  if (s21_is_equal(five, rem)) {
+  printf("Round\n");
+  s21_print_bin_big_decimal(remaind);
+  if (s21_big_sravnivatel(remaind, five) == 0){
     if (!s21_is_even(*value)) { 
       s21_big_decimal one = {{1, 0, 0, 0, 0, 0, 0}};
       s21_binary_add(*value, one, value); // problem with 99999999999.999 + 1
     }
-  } else if (s21_is_greater(rem, five)) {
+  } else if (s21_big_sravnivatel(remaind, five) > 0){
     s21_big_decimal one = {{1, 0, 0, 0, 0, 0, 0}};
     s21_binary_add(*value, one, value); 
   }

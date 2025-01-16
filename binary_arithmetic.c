@@ -80,14 +80,14 @@ void s21_binary_div(s21_big_decimal num_one, s21_big_decimal num_two,
 
   while (dif >= 0) {
     s21_big_decimal temp = num_two; 
-    s21_print_bin_big_decimal(temp);
+    /*s21_print_bin_big_decimal(temp);*/
     s21_bin_shift_left(&temp, dif);
-    s21_print_bin_big_decimal(temp);
-    s21_print_bin_big_decimal(num_one);
+    /*s21_print_bin_big_decimal(temp);*/
+    /*s21_print_bin_big_decimal(num_one);*/
     if (s21_big_sravnivatel(num_one, temp) >= 0) {
-      s21_print_bin_big_decimal(num_one);
+      /*s21_print_bin_big_decimal(num_one);*/
       s21_binary_sub(num_one, temp, &num_one);
-      s21_print_bin_big_decimal(num_one);
+      /*s21_print_bin_big_decimal(num_one);*/
       s21_bin_or(res, one, &res); 
     }
     if (dif != 0) {

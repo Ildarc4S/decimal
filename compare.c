@@ -24,8 +24,8 @@ void sravnitel_operations(int byte1, int byte2, int *result, int *stop) {
 int s21_big_sravnivatel(s21_big_decimal num1, s21_big_decimal num2) {
   int result = 0;
   int stop = 0;
-  s21_print_bin_big_decimal(num1);
-  s21_print_bin_big_decimal(num2);
+  /*s21_print_bin_big_decimal(num1);*/
+  /*s21_print_bin_big_decimal(num2);*/
   int sign_num1 = s21_get_big_decimal_sign(num1);
   int sign_num2 = s21_get_big_decimal_sign(num2);
 
