@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "s21_decimal.h"
-#include "test.h"
+#include "../include/s21_decimal.h"
+#include "../include/test.h"
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 Тесты на некорректные данные (ручные)

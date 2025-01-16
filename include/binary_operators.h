@@ -1,7 +1,7 @@
 #ifndef BIN_OPERATORS_H
 #define BIN_OPERATORS_H
 
-#include "./type.h"
+#include "type.h"
 
 int s21_bin_operator_and(int num_one, int num_two);
 int s21_bin_operator_or(int num_one, int num_two);

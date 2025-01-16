@@ -1,4 +1,4 @@
-#include "./binary_operators.h"
+#include "../include/binary_operators.h"
 
 void s21_bin_invert(s21_big_decimal* num) {
   for (int i = 0; i < BIG_DECIMAL_LENGTH - 1; i++) {

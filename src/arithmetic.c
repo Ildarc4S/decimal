@@ -1,7 +1,4 @@
-#include "./arithmetic.h"
-#include "binary_arithmetic.h"
-#include "./compare.h"
-#include "_debug.h"
+#include "../include/arithmetic.h"
 
 int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal* result) {
   S21ArithmeticResultCode result_code = kCodeOK;

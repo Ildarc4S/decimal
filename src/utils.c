@@ -1,4 +1,4 @@
-#include "./utils.h"
+#include "../include/utils.h"
 
 int s21_is_correct_decimal(s21_decimal num) {
   int result_code = 1;

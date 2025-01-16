@@ -1,7 +1,7 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#include "./type.h"
+#include "type.h"
 #include <stdio.h>
 
 int s21_is_correct_decimal(s21_decimal num);

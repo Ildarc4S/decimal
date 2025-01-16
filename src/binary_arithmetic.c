@@ -1,4 +1,4 @@
-#include "binary_arithmetic.h"
+#include "../include/binary_arithmetic.h"
 
 void s21_binary_add(s21_big_decimal num_one, s21_big_decimal num_two,
                     s21_big_decimal* result) {

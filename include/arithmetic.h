@@ -1,10 +1,11 @@
 #ifndef ARITHMETIC_H
 #define ARITHMETIC_H
 
-#include "./type.h"
-#include "./binary_operators.h"
-#include "./utils.h"
+#include "type.h"
+#include "utils.h"
 #include "round.h"
+#include "binary_arithmetic.h"
+#include "compare.h"
 
 #define POSITIVE 0
 #define NEGATIVE 1

@@ -1,7 +1,7 @@
 #include <stdlib.h>
 
-#include "s21_decimal.h"
-#include "test.h"
+#include "../include/s21_decimal.h"
+#include "../include/test.h"
 
 int main(void) {
     int number_failed;

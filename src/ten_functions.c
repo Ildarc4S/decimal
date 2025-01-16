@@ -1,4 +1,4 @@
-#include "ten_functions.h"
+#include "../include/ten_functions.h"
 
 void s21_mul_to_ten(s21_big_decimal* num) {
   s21_big_decimal temp = *num;
