@@ -1,7 +1,7 @@
 #include "../include/round.h"
 
 /*
- *
+
  * Нет операций s21_sub s21_add и сравнений
  */
 
