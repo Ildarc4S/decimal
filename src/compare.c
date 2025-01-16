@@ -1,5 +1,6 @@
 #include "../include/compare.h"
 
+
 void sravnitel_operations(int byte1, int byte2, int *result, int *stop) {
   if (byte1 <= byte2) {
     if (byte1 < byte2) {
