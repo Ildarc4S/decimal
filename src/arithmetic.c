@@ -105,7 +105,6 @@ int s21_add_util(s21_decimal value_1, s21_decimal value_2,
   S21ArithmeticResultCode result_code = kCodeOK;
   s21_big_decimal big_value_1, big_value_2, big_result;
 
-  /*printf("add\n");*/
   s21_decimal_to_big_decimal(value_1, &big_value_1);
   s21_decimal_to_big_decimal(value_2, &big_value_2);
   s21_decimal_to_big_decimal(*result, &big_result);
@@ -116,37 +115,46 @@ int s21_add_util(s21_decimal value_1, s21_decimal value_2,
   /*s21_print_bin_big_decimal(big_value_2);*/
 
   s21_binary_add(big_value_1, big_value_2, &big_result);
-  /*s21_print_bin_big_decimal(big_result);*/
+  s21_print_bin_big_decimal(big_result);
 
   s21_big_decimal temp = big_result;
   s21_div_to_ten(&temp);
   int scale = s21_get_big_decimal_scale(big_result);
-  
+  printf("Scale:%d\n", scale); 
   while(s21_get_max_bit(temp) > 96 && scale > 0) {
     s21_div_to_ten(&temp);
-    /*printf("D");*/
     s21_div_to_ten(&big_result);
+    s21_print_bin_big_decimal(big_result);
     scale--;
   }
+  s21_print_bin_big_decimal(big_result);
+  s21_set_scale(&big_result, scale);
   if (s21_get_max_bit(big_result) >= 96 && scale > 0) {
-    s21_set_scale(&big_result, scale);
+    printf("Okrug");
     s21_big_decimal big_truncate_decimal = big_result;
     /*printf("Big_trunc_dec\n");*/
-    /*s21_print_bin_big_decimal(big_truncate_decimal);*/
+    s21_print_bin_big_decimal(big_truncate_decimal);
 
     s21_big_decimal remaind;
     s21_null_big_decimal(&remaind);
 
     s21_big_decimal_truncate(&big_truncate_decimal);
-    /*s21_print_bin_big_decimal(big_truncate_decimal);*/
+    s21_print_bin_big_decimal(big_truncate_decimal);
 
+    s21_normalization(&big_result, &big_truncate_decimal);
     s21_binary_sub(big_result, big_truncate_decimal, &remaind); 
-     
+  
+    s21_print_bin_big_decimal(big_result);
     s21_div_to_ten(&big_result);
+    s21_print_bin_big_decimal(big_result);
+
+    scale--;
+    s21_set_scale(&big_result, scale);
     s21_banck_round(&big_result, remaind);
   }
-
+  s21_print_bin_big_decimal(big_result);
   if (s21_get_max_bit(big_result) >= 96) {
+    printf("BIG\n");
     result_code = kCodeBig;
   }
 
@@ -170,39 +178,49 @@ int s21_sub_util(s21_decimal value_1, s21_decimal value_2,
   /*s21_print_bin_big_decimal(big_value_2);*/
 
   s21_binary_sub(big_value_1, big_value_2, &big_result);
-  /*s21_print_bin_big_decimal(big_result);*/
+  s21_print_bin_big_decimal(big_result);
 
   s21_big_decimal temp = big_result;
+  s21_big_decimal trunc_temp = big_result;
+
   s21_div_to_ten(&temp);
   int scale = s21_get_big_decimal_scale(big_result);
   printf("Scale:%d\n", scale); 
-  while(s21_get_max_bit(temp) > 96 && scale > 0) {
+  while(s21_get_max_bit(temp) > 96 && scale > 1) {
     s21_div_to_ten(&temp);
-    printf("D");
+    printf("%d\n", s21_get_max_bit(temp));
     s21_div_to_ten(&big_result);
+    s21_print_bin_big_decimal(big_result);
     scale--;
   }
+  s21_print_bin_big_decimal(big_result);
+  s21_set_scale(&big_result, scale);
   if (s21_get_max_bit(big_result) >= 96 && scale > 0) {
     printf("Okrug");
-    s21_set_scale(&big_result, scale);
     s21_big_decimal big_truncate_decimal = big_result;
     /*printf("Big_trunc_dec\n");*/
-    /*s21_print_bin_big_decimal(big_truncate_decimal);*/
+    s21_print_bin_big_decimal(big_truncate_decimal);
 
     s21_big_decimal remaind;
     s21_null_big_decimal(&remaind);
 
     s21_big_decimal_truncate(&big_truncate_decimal);
-    /*s21_print_bin_big_decimal(big_truncate_decimal);*/
-    
-    s21_normalization(&big_result, &big_truncate_decimal);
-    s21_binary_sub(big_result, big_truncate_decimal, &remaind); 
-     
+    s21_print_bin_big_decimal(big_truncate_decimal);
+
+    s21_normalization(&trunc_temp, &big_truncate_decimal);
+    s21_binary_sub(trunc_temp, big_truncate_decimal, &remaind); 
+  
+    s21_print_bin_big_decimal(big_result);
     s21_div_to_ten(&big_result);
+    s21_print_bin_big_decimal(big_result);
+
+    scale--;
+    s21_set_scale(&big_result, scale);
     s21_banck_round(&big_result, remaind);
   }
-
+  s21_print_bin_big_decimal(big_result);
   if (s21_get_max_bit(big_result) >= 96) {
+    printf("BIG\n");
     result_code = kCodeBig;
   }
 

@@ -36,12 +36,16 @@ void s21_banck_round(s21_big_decimal* value, s21_big_decimal remaind) {
 
   printf("Round\n");
   s21_print_bin_big_decimal(remaind);
-  if (s21_big_sravnivatel(remaind, five) == 0){
+  s21_print_bin_big_decimal(*value);
+  s21_print_bin_big_decimal(five);
+  if (s21_big_sravnivatel(remaind, five) == 0) {
+    printf("Eq\n");
     if (!s21_is_even(*value)) { 
       s21_big_decimal one = {{1, 0, 0, 0, 0, 0, 0}};
-      s21_binary_add(*value, one, value); // problem with 99999999999.999 + 1
+      s21_binary_add(*value, one, value); 
     }
   } else if (s21_big_sravnivatel(remaind, five) > 0){
+    printf("Great\n");
     s21_big_decimal one = {{1, 0, 0, 0, 0, 0, 0}};
     s21_binary_add(*value, one, value); 
   }
