@@ -27,6 +27,7 @@ void s21_set_sign(s21_decimal* num, int sign_value);
 void s21_set_scale(s21_big_decimal* num, int scale_value);
 void s21_set_decimal_scale(s21_decimal* num, int scale_value);
 void s21_set_bit(s21_decimal* num, int bit, int value);
+void s21_set_big_decimal_sign(s21_big_decimal* num, int sign_value);
 
 int s21_negate(s21_decimal value, s21_decimal *result);
 
