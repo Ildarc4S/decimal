@@ -17,7 +17,7 @@ if [ "$(docker ps -aq -f name=ubuntu_dev)" ]; then
     docker exec -it -e TERM=xterm-256color ubuntu_dev zsh
 else
     echo "Контейнер 'ubuntu_dev' не найден. Создание нового образа и запуск контейнера 'ubuntu_dev'..."
-    docker pull ubuntu:24.04
+    docker pull ubuntu
     docker build -t ubuntu_dev .
     docker run -it -e TERM=xterm-256color -v $PWD:/ubuntu_dev -w /ubuntu_dev --name ubuntu_dev ubuntu_dev
 fi
