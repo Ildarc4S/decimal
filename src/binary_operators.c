@@ -47,8 +47,23 @@ void s21_bin_shift_left_one(s21_big_decimal* num) {
     temp_bit = (temp_num >> 31) & 1;
   }
 }
+
+void s21_bin_shift_right_one(s21_big_decimal* num) {
+  int temp_bit = 0;
+  for (int i = BIG_DECIMAL_LENGTH - 2; i >= 0; i--) {
+    int temp_num = num->bits[i];
+    num->bits[i] = (num->bits[i] >> 1) | temp_bit;
+    temp_bit = temp_num & 1;
+  }
+}
+
 void s21_bin_shift_left(s21_big_decimal* num, int shift) {
   for (int i = 0; i < shift; i++) {
     s21_bin_shift_left_one(num);
+  }
+}
+void s21_bin_shift_right(s21_big_decimal* num, int shift) {
+  for (int i = 0; i < shift; i++) {
+    s21_bin_shift_right_one(num);
   }
 }

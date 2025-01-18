@@ -14,23 +14,25 @@ int s21_is_correct_decimal(s21_decimal num) {
 void s21_decimal_to_big_decimal(s21_decimal num, s21_big_decimal* result) {
   s21_null_big_decimal(result);
   int mask = 0xffffffff;
-  
+
   for (int i = 0; i < DECIMAL_LENGTH - 1; i++) {
-    result->bits[i] = num.bits[i];// & mask;
+    result->bits[i] = num.bits[i];  // & mask;
   }
-  result->bits[BIG_DECIMAL_LENGTH - 1] = num.bits[DECIMAL_LENGTH - 1];// & mask;
+  result->bits[BIG_DECIMAL_LENGTH - 1] =
+      num.bits[DECIMAL_LENGTH - 1];  // & mask;
 }
 
 void s21_big_decimal_to_decimal(s21_big_decimal num, s21_decimal* result) {
   int big_decimal_len = s21_get_max_bit(num);
   for (int i = 0; i < DECIMAL_LENGTH; i++) {
-     result->bits[i] = 0;
+    result->bits[i] = 0;
   }
-  //int mask = 0xffffffff;
+  // int mask = 0xffffffff;
   for (int i = 0; i < DECIMAL_LENGTH - 1; i++) {
-    result->bits[i] = num.bits[i];// & mask;
+    result->bits[i] = num.bits[i];  // & mask;
   }
-  result->bits[DECIMAL_LENGTH - 1] = num.bits[BIG_DECIMAL_LENGTH - 1];// & mask;
+  result->bits[DECIMAL_LENGTH - 1] =
+      num.bits[BIG_DECIMAL_LENGTH - 1];  // & mask;
   /*s21_print_bin_decimal(*result);*/
 }
 
@@ -63,18 +65,14 @@ int s21_is_null(s21_big_decimal num) {
   return result;
 }
 
-int s21_is_even(s21_big_decimal num) {
-  return (num.bits[0] & 1) == 0;
-}
+int s21_is_even(s21_big_decimal num) { return (num.bits[0] & 1) == 0; }
 
 int s21_is_set_bit(int num, int index) { return (num & (1 << index)) != 0; }
 
-int s21_get_sign(s21_decimal num) {
-  return (num.bits[3] & 0x80000000) ? 1 : 0; 
-}
+int s21_get_sign(s21_decimal num) { return (num.bits[3] & 0x80000000) ? 1 : 0; }
 
 int s21_get_big_decimal_sign(s21_big_decimal num) {
-  return (num.bits[6] & 0x80000000) ? 1 : 0; 
+  return (num.bits[6] & 0x80000000) ? 1 : 0;
 }
 int s21_get_big_decimal_scale(s21_big_decimal num) {
   int res = (num.bits[BIG_DECIMAL_LENGTH - 1] >> 16) & 0xFF;
@@ -125,7 +123,7 @@ void s21_set_sign(s21_decimal* num, int sign_value) {
   if (sign_value == 1) {
     num->bits[3] |= (1 << 31);
   } else if (sign_value == 0) {
-    num->bits[3] &= ~(1<<31);
+    num->bits[3] &= ~(1 << 31);
   }
 }
 

@@ -3,46 +3,45 @@
 int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal* result) {
   S21ArithmeticResultCode result_code = kCodeOK;
   if (result == NULL) {
-  /*result_code = kCodeError; */
-  /*} else if (!s21_is_correct_decimal(value_1) ||
-   * !s21_is_correct_decimal(value_2)) {*/
-  /*result_code = kCodeError;*/
-  /*} else {*/
-  /*s21_null_decimal(result);*/
-  /*if (s21_get_decimal_scale(value_1) > 28 && s21_get_sign(value_1)) {*/
-  /*result_code = kCodeBig; */
-  /*} else {*/
+    /*result_code = kCodeError; */
+    /*} else if (!s21_is_correct_decimal(value_1) ||
+     * !s21_is_correct_decimal(value_2)) {*/
+    /*result_code = kCodeError;*/
+    /*} else {*/
+    /*s21_null_decimal(result);*/
+    /*if (s21_get_decimal_scale(value_1) > 28 && s21_get_sign(value_1)) {*/
+    /*result_code = kCodeBig; */
+    /*} else {*/
     return 4;
   } else {
-  int sign_one = s21_get_sign(value_1);
-  int sign_two = s21_get_sign(value_2);
+    int sign_one = s21_get_sign(value_1);
+    int sign_two = s21_get_sign(value_2);
 
-  if (sign_one == POSITIVE && sign_two == POSITIVE) {
-    result_code = s21_add_util(value_1, value_2, result);
-  } else if (sign_one == NEGATIVE && sign_two == NEGATIVE) {
-    result_code = s21_add_util(value_1, value_2, result);
-  } else if (sign_one == POSITIVE && sign_two == NEGATIVE) {
-    /*printf("PN\n");*/
-    s21_set_sign(&value_2, 0);
-    /*printf("Val2:\n");*/
-    /*s21_print_bin_decimal(value_2);*/
-    if (s21_is_greater_or_equal(value_1, value_2)) { // 4 - 2 = sub(4,2) 
-      /*printf("YES, great\n");*/
-      result_code = s21_sub_util(value_1, value_2, result);
-    } else {
-      result_code = s21_sub_util(value_2, value_1, result);
-      s21_set_sign(result, 1);
+    if (sign_one == POSITIVE && sign_two == POSITIVE) {
+      result_code = s21_add_util(value_1, value_2, result);
+    } else if (sign_one == NEGATIVE && sign_two == NEGATIVE) {
+      result_code = s21_add_util(value_1, value_2, result);
+    } else if (sign_one == POSITIVE && sign_two == NEGATIVE) {
+      /*printf("PN\n");*/
+      s21_set_sign(&value_2, 0);
+      /*printf("Val2:\n");*/
+      /*s21_print_bin_decimal(value_2);*/
+      if (s21_is_greater_or_equal(value_1, value_2)) {  // 4 - 2 = sub(4,2)
+        /*printf("YES, great\n");*/
+        result_code = s21_sub_util(value_1, value_2, result);
+      } else {
+        result_code = s21_sub_util(value_2, value_1, result);
+        s21_set_sign(result, 1);
+      }
+    } else if (sign_one == NEGATIVE && sign_two == POSITIVE) {
+      s21_set_sign(&value_1, 0);
+      if (s21_is_greater_or_equal(value_1, value_2)) {
+        result_code = s21_sub_util(value_1, value_2, result);
+        s21_set_decimal_scale(result, 1);
+      } else {
+        result_code = s21_sub_util(value_2, value_1, result);
+      }
     }
-  } else if (sign_one == NEGATIVE && sign_two == POSITIVE) {
-    s21_set_sign(&value_1, 0);
-    if (s21_is_greater_or_equal(value_1, value_2)) {
-      result_code = s21_sub_util(value_1, value_2, result);
-      s21_set_decimal_scale(result, 1);
-    } else {
-      result_code = s21_sub_util(value_2, value_1, result);
-    }
-  }
-
   }
   return result_code;
 }
@@ -98,7 +97,71 @@ int s21_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal* result) {
   return result_code;
 }
 
-int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal* result) {}
+/**
+ * @author sundaeka
+ * @brief делит один децимал на другой
+ * алгоритм типа
+ * 1 - сдвигаем до первой значащей
+ *
+ */
+/** надо еще добавить функционал деления маленького на большое
+ * по идее результат деления мы узнаем из бинарной версии деления, тут только
+ * надо вернуть "код" деления, может исправим позже, но получать код пока что
+ * полезно
+ *
+ */
+int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal* result) {
+  //   *result = s21_dec_init();
+  //   s21_big_decimal value_1 s21_decimal_to_big_decimal();
+  //   s21_big_decimal bdivider = s21_dec_bdec_convers(dividend);
+  //   s21_big_decimal bres = s21_dec_bdec_convers(*res);
+
+  //   int er_code = OK;
+  //   if (s21_is_equal(divider, *res)) {
+  //     er_code = DIV_ON_ZERO;
+  //   }
+  //   //  else if () {
+  //   //   er_code = DEC_IS_SMALL;
+  //   // }
+  //   // else if (1) {
+  //   //   er_code = DEC_IS_BIG;
+  //   // }
+  //   if (er_code != OK) {
+  //     return er_code;
+  //   }
+
+  //   s21_bin_div(bdividend, bdivider, bres);
+  //   // функция валидности bres'а
+  //   *res = s21_bdec_dec_convers(bres);
+  //   return er_code;
+}
+
+/**
+ * @author majorswe
+ * @brief умножает децималы
+ */
+// надо потом мелкие функции раскидать по соответсвующим файлам
+int is_set_bit(int num, int index) { return (num & (1 << index)) != 0; }
+
+int max_bit(int num) {
+  int result = -1;
+  for (int i = 31; i >= 0 && result == -1; i--) {
+    if (is_set_bit(num, i)) {
+      result = i;
+    }
+  }
+  return result;
+}
+
+int add_num(int num1, int num2) {
+  int result = -11;
+  while (result != 0) {
+    result = (num1 & num2) << 1;
+    num1 = num1 ^ num2;
+    num2 = result;
+  }
+  return num1;
+}
 
 int s21_add_util(s21_decimal value_1, s21_decimal value_2,
                  s21_decimal* result) {
@@ -120,8 +183,8 @@ int s21_add_util(s21_decimal value_1, s21_decimal value_2,
   s21_big_decimal temp = big_result;
   s21_div_to_ten(&temp);
   int scale = s21_get_big_decimal_scale(big_result);
-  printf("Scale:%d\n", scale); 
-  while(s21_get_max_bit(temp) > 96 && scale > 0) {
+  printf("Scale:%d\n", scale);
+  while (s21_get_max_bit(temp) > 96 && scale > 0) {
     s21_div_to_ten(&temp);
     s21_div_to_ten(&big_result);
     s21_print_bin_big_decimal(big_result);
@@ -142,8 +205,8 @@ int s21_add_util(s21_decimal value_1, s21_decimal value_2,
     s21_print_bin_big_decimal(big_truncate_decimal);
 
     s21_normalization(&big_result, &big_truncate_decimal);
-    s21_binary_sub(big_result, big_truncate_decimal, &remaind); 
-  
+    s21_binary_sub(big_result, big_truncate_decimal, &remaind);
+
     s21_print_bin_big_decimal(big_result);
     s21_div_to_ten(&big_result);
     s21_print_bin_big_decimal(big_result);
@@ -185,8 +248,8 @@ int s21_sub_util(s21_decimal value_1, s21_decimal value_2,
 
   s21_div_to_ten(&temp);
   int scale = s21_get_big_decimal_scale(big_result);
-  printf("Scale:%d\n", scale); 
-  while(s21_get_max_bit(temp) > 96 && scale > 1) {
+  printf("Scale:%d\n", scale);
+  while (s21_get_max_bit(temp) > 96 && scale > 1) {
     s21_div_to_ten(&temp);
     printf("%d\n", s21_get_max_bit(temp));
     s21_div_to_ten(&big_result);
@@ -208,8 +271,8 @@ int s21_sub_util(s21_decimal value_1, s21_decimal value_2,
     s21_print_bin_big_decimal(big_truncate_decimal);
 
     s21_normalization(&trunc_temp, &big_truncate_decimal);
-    s21_binary_sub(trunc_temp, big_truncate_decimal, &remaind); 
-  
+    s21_binary_sub(trunc_temp, big_truncate_decimal, &remaind);
+
     s21_print_bin_big_decimal(big_result);
     s21_div_to_ten(&big_result);
     s21_print_bin_big_decimal(big_result);
@@ -253,10 +316,16 @@ int s21_mul_util(s21_decimal value_1, s21_decimal value_2,
 
   return result_code;
 }
+
 int s21_div_util(s21_decimal value_1, s21_decimal value_2,
-                 s21_decimal* result) {}
+                 s21_decimal* result) {
+  //   S21ArithmeticResultCode result_code = kCodeOK;
+  //   s21_big_decimal big_value_1, big_value_2, big_result;
 
-
+  //   s21_decimal_to_big_decimal(value_1, &big_value_1);
+  //   s21_decimal_to_big_decimal(value_2, &big_value_2);
+  //   s21_decimal_to_big_decimal(*result, &big_result);
+}
 
 void s21_normalization(s21_big_decimal* num_one, s21_big_decimal* num_two) {
   int scale_one = s21_get_big_decimal_scale(*num_one);
