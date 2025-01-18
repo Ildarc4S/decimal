@@ -1,4 +1,4 @@
-#include "s21_dec_bdec_convers.h"
+#include "../s21_decimal.h"
 
 s21_big_decimal s21_dec_bdec_convers(s21_decimal num) {
   s21_big_decimal res = {{0, 0, 0, 0, 0, 0, 0}};

@@ -1,4 +1,4 @@
-#include "s21_shift.h"
+#include "../s21_decimal.h"
 
 /**
  * @author majorswe arniefle sundaeka

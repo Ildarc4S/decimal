@@ -1,4 +1,4 @@
-#include "s21_comparison.h"
+#include "s21_decimal.h"
 
 /*НЕ ТРЕБУЕТ РЕДАКТИРОВАНИЯ(скорее всего)*/
 

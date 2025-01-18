@@ -1,4 +1,3 @@
-#include "s21_arithmetic_operators.h"
 #include "s21_decimal.h"
 
 /**

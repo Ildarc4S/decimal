@@ -1,4 +1,4 @@
-#include "s21_other_fncs.h"
+#include "s21_decimal.h"
 
 /**
  * @author sundaeka

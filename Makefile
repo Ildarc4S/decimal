@@ -2,7 +2,7 @@ CC = gcc
 FLAGS = -Wall -Werror -Wextra -std=c11
 GCOV_FLAGS = --coverage
 CHECK_FLAGS = -lcheck -lm -lsubunit
-UT_FUN_PATH = s21_utility_fncs/
+UT_FUN_PATH = s21_utils/
 CFILES = s21_arithmetic_operators.c $(UT_FUN_PATH)s21_auxiliary_fncs.c $(UT_FUN_PATH)s21_binary_operations.c s21_comparison.c s21_other_fncs.c $(UT_FUN_PATH)s21_shift.c s21_!sundaeka_main.c
 OBJS = $(CFILES:.c=.o)
 

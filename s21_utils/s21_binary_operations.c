@@ -1,6 +1,4 @@
-#include "s21_binary_operations.h"
-
-#include "../s21_arithmetic_operators.h"
+#include "../s21_decimal.h"
 
 /*НЕ ТРЕБУЕТ РЕДАКТИРОВАНИЯ(скорее всего)*/
 
