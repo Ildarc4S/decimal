@@ -1,18 +1,13 @@
 #include "../include/arithmetic.h"
 
+int is_null_dec(s21_decimal num) {
+  return num.bits[0] == 0 && num.bits[1] == 0 && num.bits[2] == 0; 
+}
+
 int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal* result) {
   S21ArithmeticResultCode result_code = kCodeOK;
   if (result == NULL) {
-  /*result_code = kCodeError; */
-  /*} else if (!s21_is_correct_decimal(value_1) ||
-   * !s21_is_correct_decimal(value_2)) {*/
-  /*result_code = kCodeError;*/
-  /*} else {*/
-  /*s21_null_decimal(result);*/
-  /*if (s21_get_decimal_scale(value_1) > 28 && s21_get_sign(value_1)) {*/
-  /*result_code = kCodeBig; */
-  /*} else {*/
-    return 4;
+      return 4;
   } else {
   int sign_one = s21_get_sign(value_1);
   int sign_two = s21_get_sign(value_2);
@@ -29,15 +24,14 @@ int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal* result) {
         result_code = kCodeSmall;
     }
   } else if (sign_one == POSITIVE && sign_two == NEGATIVE) {
-    /*printf("PN\n");*/
     s21_set_sign(&value_2, 0);
-    /*printf("Val2:\n");*/
-    /*//s21_print_bin_decimal(value_2);*/
-    if (s21_is_greater_or_equal(value_1, value_2)) { // 4 - 2 = sub(4,2) 
-      /*printf("YES, great\n");*/
+    if (s21_is_greater_or_equal(value_1, value_2)) { 
       result_code = s21_sub_util(value_1, value_2, result);
     } else {
       result_code = s21_sub_util(value_2, value_1, result);
+      s21_set_sign(result, 1);
+    }
+    if (is_null_dec(value_1) && is_null_dec(value_2) && s21_get_decimal_scale(value_2) != 0 && s21_get_decimal_scale(value_1) == 0)  { 
       s21_set_sign(result, 1);
     }
   } else if (sign_one == NEGATIVE && sign_two == POSITIVE) {
@@ -45,11 +39,14 @@ int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal* result) {
     if (s21_is_greater_or_equal(value_1, value_2)) {
       result_code = s21_sub_util(value_1, value_2, result);
       s21_set_sign(result, 1);
+      if (is_null_dec(value_1) && is_null_dec(value_2) && s21_get_decimal_scale(value_2) != 0  && s21_get_decimal_scale(value_1) == 0) {
+        s21_set_sign(result, 0);
+      }
     } else {
       result_code = s21_sub_util(value_2, value_1, result);
     }
   }
-
+  
   }
   return result_code;
 }
@@ -127,7 +124,7 @@ int s21_add_util(s21_decimal value_1, s21_decimal value_2,
   int scale = s21_get_big_decimal_scale(big_result);
   scale--;
   printf("Scale:%d\n", scale); 
-  while(s21_get_max_bit(temp) > 96 && scale > 0) {
+  while(s21_get_max_bit(temp) >= 96 && scale > 0) {
     s21_div_to_ten(&temp);
     s21_div_to_ten(&big_result);
     scale--;
@@ -209,7 +206,7 @@ int s21_sub_util(s21_decimal value_1, s21_decimal value_2,
   int scale = s21_get_big_decimal_scale(big_result);
   scale--;
   printf("Scale:%d\n", scale); 
-  while(s21_get_max_bit(temp) > 97 && scale > 0) {
+  while(s21_get_max_bit(temp) >= 96 && scale > 0) {
     s21_div_to_ten(&temp);
     s21_div_to_ten(&big_result);
     scale--;
