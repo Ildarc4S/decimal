@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../include/s21_decimal.h"
-#include "../include/test.h"
+#include "./../../include/s21_decimal.h"
+#include "./../test.h"
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 Тесты на некорректные данные (ручные)
@@ -12,7 +12,7 @@ START_TEST(test_mul_fail_manual1) {
     // 792281625.14264337593543950335
     s21_decimal decimal1 = {{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x140000}};
     s21_decimal decimal2 = {{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x140000}};
-    int code = TEST_ARITHMETIC_OK;
+    int code = s21_mul(decimal1, decimal2, NULL);
 
     ck_assert_int_ne(code, TEST_ARITHMETIC_OK);
 }
@@ -40976,55 +40976,55 @@ Suite *mul_suite9(void) {
     return s;
 }
 
-// Suite *mul_suite0(void) {
-//     Suite *s;
-//     TCase *tc_core;
+Suite *mul_suite0(void) {
+    Suite *s;
+    TCase *tc_core;
 
-//     s = suite_create("mul0");
-//     tc_core = tcase_create("Core");
-//     tcase_add_test(tc_core, test_mul_fail_manual1);
-//     tcase_add_test(tc_core, test_mul_fail_manual2);
-//     tcase_add_test(tc_core, test_mul_fail_manual3);
-//     tcase_add_test(tc_core, test_mul_fail_manual4);
-//     tcase_add_test(tc_core, test_mul_fail_manual5);
-//     tcase_add_test(tc_core, test_mul_fail_manual6);
-//     tcase_add_test(tc_core, test_mul_fail_manual7);
-//     tcase_add_test(tc_core, test_mul_fail_manual8);
-//     tcase_add_test(tc_core, test_mul_fail_manual9);
-//     tcase_add_test(tc_core, test_mul_fail_manual10);
-//     tcase_add_test(tc_core, test_mul_fail_manual11);
-//     tcase_add_test(tc_core, test_mul_fail_manual12);
-//     tcase_add_test(tc_core, test_mul_fail_manual13);
-//     tcase_add_test(tc_core, test_mul_fail_manual14);
-//     tcase_add_test(tc_core, test_mul_fail_manual15);
-//     tcase_add_test(tc_core, test_mul_fail_manual16);
-//     tcase_add_test(tc_core, test_mul_fail_manual17);
+    s = suite_create("mul0");
+    tc_core = tcase_create("Core");
+    tcase_add_test(tc_core, test_mul_fail_manual1);
+    tcase_add_test(tc_core, test_mul_fail_manual2);
+    tcase_add_test(tc_core, test_mul_fail_manual3);
+    tcase_add_test(tc_core, test_mul_fail_manual4);
+    tcase_add_test(tc_core, test_mul_fail_manual5);
+    tcase_add_test(tc_core, test_mul_fail_manual6);
+    tcase_add_test(tc_core, test_mul_fail_manual7);
+    tcase_add_test(tc_core, test_mul_fail_manual8);
+    tcase_add_test(tc_core, test_mul_fail_manual9);
+    tcase_add_test(tc_core, test_mul_fail_manual10);
+    tcase_add_test(tc_core, test_mul_fail_manual11);
+    tcase_add_test(tc_core, test_mul_fail_manual12);
+    tcase_add_test(tc_core, test_mul_fail_manual13);
+    tcase_add_test(tc_core, test_mul_fail_manual14);
+    tcase_add_test(tc_core, test_mul_fail_manual15);
+    tcase_add_test(tc_core, test_mul_fail_manual16);
+    tcase_add_test(tc_core, test_mul_fail_manual17);
 
-//     tcase_add_test(tc_core, test_mul_manual1);
-//     tcase_add_test(tc_core, test_mul_manual2);
-//     tcase_add_test(tc_core, test_mul_manual3);
-//     tcase_add_test(tc_core, test_mul_manual4);
-//     tcase_add_test(tc_core, test_mul_manual5);
-//     tcase_add_test(tc_core, test_mul_manual6);
-//     tcase_add_test(tc_core, test_mul_manual7);
-//     tcase_add_test(tc_core, test_mul_manual8);
-//     tcase_add_test(tc_core, test_mul_manual9);
-//     tcase_add_test(tc_core, test_mul_manual10);
-//     tcase_add_test(tc_core, test_mul_manual11);
-//     tcase_add_test(tc_core, test_mul_manual12);
-//     tcase_add_test(tc_core, test_mul_manual13);
-//     tcase_add_test(tc_core, test_mul_manual14);
-//     tcase_add_test(tc_core, test_mul_manual15);
-//     tcase_add_test(tc_core, test_mul_manual16);
-//     tcase_add_test(tc_core, test_mul_manual17);
+    tcase_add_test(tc_core, test_mul_manual1);
+    tcase_add_test(tc_core, test_mul_manual2);
+    tcase_add_test(tc_core, test_mul_manual3);
+    tcase_add_test(tc_core, test_mul_manual4);
+    tcase_add_test(tc_core, test_mul_manual5);
+    tcase_add_test(tc_core, test_mul_manual6);
+    tcase_add_test(tc_core, test_mul_manual7);
+    tcase_add_test(tc_core, test_mul_manual8);
+    tcase_add_test(tc_core, test_mul_manual9);
+    tcase_add_test(tc_core, test_mul_manual10);
+    tcase_add_test(tc_core, test_mul_manual11);
+    tcase_add_test(tc_core, test_mul_manual12);
+    tcase_add_test(tc_core, test_mul_manual13);
+    tcase_add_test(tc_core, test_mul_manual14);
+    tcase_add_test(tc_core, test_mul_manual15);
+    tcase_add_test(tc_core, test_mul_manual16);
+    tcase_add_test(tc_core, test_mul_manual17);
 
-//     tcase_add_test(tc_core, test_mul_manual97);
-//     tcase_add_test(tc_core, test_mul_manual98);
-//     tcase_add_test(tc_core, test_mul_manual99);
+    tcase_add_test(tc_core, test_mul_manual97);
+    tcase_add_test(tc_core, test_mul_manual98);
+    tcase_add_test(tc_core, test_mul_manual99);
 
-//     suite_add_tcase(s, tc_core);
-//     return s;
-// }
+    suite_add_tcase(s, tc_core);
+    return s;
+}
 
 void test_mul(s21_decimal decimal1, s21_decimal decimal2, s21_decimal check) {
     s21_decimal result;

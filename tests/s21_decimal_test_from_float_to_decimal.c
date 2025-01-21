@@ -1,27 +1,22 @@
 #include <stdlib.h>
 
-#include "../include/s21_decimal.h"
-#include "../include/test.h"
+#include "./../include/s21_decimal.h"
+#include "./test.h"
 
 int main(void) {
     int number_failed;
     SRunner *sr;
 
     sr = srunner_create(NULL);
-    
+    srunner_add_suite(sr, from_float_to_decimal_suite0());
+    srunner_add_suite(sr, from_float_to_decimal_suite1());
+    srunner_add_suite(sr, from_float_to_decimal_suite2());
+    srunner_add_suite(sr, from_float_to_decimal_suite3());
+    srunner_add_suite(sr, from_float_to_decimal_suite4());
+    srunner_add_suite(sr, from_float_to_decimal_suite5());
+    srunner_add_suite(sr, from_float_to_decimal_suite6());
+    srunner_add_suite(sr, from_float_to_decimal_suite7());
 
-    // srunner_add_suite(sr, mul_suite0());
-    srunner_add_suite(sr, mul_suite1());
-    srunner_add_suite(sr, mul_suite2());
-    srunner_add_suite(sr, mul_suite3());
-    srunner_add_suite(sr, mul_suite4());
-    srunner_add_suite(sr, mul_suite5());
-    srunner_add_suite(sr, mul_suite6());
-    srunner_add_suite(sr, mul_suite7());
-    srunner_add_suite(sr, mul_suite8());
-    srunner_add_suite(sr, mul_suite9());
-
-    
     srunner_set_fork_status(sr, CK_NOFORK);
     // Используем данный блок для вывода подробно про каждый тест с разбиением по блокам
     // srunner_set_log(sr, "-");
