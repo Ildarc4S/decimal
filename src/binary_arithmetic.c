@@ -4,8 +4,8 @@ void s21_binary_add(s21_big_decimal num_one, s21_big_decimal num_two,
                     s21_big_decimal* result) {
   s21_big_decimal temp_decimal = num_two;
   s21_big_decimal res_decimal = num_one;
-//   s21_print_bin_big_decimal(temp_decimal);
-//   s21_print_bin_big_decimal(num_two);
+  //   s21_print_bin_big_decimal(temp_decimal);
+  //   s21_print_bin_big_decimal(num_two);
   int decimal_is_null = 1;
   while (!s21_is_null(temp_decimal)) {
     decimal_is_null = 0;
@@ -19,12 +19,12 @@ void s21_binary_add(s21_big_decimal num_one, s21_big_decimal num_two,
     s21_bin_xor(res_decimal, temp_decimal, &res_decimal);
     temp_decimal = temp;
   }
-//   if (decimal_is_null) {
-//     *result = num_two;
-//   } else {
-//     *result = num_one;
-//   }
-    *result = res_decimal;
+  //   if (decimal_is_null) {
+  //     *result = num_two;
+  //   } else {
+  //     *result = num_one;
+  //   }
+  *result = res_decimal;
 }
 
 void s21_binary_sub(s21_big_decimal num_one, s21_big_decimal num_two,
@@ -74,12 +74,12 @@ void s21_binary_div(s21_big_decimal num_one, s21_big_decimal num_two,
 
   int l1 = s21_get_max_bit(num_one);
   int l2 = s21_get_max_bit(num_two);
-  
+
   int dif = l1 - l2 > 0 ? l1 - l2 : l2 - l1;
   dif += 1;
 
   while (dif >= 0) {
-    s21_big_decimal temp = num_two; 
+    s21_big_decimal temp = num_two;
     /*s21_print_bin_big_decimal(temp);*/
     s21_bin_shift_left(&temp, dif);
     /*s21_print_bin_big_decimal(temp);*/
@@ -88,12 +88,12 @@ void s21_binary_div(s21_big_decimal num_one, s21_big_decimal num_two,
       /*s21_print_bin_big_decimal(num_one);*/
       s21_binary_sub(num_one, temp, &num_one);
       /*s21_print_bin_big_decimal(num_one);*/
-      s21_bin_or(res, one, &res); 
+      s21_bin_or(res, one, &res);
     }
     if (dif != 0) {
       s21_bin_shift_left_one(&res);
     }
     dif--;
   }
- *result = res;
+  *result = res;
 }
