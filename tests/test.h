@@ -3,13 +3,11 @@
 
 #include <check.h>
 
-#include "s21_decimal.h"
-#include "_debug.h"
+#include "./../include/s21_decimal.h"
+#include "./_helpers/_debug.h"
 
 // Отображение отладочной информации в тестах
 // #define __DEBUG 1
-
-int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
 
 #define TEST_ARITHMETIC_OK 0
 #define TEST_ARITHMETIC_BIG 1
