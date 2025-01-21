@@ -3,3 +3,5 @@
 *.txt
 .vscode
 *:Zone.Identifier
+.DS_Store
+*/.DS_Store
