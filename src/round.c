@@ -1,32 +1,40 @@
 #include "../include/round.h"
+#include "../include/arithmetic.h"
 
-/*
+int s21_is_zero(s21_decimal num) {
+  int result = 1;
+  for (int i = 0; i < DECIMAL_LENGTH - 1 && result; i++) {
+    if (num.bits[i] != 0) {
+      result = 0;
+    }
+  }
+  return result;
+}
 
- * Нет операций s21_sub s21_add и сравнений
- */
+int s21_floor(s21_decimal value, s21_decimal *result) {
+  int func_result_code = 0;
+  int sign = s21_get_sign(value);
 
-/*int s21_floor(s21_decimal value, s21_decimal *result) {*/
-/*int func_result_code = 0;*/
-/*int sign = s21_get_sign(value);*/
+  s21_decimal zero, one, remainder;
+  s21_null_decimal(&zero);
+  s21_single_decimal(&one);
+  s21_null_decimal(&remainder);
 
-/*s21_decimal zero, one;*/
-/*s21_null_decimal(&zero);*/
+  s21_set_sign(&value, 0);
+  s21_decimal trunc_value;
+  s21_null_decimal(&trunc_value);
 
-/*s21_single_decimal(&one);*/
+  s21_truncate(value, &trunc_value);  
+  s21_sub(value, trunc_value, &remainder);
 
-/*s21_decimal temp_value = value;*/
+  if (sign == 1 && s21_is_equal(remainder, zero) != 1) {
+    s21_add(trunc_value, one, &trunc_value);
+  }
 
-/*s21_truncate(temp_value, &temp_value);*/
-/*s21_sub(value, temp_value, &value);*/
-
-/*if (sign == 1 && s21_is_greater(value, zero)) {*/
-/*s21_add(value, one, &value);*/
-/*}*/
-
-/*s21_set_sign(&value, sign);*/
-/**result = value;*/
-/*return func_result_code;*/
-/*}*/
+  s21_set_sign(&trunc_value, sign);
+  *result = trunc_value;
+  return func_result_code;
+}
 
 int s21_round(s21_decimal value, s21_decimal *result) {}
 
@@ -71,7 +79,7 @@ int s21_truncate(s21_decimal value, s21_decimal *result) {
   /*s21_print_bin_big_decimal(big_value);*/
   /*printf("\n");*/
   s21_big_decimal_truncate(&big_value);
-  /*s21_print_bin_big_decimal(big_value);*/
+  s21_print_bin_big_decimal(big_value);
   /*printf("\n");*/
 
   s21_big_decimal_to_decimal(big_value, result);
