@@ -41,6 +41,14 @@ test_div: clean $(CFILES)
 	$(CC) tests/s21_decimal_test_div.c  tests/arithmetic/test_div.c $(CFILES) $(CHECK_FLAGS) -o test_div
 	./test_div
 
+test_negate: clean $(CFILES)
+	$(CC) tests/s21_decimal_test_negate.c tests/_helpers/_get_sign.c tests/other/test_negate.c $(CFILES) $(CHECK_FLAGS) -o test_negate
+	./test_negate
+
+test_truncate: clean $(CFILES)
+	$(CC) tests/s21_decimal_test_truncate.c tests/_helpers/_get_sign.c tests/other/test_truncate.c tests/_helpers/_decimal_is_full_equal.c $(CFILES) $(CHECK_FLAGS) -o test_truncate
+	./test_truncate
+
 test_add_main: clean $(CFILES) 
 	$(CC) main_files/s21_decimal_test_add_main.c $(CFILES) $(CHECK_FLAGS) -o test_add_main
 	./test_add_main
@@ -57,7 +65,13 @@ test_div_main: clean $(CFILES)
 	$(CC) main_files/s21_decimal_test_div_main.c  $(CFILES) $(CHECK_FLAGS) -o test_div_main
 	./test_div_main
 
+test_negate_main: clean $(CFILES)
+	$(CC) main_files/s21_decimal_test_negate_main.c tests/_helpers/_get_sign.c tests/_helpers/_debug.c tests/other/test_negate.c $(CFILES) $(CHECK_FLAGS) -o test_negate
+	./test_negate
 
+test_truncate_main: clean $(CFILES)
+	$(CC) main_files/s21_decimal_test_truncate_main.c tests/_helpers/_get_sign.c tests/_helpers/_debug.c tests/other/test_truncate.c tests/_helpers/_decimal_is_full_equal.c $(CFILES) $(CHECK_FLAGS) -o test_truncate
+	./test_truncate
 
 gcov_report:
 	$(CC) $(FLAGS) $(TEST_FILE) $(CFILES) $(CHECK_FLAGS) $(GCOV_FLAGS) -o gcov_test
