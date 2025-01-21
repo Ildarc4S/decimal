@@ -60,13 +60,15 @@ int s21_sravnivatel(s21_decimal num1, s21_decimal num2) {
   int stop = 0;
   int sign_num1 = s21_get_sign(num1);
   int sign_num2 = s21_get_sign(num2);
-  // -> big
+  //  big
   s21_big_decimal num1_big, num2_big;
   s21_decimal_to_big_decimal(num1, &num1_big);
   s21_decimal_to_big_decimal(num2, &num2_big);
   // norm
   s21_normalization(&num1_big, &num2_big);
-  if (sign_num1 == 1 && sign_num2 == 0) {
+  if (s21_is_null(num1_big) && s21_is_null(num2_big)) {
+    result = 0;
+  } else if (sign_num1 == 1 && sign_num2 == 0) {
     result = -1;
   } else if (sign_num1 == 0 && sign_num2 == 1) {
     result = 1;

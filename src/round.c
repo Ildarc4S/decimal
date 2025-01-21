@@ -53,25 +53,26 @@ void s21_banck_round(s21_big_decimal *value, s21_big_decimal remaind) {
 
 void s21_big_decimal_truncate(s21_big_decimal *num) {
   int exponent_len = s21_get_big_decimal_scale(*num);
-  s21_print_bin_big_decimal(*num);
-  printf("Scale:%d", exponent_len);
+  /*s21_print_bin_big_decimal(*num);*/
+  /*printf("Scale:%d", exponent_len);*/
   while (exponent_len) {
+    /*s21_div_to_ten(num);*/
     s21_div_to_ten(num);
     exponent_len--;
   }
-  printf("POsle\n");
-  s21_print_bin_big_decimal(*num);
+  /*printf("POsle\n");*/
+  /*s21_print_bin_big_decimal(*num);*/
   s21_set_scale(num, exponent_len);
 }
 
 int s21_truncate(s21_decimal value, s21_decimal *result) {
   s21_big_decimal big_value;
   s21_decimal_to_big_decimal(value, &big_value);
-  s21_print_bin_big_decimal(big_value);
-  printf("\n");
+  /*s21_print_bin_big_decimal(big_value);*/
+  /*printf("\n");*/
   s21_big_decimal_truncate(&big_value);
-  s21_print_bin_big_decimal(big_value);
-  printf("\n");
+  /*s21_print_bin_big_decimal(big_value);*/
+  /*printf("\n");*/
 
   s21_big_decimal_to_decimal(big_value, result);
   return 0;

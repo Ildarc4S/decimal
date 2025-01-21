@@ -49,6 +49,11 @@ test_truncate: clean $(CFILES)
 	$(CC) tests/s21_decimal_test_truncate.c tests/_helpers/_get_sign.c tests/other/test_truncate.c tests/_helpers/_decimal_is_full_equal.c $(CFILES) $(CHECK_FLAGS) -o test_truncate
 	./test_truncate
 
+test_compare: clean $(CFILES)
+	$(CC) tests/s21_decimal_test_compare.c tests/_helpers/_get_sign.c tests/comparison/*  tests/_helpers/_decimal_is_full_equal.c $(CFILES) $(CHECK_FLAGS) -o test_compare
+	./test_compare
+
+
 test_add_main: clean $(CFILES) 
 	$(CC) main_files/s21_decimal_test_add_main.c $(CFILES) $(CHECK_FLAGS) -o test_add_main
 	./test_add_main
