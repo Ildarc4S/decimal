@@ -258,7 +258,7 @@ int s21_mul_util(s21_decimal value_1, s21_decimal value_2,
   s21_set_scale(&temp, scale_first);
 
   // printf("MU:");
-  s21_print_bin_big_decimal(big_result);
+  //s21_print_bin_big_decimal(big_result);
 
   s21_set_scale(&big_result, scale_first);
   while (s21_get_max_bit(big_result) > 96 && scale_first > 0) {
@@ -297,6 +297,7 @@ int s21_mul_util(s21_decimal value_1, s21_decimal value_2,
 
   return result_code;
 }
+
 int s21_div_util(s21_decimal value_1, s21_decimal value_2,
                  s21_decimal* result) {}
 
