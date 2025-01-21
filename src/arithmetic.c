@@ -74,7 +74,7 @@ int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal* result) {
   } else if (sign_one == POSITIVE && sign_two == NEGATIVE) {
     result_code = s21_add_util(value_1, value_2, result);
   } else if (sign_one == NEGATIVE && sign_two == POSITIVE) {
-    result_code = s21_add_util(value_1, value_2, result);
+    result_code = s21_sub_util(value_1, value_2, result);
   }
 
   return result_code;
