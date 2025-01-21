@@ -14,11 +14,11 @@ done
 if [ "$(docker ps -aq -f name=ubuntu_dev)" ]; then
     echo "Контейнер 'ubuntu_dev' существует. Запуск контейнера 'ubuntu_dev'..."
     docker start ubuntu_dev
-    docker exec -it ubuntu_dev zsh
+    docker exec -it -e TERM=xterm-256color ubuntu_dev zsh
 else
     echo "Контейнер 'ubuntu_dev' не найден. Создание нового образа и запуск контейнера 'ubuntu_dev'..."
-    docker pull ubuntu
+    docker pull ubuntu:24.04
     docker build -t ubuntu_dev .
-    docker run -it -v $PWD:/ubuntu_dev -w /ubuntu_dev --name ubuntu_dev ubuntu_dev
+    docker run -it -e TERM=xterm-256color -v $PWD:/ubuntu_dev -w /ubuntu_dev --name ubuntu_dev ubuntu_dev
 fi
 
