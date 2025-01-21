@@ -46,7 +46,7 @@ test_add_main: clean $(CFILES)
 	./test_add_main
 
 test_sub_main: clean $(CFILES)
-	$(CC) main_files/s21_decimal_test_sub_main.c $(CFILES) $(CHECK_FLAGS) -o test_sub_main
+	$(CC) main_files/s21_decimal_test_sub_main.c tests/_helpers/_debug.c tests/_helpers/_get_sign.c  $(CFILES) $(CHECK_FLAGS) -o test_sub_main
 	./test_sub_main
 	
 test_mul_main: clean $(CFILES)

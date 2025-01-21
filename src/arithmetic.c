@@ -1,48 +1,55 @@
 #include "../include/arithmetic.h"
 
+int is_null_dec(s21_decimal num) {
+  return num.bits[0] == 0 && num.bits[1] == 0 && num.bits[2] == 0;
+}
+
 int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal* result) {
   S21ArithmeticResultCode result_code = kCodeOK;
   if (result == NULL) {
-  /*result_code = kCodeError; */
-  /*} else if (!s21_is_correct_decimal(value_1) ||
-   * !s21_is_correct_decimal(value_2)) {*/
-  /*result_code = kCodeError;*/
-  /*} else {*/
-  /*s21_null_decimal(result);*/
-  /*if (s21_get_decimal_scale(value_1) > 28 && s21_get_sign(value_1)) {*/
-  /*result_code = kCodeBig; */
-  /*} else {*/
     return 4;
   } else {
-  int sign_one = s21_get_sign(value_1);
-  int sign_two = s21_get_sign(value_2);
+    int sign_one = s21_get_sign(value_1);
+    int sign_two = s21_get_sign(value_2);
 
-  if (sign_one == POSITIVE && sign_two == POSITIVE) {
-    result_code = s21_add_util(value_1, value_2, result);
-  } else if (sign_one == NEGATIVE && sign_two == NEGATIVE) {
-    result_code = s21_add_util(value_1, value_2, result);
-  } else if (sign_one == POSITIVE && sign_two == NEGATIVE) {
-    /*printf("PN\n");*/
-    s21_set_sign(&value_2, 0);
-    /*printf("Val2:\n");*/
-    /*s21_print_bin_decimal(value_2);*/
-    if (s21_is_greater_or_equal(value_1, value_2)) { // 4 - 2 = sub(4,2) 
-      /*printf("YES, great\n");*/
-      result_code = s21_sub_util(value_1, value_2, result);
-    } else {
-      result_code = s21_sub_util(value_2, value_1, result);
+    if (sign_one == POSITIVE && sign_two == POSITIVE) {
+      result_code = s21_add_util(value_1, value_2, result);
+    } else if (sign_one == NEGATIVE && sign_two == NEGATIVE) {
+      printf("Negate");
+      s21_set_sign(&value_1, 0);
+      s21_set_sign(&value_2, 0);
+      result_code = s21_add_util(value_1, value_2, result);
       s21_set_sign(result, 1);
+      if (result_code == kCodeBig) {
+        result_code = kCodeSmall;
+      }
+    } else if (sign_one == POSITIVE && sign_two == NEGATIVE) {
+      s21_set_sign(&value_2, 0);
+      if (s21_is_greater_or_equal(value_1, value_2)) {
+        result_code = s21_sub_util(value_1, value_2, result);
+      } else {
+        result_code = s21_sub_util(value_2, value_1, result);
+        s21_set_sign(result, 1);
+      }
+      if (is_null_dec(value_1) && is_null_dec(value_2) &&
+          s21_get_decimal_scale(value_2) != 0 &&
+          s21_get_decimal_scale(value_1) == 0) {
+        s21_set_sign(result, 1);
+      }
+    } else if (sign_one == NEGATIVE && sign_two == POSITIVE) {
+      s21_set_sign(&value_1, 0);
+      if (s21_is_greater_or_equal(value_1, value_2)) {
+        result_code = s21_sub_util(value_1, value_2, result);
+        s21_set_sign(result, 1);
+        if (is_null_dec(value_1) && is_null_dec(value_2) &&
+            s21_get_decimal_scale(value_2) != 0 &&
+            s21_get_decimal_scale(value_1) == 0) {
+          s21_set_sign(result, 0);
+        }
+      } else {
+        result_code = s21_sub_util(value_2, value_1, result);
+      }
     }
-  } else if (sign_one == NEGATIVE && sign_two == POSITIVE) {
-    s21_set_sign(&value_1, 0);
-    if (s21_is_greater_or_equal(value_1, value_2)) {
-      result_code = s21_sub_util(value_1, value_2, result);
-      s21_set_decimal_scale(result, 1);
-    } else {
-      result_code = s21_sub_util(value_2, value_1, result);
-    }
-  }
-
   }
   return result_code;
 }
@@ -70,7 +77,7 @@ int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal* result) {
   } else if (sign_one == POSITIVE && sign_two == NEGATIVE) {
     result_code = s21_add_util(value_1, value_2, result);
   } else if (sign_one == NEGATIVE && sign_two == POSITIVE) {
-    result_code = s21_add_util(value_1, value_2, result);
+    result_code = s21_sub_util(value_1, value_2, result);
   }
 
   return result_code;
@@ -113,49 +120,43 @@ int s21_add_util(s21_decimal value_1, s21_decimal value_2,
   s21_decimal_to_big_decimal(*result, &big_result);
 
   s21_normalization(&big_value_1, &big_value_2);
-  /*printf("Normal:\n");*/
-  /*s21_print_bin_big_decimal(big_value_1);*/
-  /*s21_print_bin_big_decimal(big_value_2);*/
-
   s21_binary_add(big_value_1, big_value_2, &big_result);
+
   s21_print_bin_big_decimal(big_result);
+  s21_big_decimal trunc_temp = big_result;
 
   s21_big_decimal temp = big_result;
   s21_div_to_ten(&temp);
   int scale = s21_get_big_decimal_scale(big_result);
-  printf("Scale:%d\n", scale); 
-  while(s21_get_max_bit(temp) > 96 && scale > 0) {
+  scale--;
+  printf("Scale:%d\n", scale);
+  while (s21_get_max_bit(temp) >= 96 && scale > 0) {
     s21_div_to_ten(&temp);
     s21_div_to_ten(&big_result);
-    s21_print_bin_big_decimal(big_result);
     scale--;
   }
   s21_print_bin_big_decimal(big_result);
-  s21_set_scale(&big_result, scale);
+  s21_set_scale(&big_result, ++scale);
+
   if (s21_get_max_bit(big_result) >= 96 && scale > 0) {
-    printf("Okrug");
-    s21_big_decimal big_truncate_decimal = big_result;
-    /*printf("Big_trunc_dec\n");*/
-    s21_print_bin_big_decimal(big_truncate_decimal);
+    s21_big_decimal remainder;
+    s21_null_big_decimal(&remainder);
 
-    s21_big_decimal remaind;
-    s21_null_big_decimal(&remaind);
-
-    s21_big_decimal_truncate(&big_truncate_decimal);
-    s21_print_bin_big_decimal(big_truncate_decimal);
-
-    s21_normalization(&big_result, &big_truncate_decimal);
-    s21_binary_sub(big_result, big_truncate_decimal, &remaind); 
-  
     s21_print_bin_big_decimal(big_result);
+    printf("Scale:%d\n", scale);
     s21_div_to_ten(&big_result);
-    s21_print_bin_big_decimal(big_result);
-
     scale--;
     s21_set_scale(&big_result, scale);
-    s21_banck_round(&big_result, remaind);
+    s21_big_decimal temp_res = big_result;
+    s21_normalization(&trunc_temp, &temp_res);
+    printf("Normal\n");
+    printf("Scale:%d\n", s21_get_big_decimal_scale(temp_res));
+    s21_print_bin_big_decimal(temp_res);
+    s21_binary_sub(trunc_temp, temp_res, &remainder);
+    s21_set_scale(&remainder, s21_get_big_decimal_scale(trunc_temp) - scale);
+    printf("Ramdin\n");
+    s21_banck_round(&big_result, remainder);
   }
-  s21_print_bin_big_decimal(big_result);
   if (s21_get_max_bit(big_result) >= 96) {
     printf("BIG\n");
     result_code = kCodeBig;
@@ -176,52 +177,46 @@ int s21_sub_util(s21_decimal value_1, s21_decimal value_2,
   s21_decimal_to_big_decimal(*result, &big_result);
 
   s21_normalization(&big_value_1, &big_value_2);
-  /*printf("Normal:\n");*/
-  /*s21_print_bin_big_decimal(big_value_1);*/
-  /*s21_print_bin_big_decimal(big_value_2);*/
-
   s21_binary_sub(big_value_1, big_value_2, &big_result);
-  s21_print_bin_big_decimal(big_result);
 
-  s21_big_decimal temp = big_result;
+  s21_print_bin_big_decimal(big_result);
   s21_big_decimal trunc_temp = big_result;
 
+  s21_big_decimal temp = big_result;
   s21_div_to_ten(&temp);
   int scale = s21_get_big_decimal_scale(big_result);
-  printf("Scale:%d\n", scale); 
-  while(s21_get_max_bit(temp) > 96 && scale > 1) {
+  scale--;
+  printf("Scale:%d\n", scale);
+  while (s21_get_max_bit(temp) >= 96 && scale > 0) {
     s21_div_to_ten(&temp);
-    printf("%d\n", s21_get_max_bit(temp));
     s21_div_to_ten(&big_result);
-    s21_print_bin_big_decimal(big_result);
     scale--;
   }
   s21_print_bin_big_decimal(big_result);
-  s21_set_scale(&big_result, scale);
+  s21_set_scale(&big_result, ++scale);
+
   if (s21_get_max_bit(big_result) >= 96 && scale > 0) {
-    printf("Okrug");
-    s21_big_decimal big_truncate_decimal = big_result;
-    /*printf("Big_trunc_dec\n");*/
-    s21_print_bin_big_decimal(big_truncate_decimal);
+    s21_big_decimal remainder;
+    s21_null_big_decimal(&remainder);
 
-    s21_big_decimal remaind;
-    s21_null_big_decimal(&remaind);
-
-    s21_big_decimal_truncate(&big_truncate_decimal);
-    s21_print_bin_big_decimal(big_truncate_decimal);
-
-    s21_normalization(&trunc_temp, &big_truncate_decimal);
-    s21_binary_sub(trunc_temp, big_truncate_decimal, &remaind); 
-  
     s21_print_bin_big_decimal(big_result);
+    printf("Scale:%d\n", scale);
     s21_div_to_ten(&big_result);
-    s21_print_bin_big_decimal(big_result);
-
     scale--;
     s21_set_scale(&big_result, scale);
-    s21_banck_round(&big_result, remaind);
+    s21_big_decimal temp_res = big_result;
+    s21_normalization(&trunc_temp, &temp_res);
+    printf("Normal\n");
+    printf("Scale:%d\n", s21_get_big_decimal_scale(temp_res));
+    s21_print_bin_big_decimal(temp_res);
+    s21_binary_sub(trunc_temp, temp_res, &remainder);
+    s21_set_scale(&remainder, s21_get_big_decimal_scale(trunc_temp) - scale);
+    printf("Ramdin\n");
+    s21_banck_round(&big_result, remainder);
   }
-  s21_print_bin_big_decimal(big_result);
+
+  // s21_print_bin_big_decimal(big_result);
+  printf("Max:%d\n", s21_get_max_bit(big_result));
   if (s21_get_max_bit(big_result) >= 96) {
     printf("BIG\n");
     result_code = kCodeBig;
@@ -300,8 +295,6 @@ int s21_mul_util(s21_decimal value_1, s21_decimal value_2,
 
 int s21_div_util(s21_decimal value_1, s21_decimal value_2,
                  s21_decimal* result) {}
-
-
 
 void s21_normalization(s21_big_decimal* num_one, s21_big_decimal* num_two) {
   int scale_one = s21_get_big_decimal_scale(*num_one);
