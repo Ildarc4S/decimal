@@ -56,6 +56,10 @@ test_compare: clean $(CFILES)
 test_floor: clean $(CFILES)
 	$(CC) tests/s21_decimal_test_floor.c tests/_helpers/_get_sign.c tests/other/test_floor.c tests/_helpers/_decimal_is_full_equal.c $(CFILES) $(CHECK_FLAGS) -o test_compare
 	./test_compare
+	
+test_round: clean $(CFILES)
+	$(CC) tests/s21_decimal_test_round.c tests/_helpers/_get_sign.c tests/other/test_round.c tests/_helpers/_decimal_is_full_equal.c $(CFILES) $(CHECK_FLAGS) -o test_round
+	./test_round
 
 
 test_add_main: clean $(CFILES) 
