@@ -8,7 +8,6 @@ int main(void) {
     SRunner *sr;
 
     sr = srunner_create(NULL);
-    //  srunner_add_suite(sr, div_suite0());
     srunner_add_suite(sr, div_suite1());
     srunner_add_suite(sr, div_suite2());
     srunner_add_suite(sr, div_suite3());
