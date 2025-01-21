@@ -50,7 +50,7 @@ void s21_single_decimal(s21_decimal* num) {
   for (int i = 0; i < DECIMAL_LENGTH; i++) {
     num->bits[i] = 0;
   }
-  num->bits[2] = 1;
+  num->bits[0] = 1;
 }
 
 int s21_is_null(s21_big_decimal num) {
