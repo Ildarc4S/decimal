@@ -2,15 +2,16 @@ CC = gcc
 FLAGS = -Wall -Werror -Wextra -std=c11
 GCOV_FLAGS = --coverage
 CHECK_FLAGS = -lcheck -lm -lsubunit
-UT_FUN_PATH = s21_utils/
-CFILES = s21_arithmetic_operators.c $(UT_FUN_PATH)s21_auxiliary_fncs.c $(UT_FUN_PATH)s21_binary_operations.c s21_comparison.c s21_other_fncs.c $(UT_FUN_PATH)s21_shift.c s21_!sundaeka_main.c
-OBJS = $(CFILES:.c=.o)
+CFILES = src/*
 
+OBJS = $(CFILES:.c=.o)
 
 TEST_FILE = s21_arithmetic_operators.c
 LIB_FILE = s21_decimal.a
 
 FILES_REPORT = *.gcno *.gcda gcov_test coverage.info gcov_test_lcov report_gcov report_lcov
+RM_FILES = test_add test_mul test_sub test_div
+RM_MAIN_FILES = test_add_main test_mul_main test_sub_main test_div_main
 
 all: $(LIB_FILE)
 
@@ -24,9 +25,38 @@ test: $(LIB_FILE)
 	$(CC) $(FLAGS) $(TEST_FILE) -L. $(LIB_FILE) $(CHECK_FLAGS) -o test
 	./test
 
-t_mul:
-	gcc main.c arithmetic.c binary_arithmetic.c binary_operators.c compare.c converter.c round.c ten_functions.c utils.c -lcheck -lsubunit -lm
-	./a.out
+test_add: clean $(CFILES)
+	$(CC) tests/s21_decimal_test_add.c  tests/arithmetic/test_add.c $(CFILES) $(CHECK_FLAGS) -o test_add
+	./test_add
+
+test_sub: clean $(CFILES)
+	$(CC) tests/s21_decimal_test_sub.c  tests/arithmetic/test_sub.c $(CFILES) $(CHECK_FLAGS) -o test_sub
+	./test_sub
+	
+test_mul: clean $(CFILES)
+	$(CC) tests/s21_decimal_test_mul.c  tests/arithmetic/test_mul.c $(CFILES) $(CHECK_FLAGS) -o test_mul
+	./test_mul
+
+test_div: clean $(CFILES)
+	$(CC) tests/s21_decimal_test_div.c  tests/arithmetic/test_div.c $(CFILES) $(CHECK_FLAGS) -o test_div
+	./test_div
+
+test_add_main: clean $(CFILES) 
+	$(CC) tests/s21_decimal_test_add_main.c $(CFILES) $(CHECK_FLAGS) -o test_add_main
+	./test_add_main
+
+test_sub_main: clean $(CFILES)
+	$(CC) tests/s21_decimal_test_sub_main.c $(CFILES) $(CHECK_FLAGS) -o test_sub_main
+	./test_sub_main
+	
+test_mul_main: clean $(CFILES)
+	$(CC) tests/s21_decimal_test_mul_main.c  $(CFILES) $(CHECK_FLAGS) -o test_mul_main
+	./test_mul_main
+
+test_div_main: clang clean $(CFILES)
+	$(CC) tests/s21_decimal_test_div_main.c  $(CFILES) $(CHECK_FLAGS) -o test_div_main
+	./test_div_main
+
 
 
 gcov_report:
@@ -49,8 +79,8 @@ $(LIB_FILE): $(OBJS)
 	$(CC) $(FLAGS) -c $< -o $@
 
 clean: 
-	rm -rf *.o *.a report $(FILES_REPORT) s21_decimal s21_utility_fncs/*.o s21_utility_fncs/*.a 
+	rm -rf *.o *.a report $(FILES_REPORT) s21_decimal $(RM_FILES) $(RM_MAIN_FILES) 
 #  test
 
 clang:
-	clang-format -i *.h *.c
+	clang-format -i include/*.h src/*.c

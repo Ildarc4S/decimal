@@ -83,29 +83,50 @@ void s21_binary_div(s21_big_decimal dividend, s21_big_decimal divider,
     s21_binary_sub(dividend, divider, &chos);
   } else {
     s21_binary_sub(divider, dividend, &chos);
-    chos.bits[6] |= HEAD_ONE;
+    chos.bits[6] |= HEAD_ONE;  // изменение знака бдецимала
   }
 
-  s21_print_bin_big_decimal(chos);
+  // s21_print_bin_big_decimal(chos);
+  s21_big_decimal null = {{0, 0, 0, 0, 0, 0, 0}};
+  // printf("%d-----\n\n\n\n\n", !(chos.bits[6] & HEAD_ONE));
 
   while (divider_shift >= 0) {
     // записываем 0 или 1 в результат частного
-    res_index++;
-	      s21_bin_shift_left_one(res);
-		  s21_print_bin_big_decimal(*res);
-    if (!(chos.bits[6] & (HEAD_ONE))) {  // если остаток отриц.
-	printf("AAAAA\n");
+    // res_index++;
+    s21_bin_shift_left_one(res);
+    // s21_print_bin_big_decimal(*res);
+    if (!!(chos.bits[6] & HEAD_ONE)) {  // если остаток отриц.
+      // printf("%d\n", !(chos.bits[6] & HEAD_ONE));
       res->bits[0] |= 1;
     }
-	  //   s21_print_bin_big_decimal(*res);
+    //   s21_print_bin_big_decimal(*res);
 
     s21_bin_shift_left_one(&chos);
-    if (!(chos.bits[6] & (HEAD_ONE))) {  // если остаток полож.
-      s21_binary_add(divider, chos, &chos);
-      chos.bits[6] |= HEAD_ONE;
-    } else {
-      chos.bits[6] &= 0;  // 0 << 31
+    resss = s21_big_sravnivatel(chos, null);
+    s21_big_decimal temp_chos = chos, temp_divider = divider;
+    temp_chos.bits[6] |= HEAD_ONE;  // модули
+    temp_divider.bits[6] |= HEAD_ONE;
+
+    int resss1 = s21_big_sravnivatel(temp_chos, temp_divider);
+    if (!!(chos.bits[6] &
+           HEAD_ONE)) {  // если остаток отриц. -> прибавляем делитель
       s21_binary_add(chos, divider, &chos);
+      if (!(divider.bits[6] & HEAD_ONE)) {  // если divider полож.
+        printf("A -\n");
+        if (resss1 == -1) {
+          printf("B -\n");
+          chos.bits[6] &= (~(HEAD_ONE));
+        }
+      }
+    } else {  // если остаток полож. -> вычитаем делитель
+      s21_binary_sub(chos, divider, &chos);
+      if (!(divider.bits[6] & HEAD_ONE)) {  // если divider полож.
+        printf("C +\n");
+        if (resss1 == -1) {
+          printf("D +\n");
+          chos.bits[6] |= HEAD_ONE;
+        }
+      }
     }
     divider_shift--;
   }

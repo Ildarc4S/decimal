@@ -1,4 +1,5 @@
-#include "../include/s21_decimal.h"
+#include "./../include/s21_decimal.h"
+#include "./test.h"
 
 /**
  * @author majorswe arniefle sundaeka
