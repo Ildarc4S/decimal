@@ -7,9 +7,10 @@ int main(void) {
     // -7922816251426433759354395033
     s21_decimal decimal_check = {{0x99999999, 0x99999999, 0x19999999, 0x80000000}};
     s21_decimal result = {{0, 0, 0, 0}};
-
-    s21_truncate(decimal, &result);
+    s21_big_decimal big_value;
+    s21_decimal_to_big_decimal(decimal, &big_value);
+    s21_div_to_ten(&big_value);
     s21_print_bin_decimal(result);
-    s21_print_bin_decimal(decimal_check);
+    s21_print_bin_big_decimal(big_value);
   return 0;
 }
