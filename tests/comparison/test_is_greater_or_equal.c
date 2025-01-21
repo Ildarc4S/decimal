@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include "./../../s21_decimal.h"
+#include "./../../include/s21_decimal.h"
 #include "./../test.h"
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *

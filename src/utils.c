@@ -18,8 +18,7 @@ void s21_decimal_to_big_decimal(s21_decimal num, s21_big_decimal* result) {
   for (int i = 0; i < DECIMAL_LENGTH - 1; i++) {
     result->bits[i] = num.bits[i];  // & mask;
   }
-  result->bits[BIG_DECIMAL_LENGTH - 1] =
-      num.bits[DECIMAL_LENGTH - 1];  // & mask;
+  result->bits[BIG_DECIMAL_LENGTH - 1] = num.bits[DECIMAL_LENGTH - 1];  // & mask;
 }
 
 void s21_big_decimal_to_decimal(s21_big_decimal num, s21_decimal* result) {
@@ -27,7 +26,6 @@ void s21_big_decimal_to_decimal(s21_big_decimal num, s21_decimal* result) {
   for (int i = 0; i < DECIMAL_LENGTH; i++) {
     result->bits[i] = 0;
   }
-  // int mask = 0xffffffff;
   for (int i = 0; i < DECIMAL_LENGTH - 1; i++) {
     result->bits[i] = num.bits[i];  // & mask;
   }
@@ -140,7 +138,7 @@ void s21_set_bit(s21_decimal* num, int bit, int value) {
 int s21_negate(s21_decimal value, s21_decimal* result) {
   value.bits[DECIMAL_LENGTH - 1] ^= (1U << 31);
   *result = value;
-  return 1;
+  return 0;
 }
 
 void s21_del_zero(s21_big_decimal* num) {}

@@ -9,10 +9,23 @@ void s21_mul_to_ten(s21_big_decimal* num) {
 }
 
 // Fix return result
-int s21_div_to_ten(s21_big_decimal* num) {
-  s21_big_decimal big_ten_decimal = {{10, 0, 0, 0, 0, 0}};
-  s21_big_decimal temp = *num;
-  s21_set_scale(&temp, 0);
-  s21_binary_div(temp, big_ten_decimal, num);
-  return 0;
+/*int s21_div_to_ten(s21_big_decimal* num) {*/
+  /*s21_big_decimal big_ten_decimal = {{10, 0, 0, 0, 0, 0}};*/
+  /*s21_big_decimal temp = *num;*/
+  /*s21_print_bin_big_decimal(temp);*/
+  /*s21_set_scale(&temp, 0);*/
+  /*s21_print_bin_big_decimal(temp);*/
+  /*s21_binary_div(temp, big_ten_decimal, num);*/
+    /*printf("TEMP:\n");*/
+  /*s21_print_bin_big_decimal(*num);*/
+  /*return 0;*/
+/*}*/
+
+void s21_div_to_ten(s21_big_decimal* num) {
+  unsigned long long remainder = 0;
+  for (int i = 5; i >= 0; i--) {
+    unsigned long value = (remainder << 32) + num->bits[i];
+    num->bits[i] = (value / 10);
+    remainder = value % 10;
+  }
 }

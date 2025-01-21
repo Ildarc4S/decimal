@@ -3,7 +3,7 @@
 
 int test_decimal_is_full_equal(s21_decimal value_1, s21_decimal value_2) {
     union {
-        struct s21_decimal d;
+        s21_decimal d;
         struct {
             uint32_t part0;
             uint32_t part1;
@@ -13,7 +13,7 @@ int test_decimal_is_full_equal(s21_decimal value_1, s21_decimal value_2) {
     } decimal_bytes1;
 
     union {
-        struct s21_decimal d;
+        s21_decimal d;
         struct {
             uint32_t part0;
             uint32_t part1;
