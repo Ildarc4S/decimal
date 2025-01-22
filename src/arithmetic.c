@@ -127,29 +127,46 @@ int s21_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal* result) {
  *
  */
 int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal* result) {
-  //   *result = s21_dec_init();
-  //   s21_big_decimal value_1 s21_decimal_to_big_decimal();
-  //   s21_big_decimal bdivider = s21_dec_bdec_convers(dividend);
-  //   s21_big_decimal bres = s21_dec_bdec_convers(*res);
+  S21ArithmeticResultCode result_code = kCodeOK;
 
-  //   int er_code = OK;
-  //   if (s21_is_equal(divider, *res)) {
-  //     er_code = DIV_ON_ZERO;
-  //   }
-  //   //  else if () {
-  //   //   er_code = DEC_IS_SMALL;
-  //   // }
-  //   // else if (1) {
-  //   //   er_code = DEC_IS_BIG;
-  //   // }
-  //   if (er_code != OK) {
-  //     return er_code;
-  //   }
+  int sign_one = s21_get_sign(value_1);
+  int sign_two = s21_get_sign(value_2);
+  int scale = s21_get_decimal_scale(*result);
 
-  //   s21_bin_div(bdividend, bdivider, bres);
-  //   // функция валидности bres'а
-  //   *res = s21_bdec_dec_convers(bres);
-  //   return er_code;
+  result_code = s21_div_util(value_1, value_2, result);
+  if (result_code != kCodeOK) {
+    return result_code;
+  }
+  s21_print_bin_decimal(*result);
+
+  return result_code;
+}
+
+int s21_div_util(s21_decimal value_1, s21_decimal value_2,
+                 s21_decimal* result) {
+  S21ArithmeticResultCode result_code = kCodeOK;
+  s21_big_decimal big_value_1, big_value_2, big_result;
+  s21_decimal_to_big_decimal(value_1, &big_value_1);
+  s21_decimal_to_big_decimal(value_2, &big_value_2);
+  s21_decimal_to_big_decimal(*result, &big_result);
+  s21_normalization(&big_value_1, &big_value_2);
+
+  s21_binary_div(big_value_1, big_value_2, &big_result);
+
+  while (s21_get_max_bit(big_result) >= 96 &&
+         s21_get_big_decimal_scale(big_result) > 0) {
+    s21_div_to_ten(&big_value_1);
+  }
+
+  if (s21_get_max_bit(big_result) >= 96) {
+    result_code = kCodeBig;
+  }
+  if (result_code == kCodeBig && s21_get_sign(*result) == 1) {
+    result_code = kCodeSmall;
+  }
+  s21_big_decimal_to_decimal(big_result, result);
+
+  return result_code;
 }
 
 /**
@@ -296,11 +313,6 @@ int s21_mul_util(s21_decimal value_1, s21_decimal value_2,
 
   return result_code;
 }
-
-int s21_div_util(s21_decimal value_1, s21_decimal value_2,
-                 s21_decimal* result) {}
-//   S21ArithmeticResultCode result_code = kCodeOK;
-//   s21_big_decimal big_value_1, big_value_2, big_result;
 
 void s21_normalization(s21_big_decimal* num_one, s21_big_decimal* num_two) {
   int scale_one = s21_get_big_decimal_scale(*num_one);
