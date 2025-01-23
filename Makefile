@@ -53,6 +53,14 @@ test_compare: clean $(CFILES)
 	$(CC) tests/s21_decimal_test_compare.c tests/_helpers/_get_sign.c tests/comparison/*  tests/_helpers/_decimal_is_full_equal.c $(CFILES) $(CHECK_FLAGS) -o test_compare
 	./test_compare
 
+test_floor: clean $(CFILES)
+	$(CC) tests/s21_decimal_test_floor.c tests/_helpers/_get_sign.c tests/other/test_floor.c tests/_helpers/_decimal_is_full_equal.c $(CFILES) $(CHECK_FLAGS) -o test_compare
+	./test_compare
+	
+test_round: clean $(CFILES)
+	$(CC) tests/s21_decimal_test_round.c tests/_helpers/_get_sign.c tests/other/test_round.c tests/_helpers/_decimal_is_full_equal.c $(CFILES) $(CHECK_FLAGS) -o test_round
+	./test_round
+
 
 test_add_main: clean $(CFILES) 
 	$(CC) main_files/s21_decimal_test_add_main.c $(CFILES) $(CHECK_FLAGS) -o test_add_main
@@ -77,6 +85,11 @@ test_negate_main: clean $(CFILES)
 test_truncate_main: clean $(CFILES)
 	$(CC) main_files/s21_decimal_test_truncate_main.c tests/_helpers/_get_sign.c tests/_helpers/_debug.c tests/other/test_truncate.c tests/_helpers/_decimal_is_full_equal.c $(CFILES) $(CHECK_FLAGS) -o test_truncate
 	./test_truncate
+
+test_floor_main: clean $(CFILES)
+	$(CC) main_files/s21_decimal_test_floor_main.c tests/_helpers/_get_sign.c tests/_helpers/_debug.c tests/other/test_floor.c tests/_helpers/_decimal_is_full_equal.c $(CFILES) $(CHECK_FLAGS) -o test_floor_main
+	./test_floor_main
+
 
 gcov_report:
 	$(CC) $(FLAGS) $(TEST_FILE) $(CFILES) $(CHECK_FLAGS) $(GCOV_FLAGS) -o gcov_test
