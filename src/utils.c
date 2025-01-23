@@ -22,15 +22,14 @@ void s21_decimal_to_big_decimal(s21_decimal num, s21_big_decimal* result) {
 }
 
 void s21_big_decimal_to_decimal(s21_big_decimal num, s21_decimal* result) {
-  int big_decimal_len = s21_get_max_bit(num);
   for (int i = 0; i < DECIMAL_LENGTH; i++) {
     result->bits[i] = 0;
   }
   for (int i = 0; i < DECIMAL_LENGTH - 1; i++) {
-    result->bits[i] = num.bits[i];  // & mask;
+    result->bits[i] = num.bits[i] & 0xffffffff;
   }
   result->bits[DECIMAL_LENGTH - 1] =
-      num.bits[BIG_DECIMAL_LENGTH - 1];  // & mask;
+      num.bits[BIG_DECIMAL_LENGTH - 1] & 0xffffffff;
   /*s21_print_bin_decimal(*result);*/
 }
 
