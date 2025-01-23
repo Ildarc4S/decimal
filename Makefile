@@ -54,7 +54,7 @@ test_mul_main: clean $(CFILES)
 	./test_mul_main
 
 test_div_main: clang clean $(CFILES)
-	$(CC) -g main_files/s21_decimal_test_div_main.c  $(CFILES) $(CHECK_FLAGS) -o zzx
+	$(CC) -g main_files/s21_decimal_test_div_main.c $(CFILES) $(CHECK_FLAGS) -o zzx
 	./zzx
 
 

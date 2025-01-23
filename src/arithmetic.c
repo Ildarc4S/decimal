@@ -137,7 +137,7 @@ int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal* result) {
   if (result_code != kCodeOK) {
     return result_code;
   }
-  s21_print_bin_decimal(*result);
+  // s21_print_bin_decimal(*result);
 
   return result_code;
 }
