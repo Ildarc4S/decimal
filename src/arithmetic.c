@@ -101,14 +101,28 @@ int s21_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal* result) {
     result_code = s21_mul_util(value_1, value_2, result);
   } else if (sign_one == NEGATIVE &&
              sign_two == NEGATIVE) {  // -3-(-2) = -3 + 2 = -1
+    s21_set_sign(&value_1, 0);
+    s21_set_sign(&value_2, 0);
     result_code = s21_mul_util(value_1, value_2, result);
   } else if (sign_one == POSITIVE && sign_two == NEGATIVE) {
+    s21_set_sign(&value_2, 0);
     result_code = s21_mul_util(value_1, value_2, result);
     s21_set_sign(result, 1);
   } else if (sign_one == NEGATIVE && sign_two == POSITIVE) {
+    s21_set_sign(&value_1, 0);
     result_code = s21_mul_util(value_1, value_2, result);
     s21_set_sign(result, 1);
   }
+  if (result_code == kCodeBig && s21_get_sign(*result) == 1) {
+    result_code = kCodeSmall;
+  }
+
+  s21_decimal zero;
+  s21_null_decimal(&zero);
+  if (result_code == kCodeOK && s21_is_not_equal(value_1, zero) &&
+            s21_is_not_equal(value_2, zero) && s21_is_equal(*result, zero)) {
+            result_code = kCodeSmall;
+   }
 
   return result_code;
 }
@@ -217,23 +231,72 @@ int s21_mul_util(s21_decimal value_1, s21_decimal value_2,
 
   s21_decimal_to_big_decimal(value_1, &big_value_1);
   s21_decimal_to_big_decimal(value_2, &big_value_2);
+  
+  s21_big_decimal big_result;
+  s21_null_big_decimal(&big_result);
+  
+  int scale_first = s21_get_decimal_scale(value_1);
+  int scale_second = s21_get_decimal_scale(value_2);
+  scale_first = scale_first + scale_second;
 
-  s21_normalization(&big_value_1, &big_value_2);
-  s21_binary_mul(big_value_1, big_value_2, &big_value_1);
+  s21_binary_mul(big_value_1, big_value_2, &big_result);
+  s21_set_scale(&big_result, scale_first);
 
-  while (s21_get_max_bit(big_value_1) >= 96 &&
-         s21_get_big_decimal_scale(big_value_1) > 0) {
-    s21_div_to_ten(&big_value_1);
+  s21_print_bin_big_decimal(big_result);
+
+  s21_big_decimal trunc_temp = big_result;
+
+  s21_big_decimal temp = big_result;
+  s21_div_to_ten(&temp);
+  int scale = s21_get_big_decimal_scale(big_result);
+  scale--;
+
+  int flag = 0;
+  while ((s21_get_max_bit(temp) >= 96 && scale > 0) || scale > 28) {
+    if (s21_get_max_bit(temp) < 96) {
+      flag = 1;
+    }
+    s21_div_to_ten(&temp);
+    s21_div_to_ten(&big_result);
+    scale--;
   }
 
-  if (s21_get_max_bit(big_value_1) >= 96) {
+  s21_print_bin_big_decimal(big_result);
+
+  s21_set_scale(&big_result, ++scale);
+  
+  // 
+  if ((s21_get_max_bit(big_result) >= 96 && scale > 0) || scale > 28) {
+    s21_big_decimal remainder;
+    s21_null_big_decimal(&remainder);
+    s21_div_to_ten(&big_result);
+    scale--;
+    s21_set_scale(&big_result, scale);
+
+    s21_print_bin_big_decimal(big_result);
+
+    s21_big_decimal temp_res = big_result;
+
+    s21_normalization(&trunc_temp, &temp_res);
+    s21_binary_sub(trunc_temp, temp_res, &remainder);
+
+    s21_print_bin_big_decimal(remainder);
+
+
+    s21_set_scale(&remainder, s21_get_big_decimal_scale(trunc_temp) - scale);
+    s21_banck_round(&big_result, remainder);
+    s21_print_bin_big_decimal(big_result);
+  }
+
+  if (s21_get_max_bit(big_result) >= 96) {
     result_code = kCodeBig;
   }
 
-  s21_big_decimal_to_decimal(big_value_1, result);
+  s21_big_decimal_to_decimal(big_result, result);
 
   return result_code;
 }
+
 int s21_div_util(s21_decimal value_1, s21_decimal value_2,
                  s21_decimal* result) {}
 
