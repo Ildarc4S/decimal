@@ -82,6 +82,9 @@ int s21_get_decimal_scale(s21_decimal num) {
   return res;
 }
 
+
+
+
 int s21_get_max_bit(s21_big_decimal num) {
   int result = -1;
   for (int i = BIG_DECIMAL_LENGTH - 2; i >= 0 && result == -1; i--) {

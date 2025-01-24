@@ -90,6 +90,11 @@ gcov_report_lcov:
 	lcov --capture --directory . --output-file coverage.info --rc branch_coverage=1
 	genhtml --branch-coverage coverage.info --output-directory report_lcov
 
+
+test_decimal_to_float_main: clean $(CFILES)
+	$(CC) main_files/s21_decimal_test_from_decimal_to_float_main.c tests/_helpers/_get_sign.c tests/_helpers/_debug.c tests/_helpers/_decimal_is_full_equal.c $(CFILES) $(CHECK_FLAGS) -o test_decimal_to_float_main 
+	./test_decimal_to_float_main
+
 $(LIB_FILE): $(OBJS)
 	ar rcs $@ $^
 	ranlib $@
