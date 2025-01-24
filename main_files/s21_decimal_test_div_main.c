@@ -16,10 +16,13 @@ int main() {
   // s21_decimal num_1 = {{16423, 0, 0, 0}};
   // s21_decimal num_2 = {{167, 0, 0, 0}};
 
-  // -626656361.06935169033698303587
-  s21_decimal decimal1 = {{0xD8705E63, 0x5DC32547, 0xCA7BCC9C, 0x80140000}};
-  // -3656273013.5441854660747245473
-  s21_decimal decimal2 = {{0x3C2CB7A1, 0x3E0B91AF, 0x7623FB44, 0x80130000}};
+  // // -626656361.06935169033698303587
+  // s21_decimal decimal1 = {{0xD8705E63, 0x5DC32547, 0xCA7BCC9C, 0x80140000}};
+  // // -3656273013.5441854660747245473
+  // s21_decimal decimal2 = {{0x3C2CB7A1, 0x3E0B91AF, 0x7623FB44, 0x80130000}};
+
+  s21_decimal decimal1 = {{123456, 0, 0, 0}};
+  s21_decimal decimal2 = {{2345678, 0, 0, 0}};
 
   // s21_print_bin_decimal(num_1);
   // s21_print_bin_decimal(num_2);

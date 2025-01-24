@@ -77,83 +77,86 @@ void s21_binary_mul(s21_big_decimal num_one, s21_big_decimal num_two,
 
 void s21_binary_div(s21_big_decimal dividend, s21_big_decimal divider,
                     s21_big_decimal* res) {
+  s21_print_bin_big_decimal(dividend);
+  int divider_shift = s21_get_max_bit(dividend) - s21_get_max_bit(divider);
+  printf("%d\n", divider_shift);
+  int tr = 0;
+  if (divider_shift >= 0) {
+    s21_bin_shift_left(&divider, divider_shift);
+    tr = 1;
+  } else if (divider_shift < 0) {  // умножить на 10
+    for (int i = divider_shift; i < 0; i++) {
+      s21_mul_to_ten(&dividend);
+    }
+    tr = 2;
+  }
+  s21_print_bin_big_decimal(dividend);
+
   s21_big_decimal p_remainder, temp_dividend = dividend, temp_divider = divider;
   s21_set_big_dec_sign(&temp_dividend, 0);  // модуль
   s21_set_big_dec_sign(&temp_divider, 0);   // модуль
-
-  int divider_shift = s21_get_max_bit(dividend) - s21_get_max_bit(divider),
-      enter = 1, ddcomp = s21_big_sravnivatel(temp_dividend, temp_divider);
   int temp_divider_shift = divider_shift;
+  int enter = 1, ddcomp = s21_big_sravnivatel(temp_dividend, temp_divider);
 
   s21_null_big_decimal(&p_remainder);
   s21_null_big_decimal(res);
-  s21_bin_shift_left(&divider, divider_shift);
 
-  if (ddcomp == -1) {
-    enter = 0;
-    p_remainder = dividend;
-  } else if (ddcomp == 0) {
-    set_one_in_res(p_remainder, res);
-    if (s21_get_big_decimal_sign(dividend) +
-            s21_get_big_decimal_sign(divider) ==
-        1) {
-      s21_set_big_dec_sign(res, 1);  // меняем если хотя бы одна единичка
-    }
-    // установка того же знака что и в делителе или делимом
-    enter = 0;
-  } else if (ddcomp == 1) {  // это уже если делим
-    ddcomp = s21_big_sravnivatel(dividend, divider);
-    if (ddcomp == 1 || ddcomp == 0) {
-      s21_binary_sub(dividend, divider, &p_remainder);
-    } else {
-      s21_binary_sub(divider, dividend, &p_remainder);
-      s21_set_big_dec_sign(&p_remainder, 1);  // изменение знака бдецимала
-    }
+  if (ddcomp == 1 || ddcomp == 0) {
+    s21_binary_sub(dividend, divider, &p_remainder);
+  } else {
+    s21_binary_sub(divider, dividend, &p_remainder);
   }
-  // printf("%d", ddcomp);
-  if (enter) {
-    set_one_in_res(p_remainder,
-                   res);  // запись 1 в рез при положительном остатке
-    while (divider_shift > 0) {
-      // записываем 0 или 1 в результат частного
-      s21_bin_shift_left_one(&p_remainder);
-      p_remainder.bits[0] &= (~(1 << (s21_get_max_bit(p_remainder) + 1)));
+  // s21_print_bin_big_decimal(*res);
+  // printf("%d", divider_shift);
+  set_one_in_res(p_remainder,
+                 res);  // запись 1 в рез при положительном остатке
+  // s21_print_bin_big_decimal(*res);
+  while (divider_shift != 0) {
+    s21_print_bin_big_decimal(p_remainder);
+    printf("%d\n", s21_get_big_decimal_sign(p_remainder));
+    // записываем 0 или 1 в результат частного
+    s21_bin_shift_left_one(&p_remainder);
+    p_remainder.bits[0] &= (~(1 << (s21_get_max_bit(p_remainder) + 1)));
 
-      s21_big_decimal temp_p_remainder = p_remainder;
-      s21_set_big_dec_sign(&temp_p_remainder, 0);  // модуль
-      s21_set_big_dec_sign(&temp_divider, 0);      // модуль
+    s21_big_decimal temp_p_remainder = p_remainder;
+    s21_set_big_dec_sign(&temp_p_remainder, 0);  // модуль
+    s21_set_big_dec_sign(&temp_divider, 0);      // модуль
 
-      int p_rdcomp = s21_big_sravnivatel(temp_p_remainder, temp_divider);
-      if (s21_get_big_decimal_sign(
-              p_remainder)) {  // если остаток отриц. -> прибавляем делитель
-        if (!s21_get_big_decimal_sign(divider)) {  // если divider полож.
-          if (p_rdcomp == -1) {
-            sub_and_set(divider, &p_remainder, 0, 1);
-          } else {
-            sub_and_set(divider, &p_remainder, 1, 0);
-          }
-        } else {  // если divider отриц.
-          s21_binary_add(p_remainder, divider, &p_remainder);
+    int p_rdcomp = s21_big_sravnivatel(temp_p_remainder, temp_divider);
+    if (s21_get_big_decimal_sign(
+            p_remainder)) {  // если остаток отриц. -> прибавляем делитель
+      if (!s21_get_big_decimal_sign(divider)) {  // если divider полож.
+        if (p_rdcomp == -1) {
+          sub_and_set(divider, &p_remainder, 0, 1);
+        } else {
+          sub_and_set(divider, &p_remainder, 1, 0);
         }
-      } else {  // если остаток полож. -> вычитаем делитель
-        if (!s21_get_big_decimal_sign(divider)) {  // если divider полож.
-          if (p_rdcomp == -1) {
-            sub_and_set(divider, &p_remainder, 1, 1);
-          } else {
-            sub_and_set(divider, &p_remainder, 2, 0);
-          }
-        } else {  // если divider отриц.
-          if (p_rdcomp == -1) {
-            sub_and_set(divider, &p_remainder, 1, 1);
-          }
+      } else {  // если divider отриц.
+        s21_binary_add(p_remainder, divider, &p_remainder);
+      }
+    } else {  // если остаток полож. -> вычитаем делитель
+      if (!s21_get_big_decimal_sign(divider)) {  // если divider полож.
+        if (p_rdcomp == -1) {
+          sub_and_set(divider, &p_remainder, 1, 1);
+        } else {
           sub_and_set(divider, &p_remainder, 2, 0);
         }
+      } else {  // если divider отриц.
+        if (p_rdcomp == -1) {
+          sub_and_set(divider, &p_remainder, 1, 1);
+        }
+        sub_and_set(divider, &p_remainder, 2, 0);
       }
-      s21_bin_shift_left_one(res);
-      set_one_in_res(p_remainder, res);
+    }
+    s21_bin_shift_left_one(res);
+    set_one_in_res(p_remainder, res);
+    if (tr == 1) {
       divider_shift--;
+    } else if (tr == 2) {
+      divider_shift++;
     }
   }
+
   // printf("СТАРЫЙ ОСТАТОК -v-\n");
   // s21_print_bin_decimal(p_remainder);
   s21_binary_add(p_remainder, divider, &p_remainder);

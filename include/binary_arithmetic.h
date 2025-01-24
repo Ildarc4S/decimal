@@ -2,6 +2,7 @@
 #define BINARY_ARITHMETIC_H
 #include "binary_operators.h"
 #include "compare.h"
+#include "ten_functions.h"
 #include "type.h"
 #include "utils.h"
 
