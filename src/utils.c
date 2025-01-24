@@ -175,8 +175,9 @@ void s21_print_bin_big_decimal(s21_big_decimal num) {
     s21_print_bin_num(num.bits[i], 31);
     printf("\n");
   }
+
   for (int i = 6; i >= 0; i--) {
     s21_print_bin_num(num.bits[i], 31);
   }
-  printf("\n");
+  printf("\n\n");
 }
