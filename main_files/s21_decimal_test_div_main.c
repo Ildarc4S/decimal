@@ -4,10 +4,10 @@
 int main(void) {
     // 79228162514264337593543950335
     s21_decimal decimal1 = {{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x0}};
-    // 79228162514264337593543950334
-    s21_decimal decimal2 = {{0xFFFFFFFE, 0xFFFFFFFF, 0xFFFFFFFF, 0x0}};
-    // 1
-    s21_decimal decimal_check = {{0x1, 0x0, 0x0, 0x0}};
+    // 39614081257132168796771975168
+    s21_decimal decimal2 = {{0x0, 0x0, 0x80000000, 0x0}};
+    // 2
+    s21_decimal decimal_check = {{0x2, 0x0, 0x0, 0x0}};
     s21_decimal result = {{0x0, 0x0, 0x0, 0x0}};
 
   s21_div(decimal1, decimal2, &result);

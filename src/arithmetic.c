@@ -333,8 +333,6 @@ int s21_div_util(s21_decimal value_1, s21_decimal value_2,
   if (value_2.bits[0] == 0 && value_2.bits[1] == 0 && value_2.bits[2] == 0) {
     return kCodeZerroDiv;
   }
-  // s21_set_decimal_scale(&value_1, 0);
-  // s21_set_decimal_scale(&value_2, 0);
 
   value_1.bits[3] = 0;
   value_2.bits[3] = 0;
@@ -346,6 +344,56 @@ int s21_div_util(s21_decimal value_1, s21_decimal value_2,
   s21_null_big_decimal(&big_result);
 
   s21_binary_div(big_value_1, big_value_2, &big_result);
+
+  s21_print_bin_big_decimal(big_result);
+
+  s21_big_decimal trunc_temp = big_result;
+
+  s21_big_decimal temp = big_result;
+  s21_div_to_ten(&temp);
+  int scale = s21_get_big_decimal_scale(big_result);
+  scale--;
+
+  int flag = 0;
+  while ((s21_get_max_bit(temp) >= 96 && scale > 0) || scale > 28) {
+    if (s21_get_max_bit(temp) < 96) {
+      flag = 1;
+    }
+    s21_div_to_ten(&temp);
+    s21_div_to_ten(&big_result);
+    scale--;
+  }
+
+  s21_print_bin_big_decimal(big_result);
+
+  s21_set_scale(&big_result, ++scale);
+  
+  // 
+  if ((s21_get_max_bit(big_result) >= 96 && scale > 0) || scale > 28) {
+    s21_big_decimal remainder;
+    s21_null_big_decimal(&remainder);
+    s21_div_to_ten(&big_result);
+    scale--;
+    s21_set_scale(&big_result, scale);
+
+    s21_print_bin_big_decimal(big_result);
+
+    s21_big_decimal temp_res = big_result;
+
+    s21_normalization(&trunc_temp, &temp_res);
+    s21_binary_sub(trunc_temp, temp_res, &remainder);
+
+    s21_print_bin_big_decimal(remainder);
+
+
+    s21_set_scale(&remainder, s21_get_big_decimal_scale(trunc_temp) - scale);
+    s21_banck_round(&big_result, remainder);
+    s21_print_bin_big_decimal(big_result);
+  }
+
+  if (s21_get_max_bit(big_result) >= 96) {
+    result_code = kCodeBig;
+  }
 
   s21_big_decimal_to_decimal(big_result, result);
 

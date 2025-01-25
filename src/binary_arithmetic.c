@@ -120,6 +120,7 @@ void s21_binary_div(s21_big_decimal num_one, s21_big_decimal num_two,
       s21_mul_to_ten(&num_one);
     } while(!s21_is_null(num_one) && bit_count <= 96);
     s21_set_scale(&res, scale-1);
-
     *result = res;
+    printf("PRINT\n");
+    s21_print_bin_big_decimal(res);
 }
