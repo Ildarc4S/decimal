@@ -75,8 +75,8 @@ int s21_sravnivatel(s21_decimal num1, s21_decimal num2) {
   } else {
     for (int j = BIG_DECIMAL_LENGTH - 2; j >= 0 && !stop; j--) {
       for (int i = 31; i >= 0 && !stop; i--) {
-        int byte1 = (num1_big.bits[j] & (1 << i)) != 0 ? 1 : 0;
-        int byte2 = (num2_big.bits[j] & (1 << i)) != 0 ? 1 : 0;
+        int byte1 = (num1_big.bits[j] & (1 << 31)) != 0 ? 1 : 0;
+        int byte2 = (num2_big.bits[j] & (1 << 31)) != 0 ? 1 : 0;
 
         sravnitel_operations(byte1, byte2, &result, &stop);
       }

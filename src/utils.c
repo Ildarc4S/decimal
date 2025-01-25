@@ -123,7 +123,8 @@ void s21_set_sign(s21_decimal* num, int sign_value) {
 }
 
 void s21_set_decimal_scale(s21_decimal* num, int scale_value) {
-  num->bits[3] |= (scale_value << 16);
+  num->bits[6] &= ~(0xFF << 16);
+  num->bits[6] |= (scale_value & 0xFF) << 16;
 }
 
 void s21_set_bit(s21_decimal* num, int bit, int value) {

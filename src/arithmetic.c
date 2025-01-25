@@ -127,7 +127,32 @@ int s21_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal* result) {
   return result_code;
 }
 
-int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal* result) {}
+int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal* result) {
+  S21ArithmeticResultCode result_code = kCodeOK;
+
+  int sign_one = s21_get_sign(value_1);
+  int sign_two = s21_get_sign(value_2);
+
+  if (sign_one == POSITIVE && sign_two == POSITIVE) {
+    result_code = s21_div_util(value_1, value_2, result);
+  } else if ((sign_one == NEGATIVE && sign_two == POSITIVE)) {
+    s21_set_sign(&value_1, 0);
+    result_code = s21_div_util(value_1, value_2, result);
+    s21_set_sign(result, 1);
+  } else if ((sign_one == POSITIVE && sign_two == NEGATIVE)) {
+    s21_set_sign(&value_2, 0);
+    result_code = s21_div_util(value_1, value_2, result);
+    s21_set_sign(result, 1);
+  } else if (sign_one == NEGATIVE && sign_two == NEGATIVE) {
+    s21_set_sign(&value_1, 0);
+    result_code = s21_div_util(value_1, value_2, result);
+  }
+
+  if (result_code == kCodeBig && s21_get_sign(*result) == 1) {
+    result_code = kCodeSmall;
+  }
+  return result_code;
+}
 
 int s21_add_util(s21_decimal value_1, s21_decimal value_2,
                  s21_decimal* result) {
@@ -137,6 +162,10 @@ int s21_add_util(s21_decimal value_1, s21_decimal value_2,
   s21_decimal_to_big_decimal(value_1, &big_value_1);
   s21_decimal_to_big_decimal(value_2, &big_value_2);
   s21_decimal_to_big_decimal(*result, &big_result);
+
+  if (s21_is_null(big_value_2)) {
+    return kCodeZerroDiv;
+  }
 
   s21_normalization(&big_value_1, &big_value_2);
   s21_binary_add(big_value_1, big_value_2, &big_result);
@@ -187,7 +216,6 @@ int s21_sub_util(s21_decimal value_1, s21_decimal value_2,
 
   s21_normalization(&big_value_1, &big_value_2);
   s21_binary_sub(big_value_1, big_value_2, &big_result);
-
 
   s21_big_decimal trunc_temp = big_result;
 
@@ -298,7 +326,31 @@ int s21_mul_util(s21_decimal value_1, s21_decimal value_2,
 }
 
 int s21_div_util(s21_decimal value_1, s21_decimal value_2,
-                 s21_decimal* result) {}
+                 s21_decimal* result) {
+        S21ArithmeticResultCode result_code = kCodeOK;
+  s21_big_decimal big_value_1, big_value_2;
+
+  if (value_2.bits[0] == 0 && value_2.bits[1] == 0 && value_2.bits[2] == 0) {
+    return kCodeZerroDiv;
+  }
+  // s21_set_decimal_scale(&value_1, 0);
+  // s21_set_decimal_scale(&value_2, 0);
+
+  value_1.bits[3] = 0;
+  value_2.bits[3] = 0;
+
+  s21_decimal_to_big_decimal(value_1, &big_value_1);
+  s21_decimal_to_big_decimal(value_2, &big_value_2);
+  
+  s21_big_decimal big_result;
+  s21_null_big_decimal(&big_result);
+
+  s21_binary_div(big_value_1, big_value_2, &big_result);
+
+  s21_big_decimal_to_decimal(big_result, result);
+
+  return result_code;
+}
 
 void s21_normalization(s21_big_decimal* num_one, s21_big_decimal* num_two) {
   int scale_one = s21_get_big_decimal_scale(*num_one);
