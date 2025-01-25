@@ -146,10 +146,14 @@ int s21_div_util(s21_decimal value_1, s21_decimal value_2,
                  s21_decimal* result) {
   S21ArithmeticResultCode result_code = kCodeOK;
   s21_big_decimal big_value_1, big_value_2, big_result;
+  int v1sc = s21_get_decimal_scale(value_1);
+  int v2sc = s21_get_decimal_scale(value_2);
+
   s21_decimal_to_big_decimal(value_1, &big_value_1);
   s21_decimal_to_big_decimal(value_2, &big_value_2);
   s21_decimal_to_big_decimal(*result, &big_result);
-  s21_normalization(&big_value_1, &big_value_2);
+
+  //   s21_normalization(&big_value_1, &big_value_2);
 
   s21_binary_div(big_value_1, big_value_2, &big_result);
 
@@ -164,11 +168,20 @@ int s21_div_util(s21_decimal value_1, s21_decimal value_2,
   if (result_code == kCodeBig && s21_get_sign(*result) == 1) {
     result_code = kCodeSmall;
   }
+  s21_decimal null = {{0, 0, 0, 0}};
+  if (s21_is_equal(null, value_2)) {
+    result_code = kCodeZerroDiv;
+  }
+  if (s21_get_sign(value_1) + s21_get_sign(value_2) == 1) {
+    s21_set_big_dec_sign(&big_result, 1);
+  }
+  //   printf("\n\n======= sign  =   %d\n\n", s21_get_sign(*result));
+  //   s21_print_bin_big_decimal(big_result);
   s21_big_decimal_to_decimal(big_result, result);
+  //   s21_print_bin_big_decimal(big_result);
 
   return result_code;
 }
-
 /**
  * @author majorswe
  * @brief умножает децималы

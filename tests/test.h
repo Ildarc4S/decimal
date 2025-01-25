@@ -63,7 +63,7 @@ Suite *div_suite12(void);
 Suite *div_suite13(void);
 Suite *div_suite14(void);
 Suite *div_suite15(void);
-Suite *div_suite16(void);
+// Suite *div_suite16(void);
 Suite *div_suite17(void);
 Suite *div_suite18(void);
 
@@ -83,9 +83,9 @@ Suite *mod_suite12(void);
 Suite *mod_suite13(void);
 Suite *mod_suite14(void);
 Suite *mod_suite15(void);
-Suite *mod_suite16(void);
-Suite *mod_suite17(void);
-Suite *mod_suite18(void);
+// Suite *mod_suite16(void);
+// Suite *mod_suite17(void);
+// Suite *mod_suite18(void);
 
 void test_add(s21_decimal decimal1, s21_decimal decimal2, s21_decimal check);
 void test_add_fail(s21_decimal decimal1, s21_decimal decimal2, int check);

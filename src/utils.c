@@ -161,6 +161,7 @@ void s21_print_bin_num(int num, int symbol_count) {
 }
 
 void s21_print_bin_decimal(s21_decimal num) {
+  printf("\n");
   for (int i = 0; i < DECIMAL_LENGTH; i++) {
     printf("[%d] ", i);
     s21_print_bin_num(num.bits[i], 31);
@@ -170,6 +171,7 @@ void s21_print_bin_decimal(s21_decimal num) {
 }
 
 void s21_print_bin_big_decimal(s21_big_decimal num) {
+  printf("\n");
   for (int i = 0; i < 7; i++) {
     printf("[%d] ", i);
     s21_print_bin_num(num.bits[i], 31);

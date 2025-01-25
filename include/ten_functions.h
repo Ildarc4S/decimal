@@ -6,6 +6,6 @@
 #include "type.h"
 
 void s21_mul_to_ten(s21_big_decimal* num);
-int s21_div_to_ten(s21_big_decimal* num);
+void s21_div_to_ten(s21_big_decimal* num);
 
 #endif

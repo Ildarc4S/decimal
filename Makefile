@@ -83,4 +83,4 @@ clean:
 #  test
 
 clang:
-	clang-format -i include/*.h src/*.c
+	clang-format -i include/*.h src/*.c main_files/*.c
