@@ -112,7 +112,7 @@ $(LIB_FILE): $(OBJS)
 
 clean: 
 	rm -rf *.o *.a report $(FILES_REPORT) s21_decimal $(RM_FILES) $(RM_MAIN_FILES) 
-#  test
+
 
 clang:
 	clang-format -i *.h *.c
