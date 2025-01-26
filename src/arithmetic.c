@@ -1,4 +1,5 @@
 #include "../include/arithmetic.h"
+
 #include "../include/compare.h"
 
 int is_null_dec(s21_decimal num) {
@@ -121,9 +122,9 @@ int s21_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal* result) {
   s21_decimal zero;
   s21_null_decimal(&zero);
   if (result_code == kCodeOK && s21_is_not_equal(value_1, zero) &&
-            s21_is_not_equal(value_2, zero) && s21_is_equal(*result, zero)) {
-            result_code = kCodeSmall;
-   }
+      s21_is_not_equal(value_2, zero) && s21_is_equal(*result, zero)) {
+    result_code = kCodeSmall;
+  }
 
   return result_code;
 }
@@ -171,7 +172,6 @@ int s21_add_util(s21_decimal value_1, s21_decimal value_2,
 
   s21_normalization(&big_value_1, &big_value_2);
   s21_binary_add(big_value_1, big_value_2, &big_result);
-
 
   s21_big_decimal trunc_temp = big_result;
 
@@ -261,10 +261,10 @@ int s21_mul_util(s21_decimal value_1, s21_decimal value_2,
 
   s21_decimal_to_big_decimal(value_1, &big_value_1);
   s21_decimal_to_big_decimal(value_2, &big_value_2);
-  
+
   s21_big_decimal big_result;
   s21_null_big_decimal(&big_result);
-  
+
   int scale_first = s21_get_decimal_scale(value_1);
   int scale_second = s21_get_decimal_scale(value_2);
   scale_first = scale_first + scale_second;
@@ -294,8 +294,8 @@ int s21_mul_util(s21_decimal value_1, s21_decimal value_2,
   s21_print_bin_big_decimal(big_result);
 
   s21_set_scale(&big_result, ++scale);
-  
-  // 
+
+  //
   if ((s21_get_max_bit(big_result) >= 96 && scale > 0) || scale > 28) {
     s21_big_decimal remainder;
     s21_null_big_decimal(&remainder);
@@ -311,7 +311,6 @@ int s21_mul_util(s21_decimal value_1, s21_decimal value_2,
     s21_binary_sub(trunc_temp, temp_res, &remainder);
 
     s21_print_bin_big_decimal(remainder);
-
 
     s21_set_scale(&remainder, s21_get_big_decimal_scale(trunc_temp) - scale);
     s21_banck_round(&big_result, remainder);
@@ -329,7 +328,6 @@ int s21_mul_util(s21_decimal value_1, s21_decimal value_2,
 
 int s21_div_util(s21_decimal value_1, s21_decimal value_2,
                  s21_decimal* result) {
-  
   S21ArithmeticResultCode result_code = kCodeOK;
   s21_big_decimal big_value_1, big_value_2;
 
@@ -344,9 +342,11 @@ int s21_div_util(s21_decimal value_1, s21_decimal value_2,
   s21_null_big_decimal(&big_result);
 
 
+
+
   s21_binary_div(big_value_1, big_value_2, &big_result);
 
-  s21_print_bin_big_decimal(big_result);
+  // s21_print_bin_big_decimal(big_result);
 
   s21_big_decimal trunc_temp = big_result;
 
@@ -354,7 +354,7 @@ int s21_div_util(s21_decimal value_1, s21_decimal value_2,
   s21_div_to_ten(&temp);
   int scale = s21_get_big_decimal_scale(big_result);
   scale--;
-  
+
   while ((s21_get_max_bit(temp) >= 96 && scale > 0) || scale > 28) {
     s21_div_to_ten(&temp);
     s21_div_to_ten(&big_result);
@@ -368,26 +368,28 @@ int s21_div_util(s21_decimal value_1, s21_decimal value_2,
     s21_null_big_decimal(&remainder);
     s21_div_to_ten(&big_result);
     scale--;
-    
+
     s21_set_scale(&big_result, scale);
 
-    s21_print_bin_big_decimal(big_result);
+    // s21_print_bin_big_decimal(big_result);
 
     s21_big_decimal temp_res = big_result;
 
     s21_normalization(&trunc_temp, &temp_res);
     s21_binary_sub(trunc_temp, temp_res, &remainder);
 
-    s21_print_bin_big_decimal(remainder);
+    // s21_print_bin_big_decimal(remainder);
 
     s21_set_scale(&remainder, s21_get_big_decimal_scale(trunc_temp) - scale);
     s21_banck_round(&big_result, remainder);
-    s21_print_bin_big_decimal(big_result);
+    // s21_print_bin_big_decimal(big_result);
   }
 
-  if (big_result.bits[0] == 0 && big_result.bits[1] == 0 && big_result.bits[2] == 0 &&
-     big_result.bits[1] == 0 && big_result.bits[2] == 0 && big_result.bits[3] == 0 &&
-     big_result.bits[4] == 0 && big_result.bits[5] == 0 && big_result.bits[6] != 0) {
+  if (big_result.bits[0] == 0 && big_result.bits[1] == 0 &&
+      big_result.bits[2] == 0 && big_result.bits[1] == 0 &&
+      big_result.bits[2] == 0 && big_result.bits[3] == 0 &&
+      big_result.bits[4] == 0 && big_result.bits[5] == 0 &&
+      big_result.bits[6] != 0) {
     result_code = kCodeSmall;
   }
 

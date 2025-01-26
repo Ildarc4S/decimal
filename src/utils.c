@@ -18,7 +18,8 @@ void s21_decimal_to_big_decimal(s21_decimal num, s21_big_decimal* result) {
   for (int i = 0; i < DECIMAL_LENGTH - 1; i++) {
     result->bits[i] = num.bits[i];  // & mask;
   }
-  result->bits[BIG_DECIMAL_LENGTH - 1] = num.bits[DECIMAL_LENGTH - 1];  // & mask;
+  result->bits[BIG_DECIMAL_LENGTH - 1] =
+      num.bits[DECIMAL_LENGTH - 1];  // & mask;
 }
 
 void s21_big_decimal_to_decimal(s21_big_decimal num, s21_decimal* result) {
@@ -159,12 +160,12 @@ void s21_print_bin_decimal(s21_decimal num) {
 }
 
 void s21_print_bin_big_decimal(s21_big_decimal num) {
-  for (int i = 0; i < 7; i++) {
-    printf("[%d] ", i);
-    s21_print_bin_num(num.bits[i], 31);
-    printf("\n");
-  }
-  for (int i = 5; i >= 0; i--) {
+  // for (int i = 0; i < 7; i++) {
+  //   printf("[%d] ", i);
+  //   s21_print_bin_num(num.bits[i], 31);
+  //   printf("\n");
+  // }
+  for (int i = 6; i >= 0; i--) {
     s21_print_bin_num(num.bits[i], 31);
   }
   printf("\n");
