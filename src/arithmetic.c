@@ -134,6 +134,17 @@ int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal* result) {
   int sign_one = s21_get_sign(value_1);
   int sign_two = s21_get_sign(value_2);
 
+  if (value_2.bits[0] == 0 && value_2.bits[1] == 0 && value_2.bits[2] == 0) {
+    *result = value_1;
+    return kCodeZerroDiv;
+  }
+
+  if (value_1.bits[0] == 0 && value_1.bits[1] == 0 && value_1.bits[2] == 0) {
+    *result = value_1;
+    return kCodeOK;
+  }
+
+
   if (sign_one == POSITIVE && sign_two == POSITIVE) {
     result_code = s21_div_util(value_1, value_2, result);
   } else if ((sign_one == NEGATIVE && sign_two == POSITIVE)) {
@@ -344,7 +355,13 @@ int s21_div_util(s21_decimal value_1, s21_decimal value_2,
   s21_null_big_decimal(&big_result);
 
 
-  s21_binary_div(big_value_1, big_value_2, &big_result);
+  int sc = 0;
+  s21_binary_div(big_value_1, big_value_2, &big_result, &sc);
+  while (sc < 0) {
+    sc++;
+    s21_mul_to_ten(&big_result);
+  }
+  s21_set_scale(&big_result, sc);
 
   s21_print_bin_big_decimal(big_result);
 
@@ -352,6 +369,7 @@ int s21_div_util(s21_decimal value_1, s21_decimal value_2,
 
   s21_big_decimal temp = big_result;
   s21_div_to_ten(&temp);
+
   int scale = s21_get_big_decimal_scale(big_result);
   scale--;
   
@@ -375,6 +393,7 @@ int s21_div_util(s21_decimal value_1, s21_decimal value_2,
 
     s21_big_decimal temp_res = big_result;
 
+
     s21_normalization(&trunc_temp, &temp_res);
     s21_binary_sub(trunc_temp, temp_res, &remainder);
 
@@ -386,8 +405,8 @@ int s21_div_util(s21_decimal value_1, s21_decimal value_2,
   }
 
   if (big_result.bits[0] == 0 && big_result.bits[1] == 0 && big_result.bits[2] == 0 &&
-     big_result.bits[1] == 0 && big_result.bits[2] == 0 && big_result.bits[3] == 0 &&
-     big_result.bits[4] == 0 && big_result.bits[5] == 0 && big_result.bits[6] != 0) {
+     big_result.bits[1] == 0 && big_result.bits[2] == 0 && s21_get_big_decimal_scale(big_result) > 1 &&
+     big_result.bits[4] == 0 && big_result.bits[5] == 0 && big_result.bits[3] == 0) {
     result_code = kCodeSmall;
   }
 

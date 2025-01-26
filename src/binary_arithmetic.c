@@ -116,7 +116,7 @@ void s21_binary_div_cel(s21_big_decimal num_one, s21_big_decimal num_two,
 }
 
 void s21_binary_div(s21_big_decimal num_one, s21_big_decimal num_two,
-                    s21_big_decimal* result) {
+                    s21_big_decimal* result, int* sc) {
     static int test_num = 1;
     printf("%d\n", test_num++);
     s21_big_decimal res, rem, temp;
@@ -127,11 +127,9 @@ void s21_binary_div(s21_big_decimal num_one, s21_big_decimal num_two,
     s21_null_big_decimal(&temp);
     int bit_count = 0;
 
-    s21_normalization(&num_one, &num_two);
-    int scale = 0;
+    int scale = s21_get_big_decimal_scale(num_one) - s21_get_big_decimal_scale(num_two);
 
     do {
-      s21_mul_to_ten(&res);
       scale++;
       s21_binary_div_cel(num_one, num_two, &temp, &num_one);
       
@@ -140,12 +138,13 @@ void s21_binary_div(s21_big_decimal num_one, s21_big_decimal num_two,
 
       s21_binary_add(res, temp, &res);
       s21_mul_to_ten(&num_one);
-    } while(!s21_is_null(num_one) && s21_get_max_bit(res) <= 96);
-    s21_set_scale(&res, --scale);
+      s21_mul_to_ten(&res);
+    } while(!s21_is_null(num_one) && scale <= 57 && s21_get_max_bit(res) <= 98);
     *result = res;
 
     printf("PRINT\n");
     s21_print_bin_big_decimal(res);
+    *sc = scale;
 }
 
 // scale = 3
