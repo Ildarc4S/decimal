@@ -75,7 +75,7 @@ test_mul_main: clean $(CFILES)
 	./test_mul_main
 
 test_div_main: clean $(CFILES)
-	$(CC) main_files/s21_decimal_test_div_main.c  $(CFILES) $(CHECK_FLAGS) -o test_div_main
+	$(CC) main_files/s21_decimal_test_div_main.c tests/_helpers/_debug.c tests/_helpers/_get_sign.c $(CFILES) $(CHECK_FLAGS) -o test_div_main
 	./test_div_main
 
 test_negate_main: clean $(CFILES)

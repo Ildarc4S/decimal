@@ -1,4 +1,5 @@
 #include "../include/arithmetic.h"
+#include "../include/compare.h"
 
 int is_null_dec(s21_decimal num) {
   return num.bits[0] == 0 && num.bits[1] == 0 && num.bits[2] == 0;
@@ -151,6 +152,7 @@ int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal* result) {
   if (result_code == kCodeBig && s21_get_sign(*result) == 1) {
     result_code = kCodeSmall;
   }
+
   return result_code;
 }
 
@@ -327,21 +329,20 @@ int s21_mul_util(s21_decimal value_1, s21_decimal value_2,
 
 int s21_div_util(s21_decimal value_1, s21_decimal value_2,
                  s21_decimal* result) {
-        S21ArithmeticResultCode result_code = kCodeOK;
+  
+  S21ArithmeticResultCode result_code = kCodeOK;
   s21_big_decimal big_value_1, big_value_2;
 
   if (value_2.bits[0] == 0 && value_2.bits[1] == 0 && value_2.bits[2] == 0) {
     return kCodeZerroDiv;
   }
 
-  value_1.bits[3] = 0;
-  value_2.bits[3] = 0;
-
   s21_decimal_to_big_decimal(value_1, &big_value_1);
   s21_decimal_to_big_decimal(value_2, &big_value_2);
-  
+
   s21_big_decimal big_result;
   s21_null_big_decimal(&big_result);
+
 
   s21_binary_div(big_value_1, big_value_2, &big_result);
 
@@ -353,27 +354,21 @@ int s21_div_util(s21_decimal value_1, s21_decimal value_2,
   s21_div_to_ten(&temp);
   int scale = s21_get_big_decimal_scale(big_result);
   scale--;
-
-  int flag = 0;
+  
   while ((s21_get_max_bit(temp) >= 96 && scale > 0) || scale > 28) {
-    if (s21_get_max_bit(temp) < 96) {
-      flag = 1;
-    }
     s21_div_to_ten(&temp);
     s21_div_to_ten(&big_result);
     scale--;
   }
 
-  s21_print_bin_big_decimal(big_result);
-
   s21_set_scale(&big_result, ++scale);
-  
-  // 
+
   if ((s21_get_max_bit(big_result) >= 96 && scale > 0) || scale > 28) {
     s21_big_decimal remainder;
     s21_null_big_decimal(&remainder);
     s21_div_to_ten(&big_result);
     scale--;
+    
     s21_set_scale(&big_result, scale);
 
     s21_print_bin_big_decimal(big_result);
@@ -385,10 +380,15 @@ int s21_div_util(s21_decimal value_1, s21_decimal value_2,
 
     s21_print_bin_big_decimal(remainder);
 
-
     s21_set_scale(&remainder, s21_get_big_decimal_scale(trunc_temp) - scale);
     s21_banck_round(&big_result, remainder);
     s21_print_bin_big_decimal(big_result);
+  }
+
+  if (big_result.bits[0] == 0 && big_result.bits[1] == 0 && big_result.bits[2] == 0 &&
+     big_result.bits[1] == 0 && big_result.bits[2] == 0 && big_result.bits[3] == 0 &&
+     big_result.bits[4] == 0 && big_result.bits[5] == 0 && big_result.bits[6] != 0) {
+    result_code = kCodeSmall;
   }
 
   if (s21_get_max_bit(big_result) >= 96) {
