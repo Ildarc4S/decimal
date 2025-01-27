@@ -126,14 +126,15 @@ int s21_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal* result) {
  * полезно
  *
  */
-int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal* result) {
+int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal* result,
+            s21_decimal* remainder) {
   S21ArithmeticResultCode result_code = kCodeOK;
 
   int sign_one = s21_get_sign(value_1);
   int sign_two = s21_get_sign(value_2);
   int scale = s21_get_decimal_scale(*result);
 
-  result_code = s21_div_util(value_1, value_2, result);
+  result_code = s21_div_util(value_1, value_2, result, remainder);
   if (result_code != kCodeOK) {
     return result_code;
   }
@@ -142,20 +143,21 @@ int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal* result) {
   return result_code;
 }
 
-int s21_div_util(s21_decimal value_1, s21_decimal value_2,
-                 s21_decimal* result) {
+int s21_div_util(s21_decimal value_1, s21_decimal value_2, s21_decimal* result,
+                 s21_decimal* remainder) {
   S21ArithmeticResultCode result_code = kCodeOK;
-  s21_big_decimal big_value_1, big_value_2, big_result;
+  s21_big_decimal big_value_1, big_value_2, big_result, big_remainder;
   int v1sc = s21_get_decimal_scale(value_1);
   int v2sc = s21_get_decimal_scale(value_2);
 
   s21_decimal_to_big_decimal(value_1, &big_value_1);
   s21_decimal_to_big_decimal(value_2, &big_value_2);
   s21_decimal_to_big_decimal(*result, &big_result);
+  s21_decimal_to_big_decimal(*remainder, &big_remainder);
 
   //   s21_normalization(&big_value_1, &big_value_2);
 
-  s21_binary_div(big_value_1, big_value_2, &big_result);
+  s21_binary_div(big_value_1, big_value_2, &big_result, &big_remainder);
 
   while (s21_get_max_bit(big_result) >= 96 &&
          s21_get_big_decimal_scale(big_result) > 0) {
@@ -178,6 +180,7 @@ int s21_div_util(s21_decimal value_1, s21_decimal value_2,
   //   printf("\n\n======= sign  =   %d\n\n", s21_get_sign(*result));
   //   s21_print_bin_big_decimal(big_result);
   s21_big_decimal_to_decimal(big_result, result);
+  s21_big_decimal_to_decimal(big_remainder, remainder);
   //   s21_print_bin_big_decimal(big_result);
 
   return result_code;

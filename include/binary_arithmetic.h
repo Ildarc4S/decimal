@@ -15,8 +15,8 @@ void s21_binary_sub(s21_big_decimal num_one, s21_big_decimal num_two,
                     s21_big_decimal* result);
 void s21_binary_mul(s21_big_decimal num_one, s21_big_decimal num_two,
                     s21_big_decimal* result);
-void s21_binary_div(s21_big_decimal divider, s21_big_decimal dividend,
-                    s21_big_decimal* res);
+void s21_binary_div(s21_big_decimal dividend, s21_big_decimal divider,
+                    s21_big_decimal* res, s21_big_decimal* remainder);
 void set_one_in_res(s21_big_decimal chos, s21_big_decimal* res);
 void sub_and_set(s21_big_decimal divider, s21_big_decimal* chos, int sign,
                  int mode);
