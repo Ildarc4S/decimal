@@ -78,6 +78,19 @@ test_truncate_main: clean $(CFILES)
 	$(CC) main_files/s21_decimal_test_truncate_main.c tests/_helpers/_get_sign.c tests/_helpers/_debug.c tests/other/test_truncate.c tests/_helpers/_decimal_is_full_equal.c $(CFILES) $(CHECK_FLAGS) -o test_truncate
 	./test_truncate
 
+
+test_float_to_decimal: clean $(CFILES)
+	$(CC) tests/s21_decimal_test_from_float_to_decimal.c tests/_helpers/_get_sign.c tests/conversion/test_from_float_to_decimal.c $(CFILES) $(CHECK_FLAGS) -o test_float_to_decimal
+	./test_float_to_decimal
+
+test_float_to_decimal_main: clean $(CFILES)
+	$(CC) main_files/s21_decimal_test_from_float_to_decimal_main.c tests/_helpers/_get_sign.c tests/_helpers/_debug.c $(CFILES) $(CHECK_FLAGS) -o test_float_to_decimal_main
+	./test_float_to_decimal_main
+
+test_decimal_to_float_main: clean $(CFILES)
+	$(CC) main_files/s21_decimal_test_from_decimal_to_float_main.c tests/_helpers/_get_sign.c tests/_helpers/_debug.c tests/_helpers/_decimal_is_full_equal.c $(CFILES) $(CHECK_FLAGS) -o test_decimal_to_float_main 
+	./test_decimal_to_float_main
+
 gcov_report:
 	$(CC) $(FLAGS) $(TEST_FILE) $(CFILES) $(CHECK_FLAGS) $(GCOV_FLAGS) -o gcov_test
 	./gcov_test
@@ -91,9 +104,6 @@ gcov_report_lcov:
 	genhtml --branch-coverage coverage.info --output-directory report_lcov
 
 
-test_decimal_to_float_main: clean $(CFILES)
-	$(CC) main_files/s21_decimal_test_from_decimal_to_float_main.c tests/_helpers/_get_sign.c tests/_helpers/_debug.c tests/_helpers/_decimal_is_full_equal.c $(CFILES) $(CHECK_FLAGS) -o test_decimal_to_float_main 
-	./test_decimal_to_float_main
 
 $(LIB_FILE): $(OBJS)
 	ar rcs $@ $^

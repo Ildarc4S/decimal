@@ -1,8 +1,14 @@
 #include "../include/converter.h"
 #include "../include/utils.h"
+#include "./../include/ten_functions.h"
+
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
+
+#define MAX_FLOAT_TO_CONVERT 79228157791897854723898736640.0f
+#define MIN_FLOAT_TO_CONVERT \
+    0.00000000000000000000000000010000000031710768509710513471352647538147514756461109f
 
 int s21_from_decimal_to_int(s21_decimal src, int *dst) {}
 
@@ -47,67 +53,121 @@ int s21_from_int_to_decimal(int src, s21_decimal *dst) {
   
   return 0;
 }
-int getFloatExp(float *value) {
-  return ((*((int *)value) & ~(1u << 31)) >> 23) - 127;
-}
 
 int s21_from_float_to_decimal(float src, s21_decimal* dst) {
-  
-  s21_decimal_to_null(dst);
-  int flag = 1;
-  if (isinf(src) || isnan(src))
-    flag = 0;
-  else {
-    if (src != 0) {
-      int sign = (src < 0) ? 1 : 0;
-      int exp = ((*(int *)&src & ~0x80000000) >> 23) - 127;
-      double temp = (double)fabs(src);
-      int scale = 0;
-      while (scale < 28 && (int)temp / (int)pow(2, 23) == 0) {
-        temp *= 10;
-        scale++;
-      }
-      temp = round(temp);
-      if (scale <= 28 && (exp > -94 && exp < 96)) {
-        float tmp_float = 0;
-        temp = (float)temp;
-        while (fmod(temp, 10) == 0 && scale > 0) {
-          scale--;
-          temp /= 10;
-        }
-        tmp_float = temp;
-        exp = ((*(int *)&tmp_float & ~0x80000000) >> 23) - 127;
-        dst->bits[exp / 32] |= 1 << exp % 32;
-        for (int i = exp - 1, ii = 22; ii >= 0; i--, ii--)
-          if ((*(int *)&tmp_float & (1 << ii)) != 0)
-            dst->bits[i / 32] |= 1 << i % 32;
-        s21_set_decimal_scale(dst, 0);
-        if (sign)s21_set_sign(dst, sign);
+
+  int res=0;
+  if(!dst){
+    res = 1;
+  }
+  else if (isinf(src) || isnan(src)) {
+    // Отдельно обрабатываем +inf, -inf, +nan, и -nan
+    res = 1;
+
+  }
+  else if (fabsf(src) > MAX_FLOAT_TO_CONVERT) {
+    // MAX_FLOAT_TO_CONVERT - максимальное число, которое можно сконвертировать в decimal
+    res = 1;
+
+  }
+  else if (fabsf(src) < MIN_FLOAT_TO_CONVERT) {
+    // MIN_FLOAT_TO_CONVERT - минимальное число, которое можно сконвертировать в decimal
+    res = 1;
+    s21_decimal_to_null(dst);
+  }
+  else{
+    s21_decimal_to_null(dst);
+    s21_big_decimal big_decimal = {{0,0,0,0,0,0,0}}; 
+    s21_decimal_to_big_decimal(*dst, &big_decimal);
+    //float a = -0.000000004;
+    
+    char b[64];
+    char c[64]="\0";
+    char sc[5]="\0";
+    sprintf(b, "%e", src);
+    char *ptr =b;
+    int sign=0;
+    if(src<0.0){
+      sign = 1;
+      ptr++;
+    }
+    int i=0;
+    //printf("%s\n", b);
+    while(*ptr!='e'){
+      if(*ptr=='.')ptr++;
+      else {
+        c[i]=*ptr;
+        i++;
+        ptr++;
       }
     }
+    ptr++; // на знак
+    int num;
+    char *end; // Указатель для отслеживания конца числа
+    int scale;
+    num = strtod(c, &end); // Преобразуем строку
+    //printf("%d\n", num);
+    big_decimal.bits[0]=num;
+    //s21_print_bin_big_decimal(big_decimal);
+    if(*ptr =='+'){
+      ptr++;
+      if(*ptr=='0'){
+        ptr++;
+        scale = atoi(ptr);
+        scale = scale - 6;
+
+      }
+      else{
+        sc[0]=*ptr;
+        ptr++;
+        sc[1]=*ptr;
+        scale = strtod(sc, &end);
+        scale = scale - 6;
+      }
+      //printf("%d", scale);
+      if(scale<0){
+        s21_set_scale(&big_decimal, abs(scale));
+      }
+      else{
+        while(scale>0){
+          s21_mul_to_ten(&big_decimal);
+          scale--;
+        }
+      }
+      //s21_print_bin_big_decimal(big_decimal);
+      s21_big_decimal_to_decimal(big_decimal, dst);
+    }
+    else if(*ptr =='-'){
+      ptr++;
+      if(*ptr=='0'){
+        ptr++;
+        scale = atoi(ptr);
+        scale = scale + 6;
+      }
+      else{
+        sc[0]=*ptr;
+        ptr++;
+        sc[1]=*ptr;
+        scale = strtod(sc, &end);
+        scale = scale + 6;
+      }
+    // printf("%d", scale);
+
+      //s21_print_bin_big_decimal(big_decimal);
+      s21_set_scale(&big_decimal, scale);
+      //s21_print_bin_big_decimal(big_decimal);
+      //s21_set_scale(&big_decimal, scale);
+
+      s21_big_decimal_to_decimal(big_decimal, dst);
+    }
+
+    if(sign){
+      s21_set_sign(dst, sign);
+    }
   }
-  return flag;
+  
 
-
-
-
-
-
-
-  // if(!src){
-  //   res = 1;
-  // }
-  // else{
-  //   char dec[64];
-  //   float res;
-  //   char *ptr = dec;
-  //   sprintf(dec, "%.8e", src);
-
-  //   res = atof(dec);
-
-  //   printf("%f", res);
-  // }
-
+  return res;
 }
 
 int s21_from_decimal_to_float(s21_decimal src, float *dst) {
