@@ -16,9 +16,9 @@ void s21_decimal_to_big_decimal(s21_decimal num, s21_big_decimal* result) {
   int mask = 0xffffffff;
 
   for (int i = 0; i < DECIMAL_LENGTH - 1; i++) {
-    result->bits[i] = num.bits[i];  // & mask;
+    result->bits[i] = num.bits[i] & 0xffffffff;
   }
-  result->bits[BIG_DECIMAL_LENGTH - 1] = num.bits[DECIMAL_LENGTH - 1];  // & mask;
+  result->bits[BIG_DECIMAL_LENGTH - 1] = num.bits[DECIMAL_LENGTH - 1] & 0xffffffff;
 }
 
 void s21_big_decimal_to_decimal(s21_big_decimal num, s21_decimal* result) {

@@ -10,8 +10,8 @@ TEST_FILE = s21_arithmetic_operators.c
 LIB_FILE = s21_decimal.a
 
 FILES_REPORT = *.gcno *.gcda gcov_test coverage.info gcov_test_lcov report_gcov report_lcov
-RM_FILES = test_add test_mul test_sub test_div
-RM_MAIN_FILES = test_add_main test_mul_main test_sub_main test_div_main
+RM_FILES = test_add test_mul test_sub test_div test_truncate test_compare test_div test_from_decimal_to_int test_from_int_to_decimal
+RM_MAIN_FILES = test_add_main test_mul_main test_sub_main test_div_main test_from_int_to_decimal_main
 
 all: $(LIB_FILE)
 
@@ -61,6 +61,13 @@ test_round: clean $(CFILES)
 	$(CC) tests/s21_decimal_test_round.c tests/_helpers/_get_sign.c tests/other/test_round.c tests/_helpers/_decimal_is_full_equal.c $(CFILES) $(CHECK_FLAGS) -o test_round
 	./test_round
 
+test_from_decimal_to_int: clean $(CFILES)
+	$(CC) tests/s21_decimal_test_from_decimal_to_int.c tests/conversion/test_from_decimal_to_int.c tests/_helpers/_get_sign.c tests/_helpers/_debug.c tests/_helpers/_decimal_is_full_equal.c $(CFILES) $(CHECK_FLAGS) -o test_from_decimal_to_int
+	./test_from_decimal_to_int
+
+test_from_int_to_decimal: clean $(CFILES)
+	$(CC) tests/s21_decimal_test_from_int_to_decimal.c tests/conversion/test_from_int_to_decimal.c tests/_helpers/_random.c tests/_helpers/_get_sign.c tests/_helpers/_debug.c tests/_helpers/_decimal_is_full_equal.c $(CFILES) $(CHECK_FLAGS) -o test_from_int_to_decimal
+	./test_from_int_to_decimal
 
 test_add_main: clean $(CFILES) 
 	$(CC) main_files/s21_decimal_test_add_main.c $(CFILES) $(CHECK_FLAGS) -o test_add_main
@@ -89,6 +96,14 @@ test_truncate_main: clean $(CFILES)
 test_floor_main: clean $(CFILES)
 	$(CC) main_files/s21_decimal_test_floor_main.c tests/_helpers/_get_sign.c tests/_helpers/_debug.c tests/other/test_floor.c tests/_helpers/_decimal_is_full_equal.c $(CFILES) $(CHECK_FLAGS) -o test_floor_main
 	./test_floor_main
+
+test_from_decimal_to_int_main: clean $(CFILES)
+	$(CC) main_files/s21_decimal_test_from_decimal_to_int_main.c tests/_helpers/_get_sign.c tests/_helpers/_debug.c tests/_helpers/_decimal_is_full_equal.c $(CFILES) $(CHECK_FLAGS) -lm -o test_from_decimal_to_int_main
+	./test_from_decimal_to_int_main
+
+test_from_int_to_decimal_main: clean $(CFILES)
+	$(CC) main_files/s21_decimal_test_from_int_to_decimal_main.c tests/_helpers/_get_sign.c tests/_helpers/_debug.c tests/_helpers/_decimal_is_full_equal.c $(CFILES) $(CHECK_FLAGS) -lm -o test_from_int_to_decimal_main
+	./test_from_int_to_decimal_main
 
 
 gcov_report:

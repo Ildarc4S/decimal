@@ -94,7 +94,6 @@ int s21_truncate(s21_decimal value, s21_decimal *result) {
   s21_big_decimal_truncate(&big_value);
   s21_print_bin_big_decimal(big_value);
   /*printf("\n");*/
-
   s21_big_decimal_to_decimal(big_value, result);
   return 0;
 }
