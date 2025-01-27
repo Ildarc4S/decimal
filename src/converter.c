@@ -102,12 +102,15 @@ int s21_from_float_to_decimal(float src, s21_decimal* dst) {
       }
     }
     ptr++; // на знак
-    int num;
-    char *end; // Указатель для отслеживания конца числа
+    float num;
     int scale;
-    num = strtod(c, &end); // Преобразуем строку
+    // int num2;
+
+    num = strtod(c, NULL); // Преобразуем строку
+    // num2 = num2/10;
+    // num = (float)num2;
     //printf("%d\n", num);
-    big_decimal.bits[0]=num;
+    // big_decimal.bits[0]=num;
     //s21_print_bin_big_decimal(big_decimal);
     if(*ptr =='+'){
       ptr++;
@@ -121,10 +124,11 @@ int s21_from_float_to_decimal(float src, s21_decimal* dst) {
         sc[0]=*ptr;
         ptr++;
         sc[1]=*ptr;
-        scale = strtod(sc, &end);
+        scale = strtod(sc, NULL);
         scale = scale - 6;
       }
       //printf("%d", scale);
+      big_decimal.bits[0]=num;
       if(scale<0){
         s21_set_scale(&big_decimal, abs(scale));
       }
@@ -135,7 +139,7 @@ int s21_from_float_to_decimal(float src, s21_decimal* dst) {
         }
       }
       //s21_print_bin_big_decimal(big_decimal);
-      s21_big_decimal_to_decimal(big_decimal, dst);
+      // s21_big_decimal_to_decimal(big_decimal, dst);
     }
     else if(*ptr =='-'){
       ptr++;
@@ -148,18 +152,25 @@ int s21_from_float_to_decimal(float src, s21_decimal* dst) {
         sc[0]=*ptr;
         ptr++;
         sc[1]=*ptr;
-        scale = strtod(sc, &end);
+        scale = strtod(sc, NULL);
         scale = scale + 6;
       }
     // printf("%d", scale);
-
+      if(28-scale<0){
+        num /= pow(10, scale-28);
+        num = round(num);
+        scale = scale - (scale-28);
+      }
+      big_decimal.bits[0]=num;
       //s21_print_bin_big_decimal(big_decimal);
       s21_set_scale(&big_decimal, scale);
       //s21_print_bin_big_decimal(big_decimal);
       //s21_set_scale(&big_decimal, scale);
 
-      s21_big_decimal_to_decimal(big_decimal, dst);
+      // s21_big_decimal_to_decimal(big_decimal, dst);
     }
+    //big_decimal.bits[0]=num;
+    s21_big_decimal_to_decimal(big_decimal, dst);
 
     if(sign){
       s21_set_sign(dst, sign);

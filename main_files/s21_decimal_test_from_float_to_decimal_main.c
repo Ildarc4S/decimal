@@ -32,12 +32,12 @@ int main(void) {
   s21_decimal decimal = {{0,0,0,0}}; ; 
   s21_big_decimal big_decimal = {{0,0,0,0,0,0,0}}; 
   s21_decimal_to_big_decimal(decimal, &big_decimal);
-  float a = -9.85001198E-23;
+  float a = 2.28401628E-19;
   
   char b[64];
   char c[64]="\0";
   char sc[5]="\0";
-  sprintf(b, "%e", a);
+  sprintf(b, "%.7e", a);
   char *ptr =b;
   int sign=0;
   if(a<0.0){
@@ -56,26 +56,29 @@ int main(void) {
   }
   ptr++; // на знак
   int scale;
-  char *end; // Указатель для отслеживания конца числа
+  //char *end; // Указатель для отслеживания конца числа
+  double num;
 
-  float num;
-  num = strtod(c, &end); // Преобразуем строку
-  printf("num : %f\n", num);
+  num = strtod(c, NULL); // Преобразуем строку
+  // num2 = num2/10;
+  // num = num2;
+  printf("num : %.7f\n", num);
+
   //s21_print_bin_big_decimal(big_decimal);
   if(*ptr =='+'){
     ptr++;
     if(*ptr=='0'){
       ptr++;
       scale = atoi(ptr);
-      scale = scale - 6;
+      scale = scale - 7;
 
     }
     else{
       sc[0]=*ptr;
       ptr++;
       sc[1]=*ptr;
-      scale = strtod(sc, &end);
-      scale = scale - 6;
+      scale = strtod(sc, NULL);
+      scale = scale - 7;
     }
     printf("scale : %d\n", scale);
     if(scale<0){
@@ -100,14 +103,14 @@ int main(void) {
     if(*ptr=='0'){
       ptr++;
       scale = atoi(ptr);
-      scale = scale + 6;
+      scale = scale + 7;
     }
     else{
       sc[0]=*ptr;
       ptr++;
       sc[1]=*ptr;
-      scale = strtod(sc, &end);
-      scale = scale + 6;
+      scale = strtod(sc, NULL);
+      scale = scale + 7;
       //scale = abs(scale);
     }
    // printf("%d", scale);
