@@ -18,7 +18,8 @@ void s21_decimal_to_big_decimal(s21_decimal num, s21_big_decimal* result) {
   for (int i = 0; i < DECIMAL_LENGTH - 1; i++) {
     result->bits[i] = num.bits[i] & 0xffffffff;
   }
-  result->bits[BIG_DECIMAL_LENGTH - 1] = num.bits[DECIMAL_LENGTH - 1] & 0xffffffff;
+  result->bits[BIG_DECIMAL_LENGTH - 1] =
+      num.bits[DECIMAL_LENGTH - 1] & 0xffffffff;
 }
 
 void s21_big_decimal_to_decimal(s21_big_decimal num, s21_decimal* result) {
@@ -33,33 +34,37 @@ void s21_big_decimal_to_decimal(s21_big_decimal num, s21_decimal* result) {
   /*s21_print_bin_decimal(*result);*/
 }
 
-void s21_null_decimal(s21_decimal* num) {
-  for (int i = 0; i < DECIMAL_LENGTH; i++) {
-    num->bits[i] = 0;
+// теперь передаём сюда тип децимала
+#define ZERO_DEC                                                       \
+  (dec_type) if (dec_type == s21_decimal) { length = DECIMAL_LENGTH; } \
+  else if (dec_type == s21_big_decimal) {                              \
+    length = BIG_DECIMAL_LENGTH;                                       \
+  }                                                                    \
+  void s21_zero_dec(dec_type* num) {                                   \
+    for (int i = 0; i < length; i++) {                                 \
+      num->bits[i] = 0;                                                \
+    }                                                                  \
   }
-}
 
-void s21_null_big_decimal(s21_big_decimal* num) {
-  for (int i = 0; i < BIG_DECIMAL_LENGTH; i++) {
-    num->bits[i] = 0;
+// теперь передаём сюда тип децимала
+#define IS_ZERO                                                       \
+  (dec_type) if (dec_type == s21_decimal) { length = DECIMAL_LENGTH } \
+  else if (dec_type == s21_big_decimal) {                             \
+    length = BIG_DECIMAL_LENGTH                                       \
+  }                                                                   \
+  int s21_is_zero(dec_type num) {                                     \
+    int res = 1;                                                      \
+    for (int i = 0; i < length - 1 && res; i++) {                     \
+      res *= num.bits[i];                                             \
+    }                                                                 \
+    return res;                                                       \
   }
-}
 
 void s21_single_decimal(s21_decimal* num) {
   for (int i = 0; i < DECIMAL_LENGTH; i++) {
     num->bits[i] = 0;
   }
   num->bits[0] = 1;
-}
-
-int s21_is_null(s21_big_decimal num) {
-  int result = 1;
-  for (int i = 0; i < BIG_DECIMAL_LENGTH - 1 && result; i++) {
-    if (num.bits[i] != 0) {
-      result = 0;
-    }
-  }
-  return result;
 }
 
 int s21_is_even(s21_big_decimal num) { return (num.bits[0] & 1) == 0; }
