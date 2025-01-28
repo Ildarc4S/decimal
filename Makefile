@@ -87,6 +87,10 @@ test_float_to_decimal_main: clean $(CFILES)
 	$(CC) main_files/s21_decimal_test_from_float_to_decimal_main.c tests/_helpers/_get_sign.c tests/_helpers/_debug.c $(CFILES) $(CHECK_FLAGS) -o test_float_to_decimal_main
 	./test_float_to_decimal_main
 
+test_decimal_to_float: clean $(CFILES)
+	$(CC) tests/s21_decimal_test_from_decimal_to_float.c tests/_helpers/_get_sign.c tests/conversion/test_from_decimal_to_float.c $(CFILES) $(CHECK_FLAGS) -o test_decimal_to_float
+	./test_decimal_to_float
+
 test_decimal_to_float_main: clean $(CFILES)
 	$(CC) main_files/s21_decimal_test_from_decimal_to_float_main.c tests/_helpers/_get_sign.c tests/_helpers/_debug.c tests/_helpers/_decimal_is_full_equal.c $(CFILES) $(CHECK_FLAGS) -o test_decimal_to_float_main 
 	./test_decimal_to_float_main

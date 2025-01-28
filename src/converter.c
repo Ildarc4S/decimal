@@ -1,6 +1,7 @@
 #include "../include/converter.h"
 #include "../include/utils.h"
 #include "./../include/ten_functions.h"
+#include "./../include/round.h"
 
 #include <math.h>
 #include <stdlib.h>
@@ -12,12 +13,6 @@
 
 int s21_from_decimal_to_int(s21_decimal src, int *dst) {}
 
-
-void s21_decimal_to_null(s21_decimal *dst){
-  for(int i=0; i<4; i++){
-    dst->bits[i] = 0;
-  }
-}
 
 //проверка на подходящий диапазон бита нужно добавить
 int s21_get_bit(s21_decimal num, int bit){
@@ -38,154 +33,149 @@ int s21_get_bit(s21_decimal num, int bit){
 int s21_from_int_to_decimal(int src, s21_decimal *dst) {
   int sign = 0;
 
-  s21_decimal_to_null(dst);
+  s21_null_decimal(dst);
 
   if (src < 0) {
     sign = 1;
     src = -src;
   }
-
   dst->bits[0] = src;
 
   s21_set_decimal_scale(dst, 0);
-
   s21_set_sign(dst, sign);
   
   return 0;
 }
 
-int s21_from_float_to_decimal(float src, s21_decimal* dst) {
+int s21_calculate_flaot_scale(int mantissa, char *ptr_to_float_string, s21_big_decimal *big_decimal, int shift){
+  int scale=0;
+  char scale_sign=*ptr_to_float_string;
+  ptr_to_float_string++;
+  char scale_string[10]="\0";
+  int scale_index = 0;
 
-  int res=0;
-  if(!dst){
-    res = 1;
+  while (*ptr_to_float_string != '\0') {
+    scale_string[scale_index++] = *ptr_to_float_string;
+    ptr_to_float_string++;
   }
-  else if (isinf(src) || isnan(src)) {
-    // Отдельно обрабатываем +inf, -inf, +nan, и -nan
-    res = 1;
+  scale = atoi(scale_string);
+  if (scale_sign == '+') {
+    scale -= 6;
+    int i = 0;
+    big_decimal->bits[0] = mantissa;
+    while (i < scale) {
+      s21_mul_to_ten(big_decimal);
+      i++;
+    }
+    if (scale < 0) {
+      scale = scale * (-1);
+      s21_set_scale(big_decimal, scale);
+    }
+  } else {
+    scale = scale + shift;
+    big_decimal->bits[0] = mantissa;
+    s21_set_scale(big_decimal, scale);
+  }
+  return scale;
+}
 
+void s21_ockruglenie(s21_big_decimal *big_decimal){
+  s21_big_decimal trunc_temp = *big_decimal;
+  int scale = s21_get_big_decimal_scale(*big_decimal);
+  scale--;
+  while (scale > 28) {
+    s21_div_to_ten(big_decimal);
+    scale--;
   }
-  else if (fabsf(src) > MAX_FLOAT_TO_CONVERT) {
-    // MAX_FLOAT_TO_CONVERT - максимальное число, которое можно сконвертировать в decimal
-    res = 1;
+  s21_set_scale(big_decimal, ++scale);
 
-  }
-  else if (fabsf(src) < MIN_FLOAT_TO_CONVERT) {
-    // MIN_FLOAT_TO_CONVERT - минимальное число, которое можно сконвертировать в decimal
-    res = 1;
-    s21_decimal_to_null(dst);
-  }
-  else{
-    s21_decimal_to_null(dst);
-    s21_big_decimal big_decimal = {{0,0,0,0,0,0,0}}; 
-    s21_decimal_to_big_decimal(*dst, &big_decimal);
-    //float a = -0.000000004;
+  if (scale > 28) {
+    s21_big_decimal remainder;
+    s21_null_big_decimal(&remainder);
+    s21_div_to_ten(big_decimal);
     
-    char b[64];
-    char c[64]="\0";
-    char sc[5]="\0";
-    sprintf(b, "%e", src);
-    char *ptr =b;
-    int sign=0;
-    if(src<0.0){
+    scale--;
+    s21_set_scale(big_decimal, scale);
+    s21_big_decimal temp_res = *big_decimal;
+
+    s21_normalization(&trunc_temp, &temp_res);
+    s21_binary_sub(trunc_temp, temp_res, &remainder);
+    s21_set_scale(&remainder, s21_get_big_decimal_scale(trunc_temp) - scale);
+    
+    s21_banck_round(big_decimal, remainder);
+  }
+}
+
+char *s21_calculate_mantissa(char *ptr_to_float_string, char *mantissa_string){
+  int mantissa_index = 0;
+  while(*ptr_to_float_string!='e'){
+    if (*ptr_to_float_string == '.') ptr_to_float_string++;
+    else {
+      mantissa_string[mantissa_index]=*ptr_to_float_string;
+      mantissa_index++;
+      ptr_to_float_string++;
+    }
+  }
+  ptr_to_float_string++;
+  return ptr_to_float_string;
+}
+
+int s21_from_float_to_decimal(float src, s21_decimal* dst) {
+  int res = 0;
+  if (!dst) {
+    res = 1;
+  } else if (isinf(src) || isnan(src)) {
+    res = 1;
+  } else if (fabsf(src) > MAX_FLOAT_TO_CONVERT) {
+    res = 1;
+  } else if (fabsf(src) < MIN_FLOAT_TO_CONVERT) {
+    res = 1;
+    s21_null_decimal(dst);
+  } else {
+    s21_null_decimal(dst);
+    s21_big_decimal big_decimal;
+    s21_null_big_decimal(&big_decimal);
+    s21_decimal_to_big_decimal(*dst, &big_decimal);
+    
+    char float_string[64]="\0";
+    char mantissa_string[64]="\0";
+    sprintf(float_string, "%.8e", src);
+    char *ptr_to_float_string = float_string;
+    int sign = 0;
+    if(src < 0.0){
       sign = 1;
-      ptr++;
+      ptr_to_float_string++;
     }
-    int i=0;
-    //printf("%s\n", b);
-    while(*ptr!='e'){
-      if(*ptr=='.')ptr++;
-      else {
-        c[i]=*ptr;
-        i++;
-        ptr++;
-      }
-    }
-    ptr++; // на знак
-    float num;
-    int scale;
-    // int num2;
 
-    num = strtod(c, NULL); // Преобразуем строку
-    // num2 = num2/10;
-    // num = (float)num2;
-    //printf("%d\n", num);
-    // big_decimal.bits[0]=num;
-    //s21_print_bin_big_decimal(big_decimal);
-    if(*ptr =='+'){
-      ptr++;
-      if(*ptr=='0'){
-        ptr++;
-        scale = atoi(ptr);
-        scale = scale - 6;
+    char* ptr_to_scale = &ptr_to_float_string[12];
+    int shift = 8;
+    int check_scale = atoi(ptr_to_scale);
+    if (ptr_to_float_string[11] == '+' || check_scale + 6 < 28) {
+      for (int i = 0; i < 64; i++) {
+        float_string[i] = '\0'; 
+      }
+      shift = 6;
+      sprintf(float_string, "%.6e", src);
+    } 
 
-      }
-      else{
-        sc[0]=*ptr;
-        ptr++;
-        sc[1]=*ptr;
-        scale = strtod(sc, NULL);
-        scale = scale - 6;
-      }
-      //printf("%d", scale);
-      big_decimal.bits[0]=num;
-      if(scale<0){
-        s21_set_scale(&big_decimal, abs(scale));
-      }
-      else{
-        while(scale>0){
-          s21_mul_to_ten(&big_decimal);
-          scale--;
-        }
-      }
-      //s21_print_bin_big_decimal(big_decimal);
-      // s21_big_decimal_to_decimal(big_decimal, dst);
-    }
-    else if(*ptr =='-'){
-      ptr++;
-      if(*ptr=='0'){
-        ptr++;
-        scale = atoi(ptr);
-        scale = scale + 6;
-      }
-      else{
-        sc[0]=*ptr;
-        ptr++;
-        sc[1]=*ptr;
-        scale = strtod(sc, NULL);
-        scale = scale + 6;
-      }
-    // printf("%d", scale);
-      if(28-scale<0){
-        num /= pow(10, scale-28);
-        num = round(num);
-        scale = scale - (scale-28);
-      }
-      big_decimal.bits[0]=num;
-      //s21_print_bin_big_decimal(big_decimal);
-      s21_set_scale(&big_decimal, scale);
-      //s21_print_bin_big_decimal(big_decimal);
-      //s21_set_scale(&big_decimal, scale);
-
-      // s21_big_decimal_to_decimal(big_decimal, dst);
-    }
-    //big_decimal.bits[0]=num;
+    ptr_to_float_string = s21_calculate_mantissa(ptr_to_float_string, mantissa_string);
+    int mantissa = atoi(mantissa_string);
+    int scale = s21_calculate_flaot_scale(mantissa, ptr_to_float_string, &big_decimal, shift);
+    s21_ockruglenie(&big_decimal);
     s21_big_decimal_to_decimal(big_decimal, dst);
-
-    if(sign){
+    if (sign) {
       s21_set_sign(dst, sign);
     }
-  }
-  
-
+  } 
   return res;
 }
+ 
 
 int s21_from_decimal_to_float(s21_decimal src, float *dst) {
   
-  int flag = 0;
+  int res = 0;
   if(!dst){
-    flag = 1;
+    res = 1;
   }
   else{
     int scale = s21_get_decimal_scale(src);
@@ -204,7 +194,7 @@ int s21_from_decimal_to_float(s21_decimal src, float *dst) {
     *dst = (float)temp;
   }
     
-  return flag;
+  return res;
 }
 
 

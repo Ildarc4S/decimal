@@ -1,6 +1,8 @@
 
 #include "./../include/s21_decimal.h"
 #include "./../include/ten_functions.h"
+#include "./../include/converter.h"
+
 
 #include <stdio.h>
 #include <stdlib.h> 
@@ -29,21 +31,24 @@ int main(void) {
 
 // 7 цифр засунул 
 // Е-sht => суешь скейл равный sht+6
-  s21_decimal decimal = {{0,0,0,0}}; ; 
+  s21_decimal decimal = {{0,0,0,0}}; 
   s21_big_decimal big_decimal = {{0,0,0,0,0,0,0}}; 
   s21_decimal_to_big_decimal(decimal, &big_decimal);
-  float a = 2.28401628E-19;
-  
+  float a = -5.92141241E+23;
+
+  s21_from_float_to_decimal(a, &decimal);
+  s21_print_bin_decimal(decimal);
   char b[64];
   char c[64]="\0";
   char sc[5]="\0";
-  sprintf(b, "%.7e", a);
+  sprintf(b, "%.8e", a);
   char *ptr =b;
   int sign=0;
   if(a<0.0){
     sign = 1;
     ptr++;
   }
+  //printf(" %c ", ptr[0]);
   int i=0;
   printf("b : %s\n", b);
   while(*ptr!='e'){
@@ -70,7 +75,7 @@ int main(void) {
     if(*ptr=='0'){
       ptr++;
       scale = atoi(ptr);
-      scale = scale - 7;
+      scale = scale - 6;
 
     }
     else{
@@ -78,7 +83,7 @@ int main(void) {
       ptr++;
       sc[1]=*ptr;
       scale = strtod(sc, NULL);
-      scale = scale - 7;
+      scale = scale - 6;
     }
     printf("scale : %d\n", scale);
     if(scale<0){
@@ -103,14 +108,14 @@ int main(void) {
     if(*ptr=='0'){
       ptr++;
       scale = atoi(ptr);
-      scale = scale + 7;
+      scale = scale + 6;
     }
     else{
       sc[0]=*ptr;
       ptr++;
       sc[1]=*ptr;
       scale = strtod(sc, NULL);
-      scale = scale + 7;
+      scale = scale + 6;
       //scale = abs(scale);
     }
    // printf("%d", scale);
