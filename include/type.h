@@ -6,10 +6,10 @@ typedef struct {
 } s21_decimal;
 
 typedef struct {
-    unsigned int bits[7];
+    unsigned int bits[8];
 } s21_big_decimal;
 
-#define BIG_DECIMAL_LENGTH 7
+#define BIG_DECIMAL_LENGTH 8
 #define DECIMAL_LENGTH 4
 
 #endif

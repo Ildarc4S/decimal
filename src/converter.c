@@ -16,7 +16,8 @@ int s21_from_int_to_decimal(int src, s21_decimal *dst) {
         int sign = 0; 
         if (src < 0) {
             sign = 1;
-            if (src != 0x80000000) {
+            int max_num = 0x80000000;
+            if (src != max_num) {
                 src = -src;
             }
         }
@@ -45,14 +46,6 @@ int s21_from_decimal_to_int(s21_decimal src, int *dst) {
             result_code = 1;
         } else{
             *dst = trunc_decimal.bits[0];
-            // // printf("Sign:");
-            // for (int j = 0; j < DECIMAL_LENGTH-1; j++) {
-            //     for (int i = 31; i >= 0; i--) {
-            //         if (s21_is_set_bit(trunc_decimal.bits[j], i) != 0) {
-            //             *dst += pow(2, 31*j + i);
-            //         }
-            //     }
-            // }
             if (s21_get_sign(trunc_decimal)) {
                 *dst = -*dst;
             }
@@ -61,4 +54,4 @@ int s21_from_decimal_to_int(s21_decimal src, int *dst) {
     return result_code;
     
 }
-int s21_from_decimal_to_float(s21_decimal src, float *dst) {}
+// int s21_from_decimal_to_float(s21_decimal src, float *dst) {}

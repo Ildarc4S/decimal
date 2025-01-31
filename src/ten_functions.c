@@ -23,7 +23,7 @@ void s21_mul_to_ten(s21_big_decimal* num) {
 
 void s21_div_to_ten(s21_big_decimal* num) {
   unsigned long long remainder = 0;
-  for (int i = 5; i >= 0; i--) {
+  for (int i = BIG_DECIMAL_LENGTH-2; i >= 0; i--) {
     unsigned long value = (remainder << 32) + num->bits[i];
     num->bits[i] = (value / 10);
     remainder = value % 10;
