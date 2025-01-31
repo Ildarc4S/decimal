@@ -1,8 +1,5 @@
 #include "../include/converter.h"
 
-#include "../include/compare.h"
-#include "../include/round.h"
-#include "../include/utils.h"
 #include "math.h"
 #include "stdlib.h"
 

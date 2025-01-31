@@ -2,6 +2,9 @@
 #define CONVERTER_H
 
 #include "type.h"
+#include "compare.h"
+#include "round.h"
+#include "utils.h"
 
 #define MAX_FLOAT_TO_CONVERT 79228157791897854723898736640.0f
 #define MIN_FLOAT_TO_CONVERT \

@@ -7,15 +7,14 @@
 #include "binary_arithmetic.h"
 #include "compare.h"
 
-#define POSITIVE 0
-#define NEGATIVE 1
+#define S21_POSITIVE 0
+#define S21_NEGATIVE 1
 
 typedef enum {
-  kCodeOK = 0,
-  kCodeBig = 1,
-  kCodeSmall = 2,
-  kCodeZerroDiv = 3,
-  // kCodeError = 4 
+  CODE_OK = 0,
+  CODE_BIG = 1,
+  CODE_SMALL = 2,
+  CODE_ZERO_DIV = 3
 } S21ArithmeticResultCode;
 
 int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);

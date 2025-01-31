@@ -10,7 +10,7 @@ TEST_FILE = s21_arithmetic_operators.c
 LIB_FILE = s21_decimal.a
 
 FILES_REPORT = *.gcno *.gcda gcov_test coverage.info gcov_test_lcov report_gcov report_lcov
-RM_FILES = test_add test_mul test_sub test_div test_truncate test_compare test_div test_from_decimal_to_int test_from_int_to_decimal test_negate test_round
+RM_FILES = test_add test_mul test_sub test_div test_truncate test_compare test_div test_from_decimal_to_int test_from_int_to_decimal test_negate test_round test_decimal_to_float test_from_float_to_decimal
 RM_MAIN_FILES = test_add_main test_mul_main test_sub_main test_div_main test_from_int_to_decimal_main
 
 all: $(LIB_FILE)

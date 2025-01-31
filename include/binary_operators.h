@@ -1,5 +1,5 @@
-#ifndef BIN_OPERATORS_H
-#define BIN_OPERATORS_H
+#ifndef BINARY_OPERATORS_H
+#define BINARY_OPERATORS_H
 
 #include "type.h"
 

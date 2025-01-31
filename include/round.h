@@ -2,6 +2,7 @@
 #define ROUND_H
 
 #include "type.h"
+#include "arithmetic.h"
 #include "binary_arithmetic.h"
 #include "utils.h"
 #include "compare.h"

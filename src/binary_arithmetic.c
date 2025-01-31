@@ -1,7 +1,5 @@
 #include "../include/binary_arithmetic.h"
 
-#include "../include/ten_functions.h"
-
 void s21_binary_add(s21_big_decimal num_one, s21_big_decimal num_two,
                     s21_big_decimal* result) {
   s21_big_decimal temp_decimal = num_two;
@@ -20,7 +18,7 @@ void s21_binary_add(s21_big_decimal num_one, s21_big_decimal num_two,
 
 void s21_binary_sub(s21_big_decimal num_one, s21_big_decimal num_two,
                     s21_big_decimal* result) {
-  s21_big_decimal singular = {{1, 0, 0, 0, 0, 0}};
+  s21_big_decimal singular = {{1, 0, 0, 0, 0, 0, 0}};
 
   s21_bin_invert(&num_two);
   s21_binary_add(num_two, singular, &num_two);
@@ -33,14 +31,14 @@ void s21_binary_mul(s21_big_decimal num_one, s21_big_decimal num_two,
   s21_big_decimal temp = num_one;
   int max_bit_index = s21_get_max_bit(num_two);
   for (int i = 0; i <= max_bit_index; i++) {
-    if (s21_is_set_bit(num_two.bits[i / 32], i % 32)) {
+    if (s21_is_set_bit(num_two.bits[i / INT_LENGTH], i % INT_LENGTH)) {
       s21_binary_add(*result, temp, result);
     }
     s21_bin_shift_left_one(&temp);
   }
 }
 
-void s21_binary_div_cel(s21_big_decimal num_one, s21_big_decimal num_two,
+void s21_binary_integer_div(s21_big_decimal num_one, s21_big_decimal num_two,
                         s21_big_decimal* result, s21_big_decimal* remainder) {
   num_one.bits[BIG_DECIMAL_LENGTH - 1] = 0;
   num_two.bits[BIG_DECIMAL_LENGTH - 1] = 0;
@@ -93,11 +91,10 @@ void s21_binary_div(s21_big_decimal num_one, s21_big_decimal num_two,
   s21_null_big_decimal(&rem);
   s21_null_big_decimal(&temp);
 
-  int scale =
-      s21_get_big_decimal_scale(num_one) - s21_get_big_decimal_scale(num_two);
+  int scale = s21_get_big_decimal_scale(num_one) - s21_get_big_decimal_scale(num_two);
   do {
     scale++;
-    s21_binary_div_cel(num_one, num_two, &temp, &num_one);
+    s21_binary_integer_div(num_one, num_two, &temp, &num_one);
 
     s21_binary_add(res, temp, &res);
     s21_mul_to_ten(&res);

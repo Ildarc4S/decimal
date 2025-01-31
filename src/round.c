@@ -1,7 +1,5 @@
 #include "../include/round.h"
 
-#include "../include/arithmetic.h"
-
 int s21_floor(s21_decimal value, s21_decimal *result) {
   int func_result_code = 0;
   int sign = s21_get_sign(value);
