@@ -1,15 +1,17 @@
 #include "../include/converter.h"
-#include "../include/utils.h"
+
 #include "../include/compare.h"
 #include "../include/round.h"
-#include "stdlib.h"
+#include "../include/utils.h"
 #include "math.h"
+#include "stdlib.h"
 
-int s21_calculate_flaot_scale(int mantissa, char *ptr_to_float_string, s21_big_decimal *big_decimal, int shift){
-  int scale=0;
-  char scale_sign=*ptr_to_float_string;
+int s21_calculate_flaot_scale(int mantissa, char *ptr_to_float_string,
+                              s21_big_decimal *big_decimal, int shift) {
+  int scale = 0;
+  char scale_sign = *ptr_to_float_string;
   ptr_to_float_string++;
-  char scale_string[10]="\0";
+  char scale_string[10] = "\0";
   int scale_index = 0;
 
   while (*ptr_to_float_string != '\0') {
@@ -37,7 +39,7 @@ int s21_calculate_flaot_scale(int mantissa, char *ptr_to_float_string, s21_big_d
   return scale;
 }
 
-void s21_ockruglenie(s21_big_decimal *big_decimal){
+void s21_ockruglenie(s21_big_decimal *big_decimal) {
   s21_big_decimal trunc_temp = *big_decimal;
   int scale = s21_get_big_decimal_scale(*big_decimal);
   scale--;
@@ -51,7 +53,7 @@ void s21_ockruglenie(s21_big_decimal *big_decimal){
     s21_big_decimal remainder;
     s21_null_big_decimal(&remainder);
     s21_div_to_ten(big_decimal);
-    
+
     scale--;
     s21_set_scale(big_decimal, scale);
     s21_big_decimal temp_res = *big_decimal;
@@ -59,17 +61,18 @@ void s21_ockruglenie(s21_big_decimal *big_decimal){
     s21_normalization(&trunc_temp, &temp_res);
     s21_binary_sub(trunc_temp, temp_res, &remainder);
     s21_set_scale(&remainder, s21_get_big_decimal_scale(trunc_temp) - scale);
-    
+
     s21_banck_round(big_decimal, remainder);
   }
 }
 
-char *s21_calculate_mantissa(char *ptr_to_float_string, char *mantissa_string){
+char *s21_calculate_mantissa(char *ptr_to_float_string, char *mantissa_string) {
   int mantissa_index = 0;
-  while(*ptr_to_float_string!='e'){
-    if (*ptr_to_float_string == '.') ptr_to_float_string++;
+  while (*ptr_to_float_string != 'e') {
+    if (*ptr_to_float_string == '.')
+      ptr_to_float_string++;
     else {
-      mantissa_string[mantissa_index]=*ptr_to_float_string;
+      mantissa_string[mantissa_index] = *ptr_to_float_string;
       mantissa_index++;
       ptr_to_float_string++;
     }
@@ -78,7 +81,7 @@ char *s21_calculate_mantissa(char *ptr_to_float_string, char *mantissa_string){
   return ptr_to_float_string;
 }
 
-int s21_from_float_to_decimal(float src, s21_decimal* dst) {
+int s21_from_float_to_decimal(float src, s21_decimal *dst) {
   int res = 0;
   if (!dst) {
     res = 1;
@@ -94,111 +97,111 @@ int s21_from_float_to_decimal(float src, s21_decimal* dst) {
     s21_big_decimal big_decimal;
     s21_null_big_decimal(&big_decimal);
     s21_decimal_to_big_decimal(*dst, &big_decimal);
-    
-    char float_string[64]="\0";
-    char mantissa_string[64]="\0";
+
+    char float_string[64] = "\0";
+    char mantissa_string[64] = "\0";
     sprintf(float_string, "%.8e", src);
     char *ptr_to_float_string = float_string;
     int sign = 0;
-    if(src < 0.0){
+    if (src < 0.0) {
       sign = 1;
       ptr_to_float_string++;
     }
 
-    char* ptr_to_scale = &ptr_to_float_string[12];
+    char *ptr_to_scale = &ptr_to_float_string[12];
     int shift = 8;
     int check_scale = atoi(ptr_to_scale);
     if (ptr_to_float_string[11] == '+' || check_scale + 6 < 28) {
       for (int i = 0; i < 64; i++) {
-        float_string[i] = '\0'; 
+        float_string[i] = '\0';
       }
       shift = 6;
       sprintf(float_string, "%.6e", src);
-    } 
+    }
 
-    ptr_to_float_string = s21_calculate_mantissa(ptr_to_float_string, mantissa_string);
+    ptr_to_float_string =
+        s21_calculate_mantissa(ptr_to_float_string, mantissa_string);
     int mantissa = atoi(mantissa_string);
-    int scale = s21_calculate_flaot_scale(mantissa, ptr_to_float_string, &big_decimal, shift);
+    s21_calculate_flaot_scale(mantissa, ptr_to_float_string,
+                                          &big_decimal, shift);
     s21_ockruglenie(&big_decimal);
     s21_big_decimal_to_decimal(big_decimal, dst);
     if (sign) {
       s21_set_sign(dst, sign);
     }
-  } 
+  }
   return res;
 }
- 
 
 int s21_from_decimal_to_float(s21_decimal src, float *dst) {
-  
   int res = 0;
-  if(!dst){
+  if (!dst) {
     res = 1;
-  }
-  else{
+  } else {
     int scale = s21_get_decimal_scale(src);
     *dst = 0.0;
     double temp = 0.0;
-    for(int i=0; i<96; i++){
-      if(s21_get_bit(src, i)){
+    for (int i = 0; i < 96; i++) {
+      if (s21_get_bit(src, i)) {
         temp += powf(2.0, i);
       }
     }
     temp /= pow(10, scale);
-    
-    if(s21_get_sign(src)){
+
+    if (s21_get_sign(src)) {
       temp = temp * (-1.0);
     }
     *dst = (float)temp;
   }
-    
+
   return res;
 }
 
 int s21_from_int_to_decimal(int src, s21_decimal *dst) {
-    int result_code = 0;
-    
-    if (dst == NULL) {
-        result_code = 1;
-    } else {
-        int sign = 0; 
-        if (src < 0) {
-            sign = 1;
-            int max_num = 0x80000000;
-            if (src != max_num) {
-                src = -src;
-            }
-        }
-        
-        s21_null_decimal(dst);
-        dst->bits[0] = src;
-        s21_set_sign(dst, sign);
+  int result_code = 0;
+
+  if (dst == NULL) {
+    result_code = 1;
+  } else {
+    int sign = 0;
+    if (src < 0) {
+      sign = 1;
+      int max_num = 0x80000000;
+      if (src != max_num) {
+        src = -src;
+      }
     }
 
-    return result_code;
+    s21_null_decimal(dst);
+    dst->bits[0] = src;
+    s21_set_sign(dst, sign);
+  }
+
+  return result_code;
 }
 int s21_from_decimal_to_int(s21_decimal src, int *dst) {
-    int result_code = 0;
-    if (dst == NULL) {
-        result_code = 1;
-    } else {
-        *dst = 0;
-        s21_decimal min_int_decimal = {{0x80000000, 0x00000000, 0x00000000, 0x80000000}}; // -2147483648
-        s21_decimal max_int_decimal = {{0x7FFFFFFF, 0x00000000, 0x00000000, 0x00000000}}; // 2147483647
-        s21_decimal trunc_decimal = {{0, 0, 0, 0}};
+  int result_code = 0;
+  if (dst == NULL) {
+    result_code = 1;
+  } else {
+    *dst = 0;
+    s21_decimal min_int_decimal = {
+        {0x80000000, 0x00000000, 0x00000000, 0x80000000}};  // -2147483648
+    s21_decimal max_int_decimal = {
+        {0x7FFFFFFF, 0x00000000, 0x00000000, 0x00000000}};  // 2147483647
+    s21_decimal trunc_decimal = {{0, 0, 0, 0}};
 
-        s21_truncate(src, &trunc_decimal);
-        if (s21_is_less(trunc_decimal, min_int_decimal)){
-            result_code = 1;
-        } else if (s21_is_greater(trunc_decimal, max_int_decimal)){
-            result_code = 1;
-        } else{
-            *dst = trunc_decimal.bits[0];
-            if (s21_get_sign(trunc_decimal)) {
-                *dst = -*dst;
-            }
-        }
+    s21_truncate(src, &trunc_decimal);
+    if (s21_is_less(trunc_decimal, min_int_decimal)) {
+      result_code = 1;
+    } else if (s21_is_greater(trunc_decimal, max_int_decimal)) {
+      result_code = 1;
+    } else {
+      *dst = trunc_decimal.bits[0];
+      if (s21_get_sign(trunc_decimal)) {
+        *dst = -*dst;
+      }
     }
-    return result_code;
-    
+  }
+  return result_code;
 }

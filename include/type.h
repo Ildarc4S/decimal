@@ -11,5 +11,6 @@ typedef struct {
 
 #define BIG_DECIMAL_LENGTH 8
 #define DECIMAL_LENGTH 4
+#define INT_LENGTH 32
 
 #endif

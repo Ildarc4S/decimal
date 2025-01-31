@@ -1,4 +1,5 @@
 #include "../include/round.h"
+
 #include "../include/arithmetic.h"
 
 int s21_floor(s21_decimal value, s21_decimal *result) {
@@ -14,7 +15,7 @@ int s21_floor(s21_decimal value, s21_decimal *result) {
   s21_decimal trunc_value;
   s21_null_decimal(&trunc_value);
 
-  s21_truncate(value, &trunc_value);  
+  s21_truncate(value, &trunc_value);
   s21_sub(value, trunc_value, &remainder);
 
   if (sign == 1 && s21_is_equal(remainder, zero) != 1) {
@@ -37,15 +38,15 @@ int s21_round(s21_decimal value, s21_decimal *result) {
   s21_decimal trunc_value;
   s21_null_decimal(&trunc_value);
 
-  s21_truncate(value, &trunc_value);  
+  s21_truncate(value, &trunc_value);
   s21_sub(value, trunc_value, &remainder);
-  
+
   s21_big_decimal big_trunc_value, big_remainder;
   s21_decimal_to_big_decimal(trunc_value, &big_trunc_value);
   s21_decimal_to_big_decimal(remainder, &big_remainder);
 
   s21_banck_round(&big_trunc_value, big_remainder);
- 
+
   s21_big_decimal_to_decimal(big_trunc_value, result);
   s21_set_sign(result, sign);
   return func_result_code;
@@ -61,7 +62,6 @@ void s21_banck_round(s21_big_decimal *value, s21_big_decimal remaind) {
       s21_binary_add(*value, one, value);
     }
   } else if (s21_big_sravnivatel(remaind, five) > 0) {
-    // printf("Great\n");
     s21_big_decimal one = {{1, 0, 0, 0, 0, 0, 0, 0}};
     s21_binary_add(*value, one, value);
   }

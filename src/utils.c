@@ -5,7 +5,8 @@ int s21_is_correct_decimal(s21_decimal num) {
   int scale = s21_get_decimal_scale(num);
   int sign = s21_get_sign(num);
   if ((sign != 1 && sign != 0) || (scale > 28 || scale < 0) ||
-      ((num.bits[DECIMAL_LENGTH-1] & 0x0000FFFF) != 0) || ((num.bits[DECIMAL_LENGTH-1] & 0x7e000000) != 0)) {
+      ((num.bits[DECIMAL_LENGTH - 1] & 0x0000FFFF) != 0) ||
+      ((num.bits[DECIMAL_LENGTH - 1] & 0x7e000000) != 0)) {
     result_code = 0;
   }
   return result_code;
@@ -74,7 +75,9 @@ int s21_is_even(s21_big_decimal num) { return (num.bits[0] & 1) == 0; }
 
 int s21_is_set_bit(int num, int index) { return (num & (1 << index)) != 0; }
 
-int s21_get_sign(s21_decimal num) { return (num.bits[DECIMAL_LENGTH-1] & 0x80000000) ? 1 : 0; }
+int s21_get_sign(s21_decimal num) {
+  return (num.bits[DECIMAL_LENGTH - 1] & 0x80000000) ? 1 : 0;
+}
 
 int s21_get_big_decimal_sign(s21_big_decimal num) {
   return (num.bits[BIG_DECIMAL_LENGTH - 1] & 0x80000000) ? 1 : 0;
@@ -95,23 +98,23 @@ int s21_get_max_bit(s21_big_decimal num) {
   for (int i = BIG_DECIMAL_LENGTH - 2; i >= 0 && result == -1; i--) {
     for (int index = 31; index >= 0 && result == -1; index--) {
       if (s21_is_set_bit(num.bits[i], index)) {
-        result = i * 32 + index;
+        result = i * INT_LENGTH + index;
       }
     }
   }
   return result;
 }
 
-int s21_get_bit(s21_decimal num, int bit){
+int s21_get_bit(s21_decimal num, int bit) {
   int res = 0;
   int number = 0;
-  while(bit>=32){
-    bit-=32;
+  while (bit >= INT_LENGTH) {
+    bit -= INT_LENGTH;
     number++;
   }
 
-  if((num.bits[number] & 1<<bit) !=0){
-    res=1;
+  if ((num.bits[number] & 1 << bit) != 0) {
+    res = 1;
   }
   return res;
 }
@@ -133,28 +136,28 @@ void s21_set_decimal_sign(s21_decimal* num, int sign_value) {
 }
 
 void s21_set_scale(s21_big_decimal* num, int scale_value) {
-  num->bits[BIG_DECIMAL_LENGTH-1] &= 0xFF00FFFF;
-  num->bits[BIG_DECIMAL_LENGTH-1] |= (scale_value << 16);
+  num->bits[BIG_DECIMAL_LENGTH - 1] &= 0xFF00FFFF;
+  num->bits[BIG_DECIMAL_LENGTH - 1] |= (scale_value << 16);
 }
 
 void s21_set_sign(s21_decimal* num, int sign_value) {
   if (sign_value == 1) {
-    num->bits[DECIMAL_LENGTH-1] |= (1 << 31);
+    num->bits[DECIMAL_LENGTH - 1] |= (1 << 31);
   } else if (sign_value == 0) {
-    num->bits[DECIMAL_LENGTH-1] &= ~(1 << 31);
+    num->bits[DECIMAL_LENGTH - 1] &= ~(1 << 31);
   }
 }
 
 void s21_set_decimal_scale(s21_decimal* num, int scale_value) {
-  num->bits[BIG_DECIMAL_LENGTH-1] &= ~(0xFF << 16);
-  num->bits[BIG_DECIMAL_LENGTH-1] |= (scale_value & 0xFF) << 16;
+  num->bits[BIG_DECIMAL_LENGTH - 1] &= ~(0xFF << 16);
+  num->bits[BIG_DECIMAL_LENGTH - 1] |= (scale_value & 0xFF) << 16;
 }
 
 void s21_set_bit(s21_decimal* num, int bit, int value) {
   if (value == 1) {
-    num->bits[bit / 32] |= (1U << (bit % 32));
+    num->bits[bit / INT_LENGTH] |= (1U << (bit % INT_LENGTH));
   } else if (value == 0) {
-    num->bits[bit / 32] &= ~(1U << (bit % 32));
+    num->bits[bit / INT_LENGTH] &= ~(1U << (bit % INT_LENGTH));
   }
 }
 
@@ -184,7 +187,7 @@ void s21_print_bin_big_decimal(s21_big_decimal num) {
     s21_print_bin_num(num.bits[i], 31);
     printf("\n");
   }
-  for (int i = BIG_DECIMAL_LENGTH-2; i >= 0; i--) {
+  for (int i = BIG_DECIMAL_LENGTH - 2; i >= 0; i--) {
     s21_print_bin_num(num.bits[i], 31);
   }
   printf("\n");

@@ -10,7 +10,7 @@ TEST_FILE = s21_arithmetic_operators.c
 LIB_FILE = s21_decimal.a
 
 FILES_REPORT = *.gcno *.gcda gcov_test coverage.info gcov_test_lcov report_gcov report_lcov
-RM_FILES = test_add test_mul test_sub test_div test_truncate test_compare test_div test_from_decimal_to_int test_from_int_to_decimal
+RM_FILES = test_add test_mul test_sub test_div test_truncate test_compare test_div test_from_decimal_to_int test_from_int_to_decimal test_negate test_round
 RM_MAIN_FILES = test_add_main test_mul_main test_sub_main test_div_main test_from_int_to_decimal_main
 
 all: $(LIB_FILE)
@@ -25,60 +25,62 @@ test: $(LIB_FILE)
 	$(CC) $(FLAGS) $(TEST_FILE) -L. $(LIB_FILE) $(CHECK_FLAGS) -o test
 	./test
 
+test_all: test_add test_sub test_div test_mul test_compare test_from_decimal_to_float test_from_decimal_to_int test_from_float_to_decimal test_from_int_to_decimal test_floor test_round test_negate test_truncate
+
 test_add: clean $(CFILES)
 	$(CC) tests/s21_decimal_test_add.c  tests/arithmetic/test_add.c $(CFILES) $(CHECK_FLAGS) -o test_add
 	./test_add
 
 test_sub: clean $(CFILES)
-	$(CC) tests/s21_decimal_test_sub.c  tests/arithmetic/test_sub.c $(CFILES) $(CHECK_FLAGS) -o test_sub
+	$(CC) $(FLAGS) tests/s21_decimal_test_sub.c  tests/arithmetic/test_sub.c $(CFILES) $(CHECK_FLAGS) -o test_sub
 	./test_sub
 	
 test_mul: clean $(CFILES)
-	$(CC) tests/s21_decimal_test_mul.c  tests/arithmetic/test_mul.c $(CFILES) $(CHECK_FLAGS) -o test_mul
+	$(CC) $(FLAGS) tests/s21_decimal_test_mul.c  tests/arithmetic/test_mul.c $(CFILES) $(CHECK_FLAGS) -o test_mul
 	./test_mul
 
 test_div: clean $(CFILES)
-	$(CC) tests/s21_decimal_test_div.c  tests/arithmetic/test_div.c $(CFILES) $(CHECK_FLAGS) -o test_div
+	$(CC) $(FLAGS) tests/s21_decimal_test_div.c  tests/arithmetic/test_div.c $(CFILES) $(CHECK_FLAGS) -o test_div
 	./test_div
 
 test_negate: clean $(CFILES)
-	$(CC) tests/s21_decimal_test_negate.c tests/_helpers/_get_sign.c tests/other/test_negate.c $(CFILES) $(CHECK_FLAGS) -o test_negate
+	$(CC) $(FLAGS) tests/s21_decimal_test_negate.c tests/_helpers/_get_sign.c tests/other/test_negate.c $(CFILES) $(CHECK_FLAGS) -o test_negate
 	./test_negate
 
 test_truncate: clean $(CFILES)
-	$(CC) tests/s21_decimal_test_truncate.c tests/_helpers/_get_sign.c tests/other/test_truncate.c tests/_helpers/_decimal_is_full_equal.c $(CFILES) $(CHECK_FLAGS) -o test_truncate
+	$(CC) $(FLAGS) tests/s21_decimal_test_truncate.c tests/_helpers/_get_sign.c tests/other/test_truncate.c tests/_helpers/_decimal_is_full_equal.c $(CFILES) $(CHECK_FLAGS) -o test_truncate
 	./test_truncate
 
 test_compare: clean $(CFILES)
-	$(CC) tests/s21_decimal_test_compare.c tests/_helpers/_get_sign.c tests/comparison/*  tests/_helpers/_decimal_is_full_equal.c $(CFILES) $(CHECK_FLAGS) -o test_compare
+	$(CC) $(FLAGS) tests/s21_decimal_test_compare.c tests/_helpers/_get_sign.c tests/comparison/*  tests/_helpers/_decimal_is_full_equal.c $(CFILES) $(CHECK_FLAGS) -o test_compare
 	./test_compare
 
 test_floor: clean $(CFILES)
-	$(CC) tests/s21_decimal_test_floor.c tests/_helpers/_get_sign.c tests/other/test_floor.c tests/_helpers/_decimal_is_full_equal.c $(CFILES) $(CHECK_FLAGS) -o test_compare
+	$(CC) $(FLAGS) tests/s21_decimal_test_floor.c tests/_helpers/_get_sign.c tests/other/test_floor.c tests/_helpers/_decimal_is_full_equal.c $(CFILES) $(CHECK_FLAGS) -o test_compare
 	./test_compare
 	
 test_round: clean $(CFILES)
-	$(CC) tests/s21_decimal_test_round.c tests/_helpers/_get_sign.c tests/other/test_round.c tests/_helpers/_decimal_is_full_equal.c $(CFILES) $(CHECK_FLAGS) -o test_round
+	$(CC) $(FLAGS) tests/s21_decimal_test_round.c tests/_helpers/_get_sign.c tests/other/test_round.c tests/_helpers/_decimal_is_full_equal.c $(CFILES) $(CHECK_FLAGS) -o test_round
 	./test_round
 
 test_from_decimal_to_int: clean $(CFILES)
-	$(CC) tests/s21_decimal_test_from_decimal_to_int.c tests/conversion/test_from_decimal_to_int.c tests/_helpers/_get_sign.c tests/_helpers/_debug.c tests/_helpers/_decimal_is_full_equal.c $(CFILES) $(CHECK_FLAGS) -o test_from_decimal_to_int
+	$(CC) $(FLAGS) tests/s21_decimal_test_from_decimal_to_int.c tests/conversion/test_from_decimal_to_int.c tests/_helpers/_get_sign.c tests/_helpers/_debug.c tests/_helpers/_decimal_is_full_equal.c $(CFILES) $(CHECK_FLAGS) -o test_from_decimal_to_int
 	./test_from_decimal_to_int
 
 test_from_int_to_decimal: clean $(CFILES)
-	$(CC) tests/s21_decimal_test_from_int_to_decimal.c tests/conversion/test_from_int_to_decimal.c tests/_helpers/_random.c tests/_helpers/_get_sign.c tests/_helpers/_debug.c tests/_helpers/_decimal_is_full_equal.c $(CFILES) $(CHECK_FLAGS) -o test_from_int_to_decimal
+	$(CC) $(FLAGS) tests/s21_decimal_test_from_int_to_decimal.c tests/conversion/test_from_int_to_decimal.c tests/_helpers/_random.c tests/_helpers/_get_sign.c tests/_helpers/_debug.c tests/_helpers/_decimal_is_full_equal.c $(CFILES) $(CHECK_FLAGS) -o test_from_int_to_decimal
 	./test_from_int_to_decimal
 
 test_from_decimal_to_float: clean $(CFILES)
-	$(CC) tests/s21_decimal_test_from_decimal_to_float.c tests/_helpers/_get_sign.c tests/conversion/test_from_decimal_to_float.c $(CFILES) $(CHECK_FLAGS) -o test_decimal_to_float
+	$(CC) $(FLAGS) tests/s21_decimal_test_from_decimal_to_float.c tests/_helpers/_get_sign.c tests/conversion/test_from_decimal_to_float.c $(CFILES) $(CHECK_FLAGS) -o test_decimal_to_float
 	./test_decimal_to_float
 
 test_from_float_to_decimal: clean $(CFILES)
-	$(CC) tests/s21_decimal_test_from_float_to_decimal.c tests/_helpers/_get_sign.c tests/conversion/test_from_float_to_decimal.c $(CFILES) $(CHECK_FLAGS) -o test_from_float_to_decimal
+	$(CC) $(FLAGS) tests/s21_decimal_test_from_float_to_decimal.c tests/_helpers/_get_sign.c tests/conversion/test_from_float_to_decimal.c $(CFILES) $(CHECK_FLAGS) -o test_from_float_to_decimal
 	./test_from_float_to_decimal
 	
 test_add_main: clean $(CFILES) 
-	$(CC) main_files/s21_decimal_test_add_main.c $(CFILES) $(CHECK_FLAGS) -o test_add_main
+	$(CC) main_files/s21_decimal_test_add_main.c tests/_helpers/_get_sign.c tests/_helpers/_debug.c tests/_helpers/_decimal_is_full_equal.c $(CFILES) $(CHECK_FLAGS) -o test_add_main
 	./test_add_main
 
 test_sub_main: clean $(CFILES)

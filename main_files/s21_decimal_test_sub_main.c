@@ -1,4 +1,4 @@
-#include "./../include/s21_decimal.h"
+#include "./../s21_decimal.h"
 #include "../tests/_helpers/_debug.h"
 
 int main(void) {

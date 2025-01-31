@@ -66,9 +66,6 @@ int s21_sravnivatel(s21_decimal num1, s21_decimal num2) {
   // norm
   s21_normalization(&num1_big, &num2_big);
 
-//   s21_print_bin_big_decimal(num1_big);
-//   s21_print_bin_big_decimal(num2_big);
-
   if (s21_is_null(num1_big) && s21_is_null(num2_big)) {
     result = 0;
   } else if (sign_num1 == 1 && sign_num2 == 0) {
