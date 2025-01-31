@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "./../../s21_decimal.h"
+#include "./../../include/s21_decimal.h"
 #include "./../test.h"
 #include "./test_from_float_to_decimal.h"
 
@@ -22794,7 +22794,7 @@ START_TEST(test_from_float_to_decimal_ok2518) {
 START_TEST(test_from_float_to_decimal_ok2519) {
     // 7.54474521E-23
     int f = 448162742;
-    // 0.0000000000000000000000754475
+    // 0.0000000000000000000000754475f
     s21_decimal decimal_check = {{0xB832B, 0x0, 0x0, 0x1C0000}};
 
     test_from_float_to_decimal(f, decimal_check);

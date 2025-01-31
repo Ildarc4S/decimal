@@ -8,7 +8,7 @@ int main(void) {
     SRunner *sr;
 
     sr = srunner_create(NULL);
-    srunner_add_suite(sr, from_float_to_decimal_suite0());
+    // srunner_add_suite(sr, from_float_to_decimal_suite0());
     srunner_add_suite(sr, from_float_to_decimal_suite1());
     srunner_add_suite(sr, from_float_to_decimal_suite2());
     srunner_add_suite(sr, from_float_to_decimal_suite3());

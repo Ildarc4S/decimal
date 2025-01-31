@@ -118,6 +118,8 @@ gcov_report_lcov:
 	lcov --capture --directory . --output-file coverage.info --rc branch_coverage=1
 	genhtml --branch-coverage coverage.info --output-directory report_lcov
 
+
+
 $(LIB_FILE): $(OBJS)
 	ar rcs $@ $^
 	ranlib $@
