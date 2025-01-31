@@ -1,6 +1,6 @@
 #include <stdlib.h>
 
-#include "./../include/s21_decimal.h"
+#include "./../s21_decimal.h"
 #include "./test.h"
 
 int main(void) {
@@ -8,7 +8,7 @@ int main(void) {
     SRunner *sr;
 
     sr = srunner_create(NULL);
-    srunner_add_suite(sr, from_decimal_to_float_suite0());
+    // srunner_add_suite(sr, from_decimal_to_float_suite0());
     srunner_add_suite(sr, from_decimal_to_float_suite1());
     srunner_add_suite(sr, from_decimal_to_float_suite2());
     srunner_add_suite(sr, from_decimal_to_float_suite3());

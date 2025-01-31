@@ -29,7 +29,6 @@ void s21_big_decimal_to_decimal(s21_big_decimal num, s21_decimal* result) {
   }
   result->bits[DECIMAL_LENGTH - 1] =
       num.bits[BIG_DECIMAL_LENGTH - 1] & 0xffffffff;
-  /*s21_print_bin_decimal(*result);*/
 }
 
 void s21_null_decimal(s21_decimal* num) {
@@ -82,9 +81,6 @@ int s21_get_decimal_scale(s21_decimal num) {
   return res;
 }
 
-
-
-
 int s21_get_max_bit(s21_big_decimal num) {
   int result = -1;
   for (int i = BIG_DECIMAL_LENGTH - 2; i >= 0 && result == -1; i--) {
@@ -95,6 +91,20 @@ int s21_get_max_bit(s21_big_decimal num) {
     }
   }
   return result;
+}
+
+int s21_get_bit(s21_decimal num, int bit){
+  int res = 0;
+  int number = 0;
+  while(bit>=32){
+    bit-=32;
+    number++;
+  }
+
+  if((num.bits[number] & 1<<bit) !=0){
+    res=1;
+  }
+  return res;
 }
 
 void s21_set_big_decimal_sign(s21_big_decimal* num, int sign_value) {

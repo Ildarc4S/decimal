@@ -1,7 +1,7 @@
 #ifndef SRC_TESTS__HELPERS__DEBUG_H_
 #define SRC_TESTS__HELPERS__DEBUG_H_
 
-#include "../../include/s21_decimal.h"
+#include "../../s21_decimal.h"
 #include <stdint.h>
 
 #define GREEN   "\033[0;32m"

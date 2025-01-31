@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "./../../include/s21_decimal.h"
+#include "./../../s21_decimal.h"
 #include "./../test.h"
 #include "./test_from_float_to_decimal.h"
 

@@ -69,6 +69,14 @@ test_from_int_to_decimal: clean $(CFILES)
 	$(CC) tests/s21_decimal_test_from_int_to_decimal.c tests/conversion/test_from_int_to_decimal.c tests/_helpers/_random.c tests/_helpers/_get_sign.c tests/_helpers/_debug.c tests/_helpers/_decimal_is_full_equal.c $(CFILES) $(CHECK_FLAGS) -o test_from_int_to_decimal
 	./test_from_int_to_decimal
 
+test_from_decimal_to_float: clean $(CFILES)
+	$(CC) tests/s21_decimal_test_from_decimal_to_float.c tests/_helpers/_get_sign.c tests/conversion/test_from_decimal_to_float.c $(CFILES) $(CHECK_FLAGS) -o test_decimal_to_float
+	./test_decimal_to_float
+
+test_from_float_to_decimal: clean $(CFILES)
+	$(CC) tests/s21_decimal_test_from_float_to_decimal.c tests/_helpers/_get_sign.c tests/conversion/test_from_float_to_decimal.c $(CFILES) $(CHECK_FLAGS) -o test_from_float_to_decimal
+	./test_from_float_to_decimal
+	
 test_add_main: clean $(CFILES) 
 	$(CC) main_files/s21_decimal_test_add_main.c $(CFILES) $(CHECK_FLAGS) -o test_add_main
 	./test_add_main

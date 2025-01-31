@@ -22,6 +22,7 @@ int s21_get_big_decimal_sign(s21_big_decimal num);
 int s21_get_decimal_scale(s21_decimal num);
 int s21_get_bit(s21_decimal num, int bit);
 int s21_get_max_bit(s21_big_decimal num); 
+int s21_get_bit(s21_decimal num, int bit);
 
 void s21_set_sign(s21_decimal* num, int sign_value);
 void s21_set_scale(s21_big_decimal* num, int scale_value);
