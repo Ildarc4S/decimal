@@ -60,6 +60,15 @@ int s21_is_null(s21_big_decimal num) {
   return result;
 }
 
+int s21_is_null_decimal(s21_decimal num) {
+  int result = 1;
+  for (int i = 0; i < DECIMAL_LENGTH - 1 && result; i++) {
+    if (num.bits[i] != 0) {
+      result = 0;
+    }
+  }
+  return result;
+}
 
 int s21_is_even(s21_big_decimal num) { return (num.bits[0] & 1) == 0; }
 

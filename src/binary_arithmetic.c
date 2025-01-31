@@ -6,11 +6,14 @@ void s21_binary_add(s21_big_decimal num_one, s21_big_decimal num_two,
   s21_big_decimal temp_decimal = num_two;
   s21_big_decimal res_decimal = num_one;
 
+  int decimal_is_null = 1;
   while (!s21_is_null(temp_decimal)) {
+    decimal_is_null = 0;
     s21_big_decimal temp;
     s21_null_big_decimal(&temp);
     s21_bin_and(res_decimal, temp_decimal, &temp);
     s21_bin_shift_left_one(&temp);
+
     s21_bin_xor(res_decimal, temp_decimal, &res_decimal);
     temp_decimal = temp;
   }
