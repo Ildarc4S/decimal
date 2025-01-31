@@ -4,12 +4,14 @@
 #include "type.h"
 #include <stdio.h>
 
+#define SCALE_SHIFT 16
+
 int s21_is_correct_decimal(s21_decimal num);
 
 void s21_decimal_to_big_decimal(s21_decimal num, s21_big_decimal* result); 
 void s21_big_decimal_to_decimal(s21_big_decimal num, s21_decimal* result); 
 
-int s21_is_null(s21_big_decimal num);
+int s21_is_null_big_decimal(s21_big_decimal num);
 int s21_is_null_decimal(s21_decimal num);
 int s21_is_even(s21_big_decimal num);
 void s21_null_decimal(s21_decimal* num);

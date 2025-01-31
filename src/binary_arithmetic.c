@@ -6,7 +6,7 @@ void s21_binary_add(s21_big_decimal num_one, s21_big_decimal num_two,
                     s21_big_decimal* result) {
   s21_big_decimal temp_decimal = num_two;
   s21_big_decimal res_decimal = num_one;
-  while (!s21_is_null(temp_decimal)) {
+  while (!s21_is_null_big_decimal(temp_decimal)) {
     s21_big_decimal temp;
     s21_null_big_decimal(&temp);
     s21_bin_and(res_decimal, temp_decimal, &temp);
@@ -77,10 +77,10 @@ void s21_binary_div_cel(s21_big_decimal num_one, s21_big_decimal num_two,
 
     s21_big_decimal rt;
     s21_null_big_decimal(&rt);
-    s21_binary_mul(temp1, twot, &rt);  // подсчет вычитаемого
+    s21_binary_mul(temp1, twot, &rt);
 
     s21_null_big_decimal(&res);
-    s21_binary_sub(num_one, rt, &res);  // след число
+    s21_binary_sub(num_one, rt, &res);
   }
   *remainder = res;
 }
@@ -102,7 +102,7 @@ void s21_binary_div(s21_big_decimal num_one, s21_big_decimal num_two,
     s21_binary_add(res, temp, &res);
     s21_mul_to_ten(&res);
     s21_mul_to_ten(&num_one);
-  } while (!s21_is_null(num_one) && scale <= 60 && s21_get_max_bit(res) <= 210);
+  } while (!s21_is_null_big_decimal(num_one) && scale <= 60 && s21_get_max_bit(res) <= 210);
   *result = res;
   *sc = scale;
 }

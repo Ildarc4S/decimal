@@ -131,33 +131,31 @@ int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal* result) {
   int sign_one = s21_get_sign(value_1);
   int sign_two = s21_get_sign(value_2);
 
-  if (value_2.bits[0] == 0 && value_2.bits[1] == 0 && value_2.bits[2] == 0) {
+  if (s21_is_null_decimal(value_2)) {
     *result = value_1;
-    return kCodeZerroDiv;
-  }
-
-  if (value_1.bits[0] == 0 && value_1.bits[1] == 0 && value_1.bits[2] == 0) {
+    result_code = kCodeZerroDiv;
+  } else if (s21_is_null_decimal(value_1)) {
     *result = value_1;
-    return kCodeOK;
-  }
+    result_code = kCodeOK;
+  } else {
+    if (sign_one == POSITIVE && sign_two == POSITIVE) {
+        result_code = s21_div_util(value_1, value_2, result);
+    } else if ((sign_one == NEGATIVE && sign_two == POSITIVE)) {
+        s21_set_sign(&value_1, 0);
+        result_code = s21_div_util(value_1, value_2, result);
+        s21_set_sign(result, 1);
+    } else if ((sign_one == POSITIVE && sign_two == NEGATIVE)) {
+        s21_set_sign(&value_2, 0);
+        result_code = s21_div_util(value_1, value_2, result);
+        s21_set_sign(result, 1);
+    } else if (sign_one == NEGATIVE && sign_two == NEGATIVE) {
+        s21_set_sign(&value_1, 0);
+        result_code = s21_div_util(value_1, value_2, result);
+    }
 
-  if (sign_one == POSITIVE && sign_two == POSITIVE) {
-    result_code = s21_div_util(value_1, value_2, result);
-  } else if ((sign_one == NEGATIVE && sign_two == POSITIVE)) {
-    s21_set_sign(&value_1, 0);
-    result_code = s21_div_util(value_1, value_2, result);
-    s21_set_sign(result, 1);
-  } else if ((sign_one == POSITIVE && sign_two == NEGATIVE)) {
-    s21_set_sign(&value_2, 0);
-    result_code = s21_div_util(value_1, value_2, result);
-    s21_set_sign(result, 1);
-  } else if (sign_one == NEGATIVE && sign_two == NEGATIVE) {
-    s21_set_sign(&value_1, 0);
-    result_code = s21_div_util(value_1, value_2, result);
-  }
-
-  if (result_code == kCodeBig && s21_get_sign(*result) == 1) {
-    result_code = kCodeSmall;
+    if (result_code == kCodeBig && s21_get_sign(*result) == 1) {
+        result_code = kCodeSmall;
+    }
   }
 
   return result_code;
@@ -319,25 +317,19 @@ int s21_div_util(s21_decimal value_1, s21_decimal value_2,
   S21ArithmeticResultCode result_code = kCodeOK;
   s21_big_decimal big_value_1, big_value_2;
 
-  if (value_2.bits[0] == 0 && value_2.bits[1] == 0 && value_2.bits[2] == 0) {
-    return kCodeZerroDiv;
-  }
-
   s21_decimal_to_big_decimal(value_1, &big_value_1);
   s21_decimal_to_big_decimal(value_2, &big_value_2);
 
   s21_big_decimal big_result;
   s21_null_big_decimal(&big_result);
 
-  int sc = 0;
-  s21_binary_div(big_value_1, big_value_2, &big_result, &sc);
-  while (sc < 0) {
-    sc++;
+  int scale_from_bin_div = 0;
+  s21_binary_div(big_value_1, big_value_2, &big_result, &scale_from_bin_div);
+  while (scale_from_bin_div < 0) {
+    scale_from_bin_div++;
     s21_mul_to_ten(&big_result);
   }
-  s21_set_scale(&big_result, sc);
-
-  //   s21_print_bin_big_decimal(big_result);
+  s21_set_scale(&big_result, scale_from_bin_div);
 
   s21_big_decimal trunc_temp = big_result;
 
@@ -363,25 +355,16 @@ int s21_div_util(s21_decimal value_1, s21_decimal value_2,
 
     s21_set_scale(&big_result, scale);
 
-    // s21_print_bin_big_decimal(big_result);
-
     s21_big_decimal temp_res = big_result;
 
     s21_normalization(&trunc_temp, &temp_res);
     s21_binary_sub(trunc_temp, temp_res, &remainder);
 
-    // s21_print_bin_big_decimal(remainder);
-
     s21_set_scale(&remainder, s21_get_big_decimal_scale(trunc_temp) - scale);
     s21_banck_round(&big_result, remainder);
-    // s21_print_bin_big_decimal(big_result);
   }
 
-  if (big_result.bits[0] == 0 && big_result.bits[1] == 0 &&
-      big_result.bits[2] == 0 && big_result.bits[1] == 0 &&
-      big_result.bits[2] == 0 && s21_get_big_decimal_scale(big_result) > 1 &&
-      big_result.bits[4] == 0 && big_result.bits[5] == 0 &&
-      big_result.bits[3] == 0) {
+  if (s21_is_null_big_decimal(big_result) && s21_get_big_decimal_scale(big_result) > 1) {
     result_code = kCodeSmall;
   }
 
