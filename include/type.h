@@ -13,4 +13,7 @@ typedef struct {
 #define DECIMAL_LENGTH 4
 #define INT_LENGTH 32
 
+#define S21_POSITIVE 0
+#define S21_NEGATIVE 1
+
 #endif

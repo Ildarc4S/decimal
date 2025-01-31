@@ -7,9 +7,6 @@
 #include "binary_arithmetic.h"
 #include "compare.h"
 
-#define S21_POSITIVE 0
-#define S21_NEGATIVE 1
-
 typedef enum {
   CODE_OK = 0,
   CODE_BIG = 1,

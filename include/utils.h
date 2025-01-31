@@ -4,9 +4,13 @@
 #include "type.h"
 #include <stdio.h>
 
+#include "ten_functions.h"
+
 #define SCALE_SHIFT 16
 
 int s21_is_correct_decimal(s21_decimal num);
+
+s21_big_decimal s21_create_one_big_decimal();
 
 void s21_decimal_to_big_decimal(s21_decimal num, s21_big_decimal* result); 
 void s21_big_decimal_to_decimal(s21_big_decimal num, s21_decimal* result); 

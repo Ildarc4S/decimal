@@ -12,6 +12,12 @@ int s21_is_correct_decimal(s21_decimal num) {
   return result_code;
 }
 
+s21_big_decimal s21_create_one_big_decimal() {
+   s21_big_decimal result = {{1, 0, 0, 0, 0, 0, 0, 0}};
+   return result;
+   
+}
+
 void s21_decimal_to_big_decimal(s21_decimal num, s21_big_decimal* result) {
   s21_null_big_decimal(result);
 
@@ -166,6 +172,24 @@ int s21_negate(s21_decimal value, s21_decimal* result) {
   *result = value;
   return 0;
 }
+
+void s21_normalization(s21_big_decimal* num_one, s21_big_decimal* num_two) {
+  int scale_one = s21_get_big_decimal_scale(*num_one);
+  int scale_two = s21_get_big_decimal_scale(*num_two);
+  while (scale_one < scale_two) {
+    scale_one++;
+    s21_mul_to_ten(num_one);
+  }
+
+  while (scale_one > scale_two) {
+    scale_two++;
+    s21_mul_to_ten(num_two);
+  }
+
+  s21_set_scale(num_one, scale_one);
+  s21_set_scale(num_two, scale_two);
+}
+
 
 void s21_print_bin_num(int num, int symbol_count) {
   for (int i = symbol_count; i >= 0; i--) {

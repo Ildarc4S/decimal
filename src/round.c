@@ -6,8 +6,8 @@ int s21_floor(s21_decimal value, s21_decimal *result) {
 
   s21_decimal zero, one, remainder;
   s21_null_decimal(&zero);
-  s21_single_decimal(&one);
   s21_null_decimal(&remainder);
+  s21_single_decimal(&one);
 
   s21_set_sign(&value, 0);
   s21_decimal trunc_value;

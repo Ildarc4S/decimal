@@ -18,7 +18,7 @@ void s21_binary_add(s21_big_decimal num_one, s21_big_decimal num_two,
 
 void s21_binary_sub(s21_big_decimal num_one, s21_big_decimal num_two,
                     s21_big_decimal* result) {
-  s21_big_decimal singular = {{1, 0, 0, 0, 0, 0, 0}};
+  s21_big_decimal singular = s21_create_one_big_decimal();
 
   s21_bin_invert(&num_two);
   s21_binary_add(num_two, singular, &num_two);
@@ -54,7 +54,7 @@ void s21_binary_integer_div(s21_big_decimal num_one, s21_big_decimal num_two,
     s21_big_decimal temp1 = num_two;
     while (s21_big_sravnivatel(temp, num_one) <= 0) {
       temp = num_two;
-      s21_big_decimal two = {{1, 0, 0, 0, 0, 0, 0}};
+      s21_big_decimal two = s21_create_one_big_decimal();
       s21_bin_shift_left(&two, q);
       s21_big_decimal r;
       s21_null_big_decimal(&r);
@@ -62,7 +62,7 @@ void s21_binary_integer_div(s21_big_decimal num_one, s21_big_decimal num_two,
       temp = r;
       q++;
     }
-    s21_big_decimal tk = {{1, 0, 0, 0, 0, 0, 0, 0}};
+    s21_big_decimal tk = s21_create_one_big_decimal();
     if (q > 1) q -= 2;
 
     s21_bin_shift_left(&tk, q);
@@ -70,7 +70,7 @@ void s21_binary_integer_div(s21_big_decimal num_one, s21_big_decimal num_two,
     s21_binary_add(*result, tk, &rer);
     *result = rer;
 
-    s21_big_decimal twot = {{1, 0, 0, 0, 0, 0, 0, 0}};
+    s21_big_decimal twot = s21_create_one_big_decimal();
     s21_bin_shift_left(&twot, q);
 
     s21_big_decimal rt;

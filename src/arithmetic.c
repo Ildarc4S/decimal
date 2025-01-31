@@ -163,7 +163,7 @@ void s21_div_fractional(s21_big_decimal* num) {
   s21_div_to_ten(&temp);
   int scale = s21_get_big_decimal_scale(*num);
   scale--;
-  while (s21_get_max_bit(temp) >= 96 && scale > 0) {
+  while ((s21_get_max_bit(temp) >= 96 && scale > 0) || scale > 28) {
     s21_div_to_ten(&temp);
     s21_div_to_ten(num);
     scale--;
@@ -187,24 +187,32 @@ void s21_round_big_decimal(s21_big_decimal* num, s21_big_decimal num_before_div_
     s21_banck_round(num, remainder);
 }
 
+void s21_truncate_and_round_decimal(s21_big_decimal* num) {
+  s21_big_decimal num_before_div_fraction = *num;
+  s21_div_fractional(num);
+  
+  int scale = s21_get_big_decimal_scale(*num);
+  if ((s21_get_max_bit(*num) >= 96 && scale > 0) || scale > 28) {
+    s21_round_big_decimal(num, num_before_div_fraction);
+  }
+}
+
+void s21_init_big_decimals(s21_decimal value_1, s21_decimal value_2, s21_big_decimal* big_value_1,s21_big_decimal* big_value_2, s21_big_decimal* big_result) {
+  s21_decimal_to_big_decimal(value_1, big_value_1);
+  s21_decimal_to_big_decimal(value_2, big_value_2);
+  s21_null_big_decimal(big_result);
+}
+
 int s21_execute_operation(s21_decimal value_1, s21_decimal value_2, s21_decimal* result, void (s21_bin_operation)(s21_big_decimal, s21_big_decimal, s21_big_decimal*)) {
   S21ArithmeticResultCode result_code = CODE_OK;
   s21_big_decimal big_value_1, big_value_2, big_result;
 
-  s21_decimal_to_big_decimal(value_1, &big_value_1);
-  s21_decimal_to_big_decimal(value_2, &big_value_2);
-  s21_null_big_decimal(&big_result);
+  s21_init_big_decimals(value_1, value_2, &big_value_1, &big_value_2, &big_result);
 
   s21_normalization(&big_value_1, &big_value_2);
   s21_bin_operation(big_value_1, big_value_2, &big_result);
 
-  s21_big_decimal trunc_temp = big_result;
-  s21_div_fractional(&big_result);
-  
-  int scale = s21_get_big_decimal_scale(big_result);
-  if (s21_get_max_bit(big_result) >= 96 && scale > 0) {
-    s21_round_big_decimal(&big_result, trunc_temp);
-  }
+  s21_truncate_and_round_decimal(&big_result);
 
   if (s21_get_max_bit(big_result) >= 96) {
     result_code = CODE_BIG;
@@ -229,9 +237,7 @@ int s21_mul_util(s21_decimal value_1, s21_decimal value_2,
   S21ArithmeticResultCode result_code = CODE_OK;
   s21_big_decimal big_value_1, big_value_2, big_result;
 
-  s21_decimal_to_big_decimal(value_1, &big_value_1);
-  s21_decimal_to_big_decimal(value_2, &big_value_2);
-  s21_null_big_decimal(&big_result);
+  s21_init_big_decimals(value_1, value_2, &big_value_1, &big_value_2, &big_result);
 
   int scale_first = s21_get_decimal_scale(value_1);
   int scale_second = s21_get_decimal_scale(value_2);
@@ -240,36 +246,7 @@ int s21_mul_util(s21_decimal value_1, s21_decimal value_2,
   s21_binary_mul(big_value_1, big_value_2, &big_result);
   s21_set_scale(&big_result, scale_first);
 
-  s21_big_decimal trunc_temp = big_result;
-
-  s21_big_decimal temp = big_result;
-  s21_div_to_ten(&temp);
-  int scale = s21_get_big_decimal_scale(big_result);
-  scale--;
-
-  while ((s21_get_max_bit(temp) >= 96 && scale > 0) || scale > 28) {
-    s21_div_to_ten(&temp);
-    s21_div_to_ten(&big_result);
-    scale--;
-  }
-
-  s21_set_scale(&big_result, ++scale);
-
-  if ((s21_get_max_bit(big_result) >= 96 && scale > 0) || scale > 28) {
-    s21_big_decimal remainder;
-    s21_null_big_decimal(&remainder);
-    s21_div_to_ten(&big_result);
-    scale--;
-    s21_set_scale(&big_result, scale);
-
-    s21_big_decimal temp_res = big_result;
-
-    s21_normalization(&trunc_temp, &temp_res);
-    s21_binary_sub(trunc_temp, temp_res, &remainder);
-
-    s21_set_scale(&remainder, s21_get_big_decimal_scale(trunc_temp) - scale);
-    s21_banck_round(&big_result, remainder);
-  }
+  s21_truncate_and_round_decimal(&big_result);
 
   if (s21_get_max_bit(big_result) >= 96) {
     result_code = CODE_BIG;
@@ -283,13 +260,9 @@ int s21_mul_util(s21_decimal value_1, s21_decimal value_2,
 int s21_div_util(s21_decimal value_1, s21_decimal value_2,
                  s21_decimal* result) {
   S21ArithmeticResultCode result_code = CODE_OK;
-  s21_big_decimal big_value_1, big_value_2;
+  s21_big_decimal big_value_1, big_value_2,big_result;
 
-  s21_decimal_to_big_decimal(value_1, &big_value_1);
-  s21_decimal_to_big_decimal(value_2, &big_value_2);
-
-  s21_big_decimal big_result;
-  s21_null_big_decimal(&big_result);
+  s21_init_big_decimals(value_1, value_2, &big_value_1, &big_value_2, &big_result);
 
   int scale_from_bin_div = 0;
   s21_binary_div(big_value_1, big_value_2, &big_result, &scale_from_bin_div);
@@ -299,39 +272,8 @@ int s21_div_util(s21_decimal value_1, s21_decimal value_2,
   }
   s21_set_scale(&big_result, scale_from_bin_div);
 
-  s21_big_decimal trunc_temp = big_result;
-
-  s21_big_decimal temp = big_result;
-  s21_div_to_ten(&temp);
-
-  int scale = s21_get_big_decimal_scale(big_result);
-  scale--;
-
-  while ((s21_get_max_bit(temp) >= 96 && scale > 0) || scale > 28) {
-    s21_div_to_ten(&temp);
-    s21_div_to_ten(&big_result);
-    scale--;
-  }
-
-  s21_set_scale(&big_result, ++scale);
-
-  if ((s21_get_max_bit(big_result) >= 96 && scale > 0) || scale > 28) {
-    s21_big_decimal remainder;
-    s21_null_big_decimal(&remainder);
-    s21_div_to_ten(&big_result);
-    scale--;
-
-    s21_set_scale(&big_result, scale);
-
-    s21_big_decimal temp_res = big_result;
-
-    s21_normalization(&trunc_temp, &temp_res);
-    s21_binary_sub(trunc_temp, temp_res, &remainder);
-
-    s21_set_scale(&remainder, s21_get_big_decimal_scale(trunc_temp) - scale);
-    s21_banck_round(&big_result, remainder);
-  }
-
+  s21_truncate_and_round_decimal(&big_result);
+  
   if (s21_is_null_big_decimal(big_result) && s21_get_big_decimal_scale(big_result) > 1) {
     result_code = CODE_SMALL;
   }
@@ -343,21 +285,4 @@ int s21_div_util(s21_decimal value_1, s21_decimal value_2,
   s21_big_decimal_to_decimal(big_result, result);
 
   return result_code;
-}
-
-void s21_normalization(s21_big_decimal* num_one, s21_big_decimal* num_two) {
-  int scale_one = s21_get_big_decimal_scale(*num_one);
-  int scale_two = s21_get_big_decimal_scale(*num_two);
-  while (scale_one < scale_two) {
-    scale_one++;
-    s21_mul_to_ten(num_one);
-  }
-
-  while (scale_one > scale_two) {
-    scale_two++;
-    s21_mul_to_ten(num_two);
-  }
-
-  s21_set_scale(num_one, scale_one);
-  s21_set_scale(num_two, scale_two);
 }

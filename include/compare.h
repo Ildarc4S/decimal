@@ -4,6 +4,12 @@
 #include "utils.h"
 #include "type.h"
 
+typedef enum {
+  CODE_LESS = -1,
+  CODE_EQUAL = 0,
+  CODE_MORE = 1
+} S21CompareCode;
+
 int s21_is_less(s21_decimal, s21_decimal);
 int s21_is_less_or_equal(s21_decimal, s21_decimal);
 int s21_is_greater(s21_decimal, s21_decimal);
