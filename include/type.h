@@ -2,11 +2,11 @@
 #define TYPE_H
 
 typedef struct {
-    int bits[4];
+  int bits[4];
 } s21_decimal;
 
 typedef struct {
-    unsigned int bits[8];
+  unsigned int bits[8];
 } s21_big_decimal;
 
 #define BIG_DECIMAL_LENGTH 8

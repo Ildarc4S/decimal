@@ -1,12 +1,14 @@
 #ifndef ROUND_H
 #define ROUND_H
 
-#include "type.h"
 #include "arithmetic.h"
 #include "binary_arithmetic.h"
-#include "utils.h"
 #include "compare.h"
 #include "ten_functions.h"
+#include "type.h"
+#include "utils.h"
+
+typedef enum { CODE_ROUND_OK = 0, CODE_ROUND_ERROR = 1 } S21RoundResultCode;
 
 int s21_floor(s21_decimal value, s21_decimal *result);
 int s21_round(s21_decimal value, s21_decimal *result);

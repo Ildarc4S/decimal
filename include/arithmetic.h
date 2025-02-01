@@ -1,11 +1,11 @@
 #ifndef ARITHMETIC_H
 #define ARITHMETIC_H
 
-#include "type.h"
-#include "utils.h"
-#include "round.h"
 #include "binary_arithmetic.h"
 #include "compare.h"
+#include "round.h"
+#include "type.h"
+#include "utils.h"
 
 typedef enum {
   CODE_OK = 0,
@@ -24,6 +24,6 @@ int s21_sub_util(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
 int s21_mul_util(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
 int s21_div_util(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
 
-void s21_truncate_and_round_decimal(s21_big_decimal* num);
+void s21_truncate_and_round_decimal(s21_big_decimal *num);
 
 #endif

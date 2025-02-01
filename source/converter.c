@@ -1,10 +1,7 @@
 #include "../include/converter.h"
 
-#include "math.h"
-#include "stdlib.h"
-
-void s21_calculate_flaot_scale(int mantissa, char *ptr_to_float_string,
-                              s21_big_decimal *big_decimal, int shift) {
+void s21_calculate_float_scale(int mantissa, char *ptr_to_float_string,
+                               s21_big_decimal *big_decimal, int shift) {
   int scale = 0;
   char scale_sign = *ptr_to_float_string;
   ptr_to_float_string++;
@@ -51,22 +48,22 @@ char *s21_calculate_mantissa(char *ptr_to_float_string, char *mantissa_string) {
 }
 
 int s21_from_float_to_decimal(float src, s21_decimal *dst) {
-  int res = 0;
+  S21ConverterResultCode result_code = CODE_CONVERTER_OK;
+
   if (!dst) {
-    res = 1;
+    result_code = CODE_CONVERTER_ERROR;
   } else if (isinf(src) || isnan(src)) {
-    res = 1;
+    result_code = CODE_CONVERTER_ERROR;
   } else if (fabsf(src) > MAX_FLOAT_TO_CONVERT) {
-    res = 1;
+    result_code = CODE_CONVERTER_ERROR;
   } else if (fabsf(src) < MIN_FLOAT_TO_CONVERT) {
-    res = 1;
+    result_code = CODE_CONVERTER_ERROR;
     s21_null_decimal(dst);
   } else {
     s21_null_decimal(dst);
     s21_big_decimal big_decimal;
     s21_null_big_decimal(&big_decimal);
     s21_decimal_to_big_decimal(*dst, &big_decimal);
-
     char float_string[64] = "\0";
     char mantissa_string[64] = "\0";
     sprintf(float_string, "%.8e", src);
@@ -76,7 +73,6 @@ int s21_from_float_to_decimal(float src, s21_decimal *dst) {
       sign = 1;
       ptr_to_float_string++;
     }
-
     char *ptr_to_scale = &ptr_to_float_string[12];
     int shift = 8;
     int check_scale = atoi(ptr_to_scale);
@@ -91,22 +87,22 @@ int s21_from_float_to_decimal(float src, s21_decimal *dst) {
     ptr_to_float_string =
         s21_calculate_mantissa(ptr_to_float_string, mantissa_string);
     int mantissa = atoi(mantissa_string);
-    s21_calculate_flaot_scale(mantissa, ptr_to_float_string,
-                                          &big_decimal, shift);
+    s21_calculate_float_scale(mantissa, ptr_to_float_string, &big_decimal,
+                              shift);
     s21_truncate_and_round_decimal(&big_decimal);
-    // s21_ockruglenie(&big_decimal);
     s21_big_decimal_to_decimal(big_decimal, dst);
     if (sign) {
       s21_set_sign(dst, sign);
     }
   }
-  return res;
+  return result_code;
 }
 
 int s21_from_decimal_to_float(s21_decimal src, float *dst) {
-  int res = 0;
+  S21ConverterResultCode result_code = CODE_CONVERTER_OK;
+
   if (!dst) {
-    res = 1;
+    result_code = CODE_CONVERTER_ERROR;
   } else {
     int scale = s21_get_decimal_scale(src);
     *dst = 0.0;
@@ -124,14 +120,14 @@ int s21_from_decimal_to_float(s21_decimal src, float *dst) {
     *dst = (float)temp;
   }
 
-  return res;
+  return result_code;
 }
 
 int s21_from_int_to_decimal(int src, s21_decimal *dst) {
-  int result_code = 0;
+  S21ConverterResultCode result_code = CODE_CONVERTER_OK;
 
   if (dst == NULL) {
-    result_code = 1;
+    result_code = CODE_CONVERTER_ERROR;
   } else {
     int sign = 0;
     if (src < 0) {
@@ -149,10 +145,12 @@ int s21_from_int_to_decimal(int src, s21_decimal *dst) {
 
   return result_code;
 }
+
 int s21_from_decimal_to_int(s21_decimal src, int *dst) {
-  int result_code = 0;
+  S21ConverterResultCode result_code = CODE_CONVERTER_OK;
+
   if (dst == NULL) {
-    result_code = 1;
+    result_code = CODE_CONVERTER_ERROR;
   } else {
     *dst = 0;
     s21_decimal min_int_decimal = {
@@ -163,9 +161,9 @@ int s21_from_decimal_to_int(s21_decimal src, int *dst) {
 
     s21_truncate(src, &trunc_decimal);
     if (s21_is_less(trunc_decimal, min_int_decimal)) {
-      result_code = 1;
+      result_code = CODE_CONVERTER_ERROR;
     } else if (s21_is_greater(trunc_decimal, max_int_decimal)) {
-      result_code = 1;
+      result_code = CODE_CONVERTER_ERROR;
     } else {
       *dst = trunc_decimal.bits[0];
       if (s21_get_sign(trunc_decimal)) {

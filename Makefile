@@ -20,16 +20,10 @@ test: $(LIB_FILE)
 	./test_exec
 
 gcov_report:
-	$(CC) $(FLAGS) $(TEST_FILE) $(CFILES) $(CHECK_FLAGS) $(GCOV_FLAGS) -o gcov_test
-	./gcov_test
-	mkdir -p report_gcov
-	gcovr --html-details -o ./report_gcov/report.html
-
-gcov_report_lcov:
 	$(CC) $(FLAGS) $(TEST_FILE) $(CFILES) $(CHECK_FLAGS) $(GCOV_FLAGS) -o gcov_test_lcov
 	./gcov_test_lcov
-	lcov --capture --directory . --output-file coverage.info --rc branch_coverage=1
-	genhtml --branch-coverage coverage.info --output-directory report_lcov
+	lcov --capture --directory . --output-file coverage.info
+	genhtml coverage.info --output-directory report_lcov
 
 $(LIB_FILE): $(OBJS)
 	ar rcs $@ $^

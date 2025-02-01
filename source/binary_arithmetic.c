@@ -39,7 +39,8 @@ void s21_binary_mul(s21_big_decimal num_one, s21_big_decimal num_two,
 }
 
 void s21_binary_integer_div(s21_big_decimal num_one, s21_big_decimal num_two,
-                        s21_big_decimal* result, s21_big_decimal* remainder) {
+                            s21_big_decimal* result,
+                            s21_big_decimal* remainder) {
   num_one.bits[BIG_DECIMAL_LENGTH - 1] = 0;
   num_two.bits[BIG_DECIMAL_LENGTH - 1] = 0;
 
@@ -91,7 +92,8 @@ void s21_binary_div(s21_big_decimal num_one, s21_big_decimal num_two,
   s21_null_big_decimal(&rem);
   s21_null_big_decimal(&temp);
 
-  int scale = s21_get_big_decimal_scale(num_one) - s21_get_big_decimal_scale(num_two);
+  int scale =
+      s21_get_big_decimal_scale(num_one) - s21_get_big_decimal_scale(num_two);
   do {
     scale++;
     s21_binary_integer_div(num_one, num_two, &temp, &num_one);
@@ -99,7 +101,8 @@ void s21_binary_div(s21_big_decimal num_one, s21_big_decimal num_two,
     s21_binary_add(res, temp, &res);
     s21_mul_to_ten(&res);
     s21_mul_to_ten(&num_one);
-  } while (!s21_is_null_big_decimal(num_one) && scale <= 60 && s21_get_max_bit(res) <= 210);
+  } while (!s21_is_null_big_decimal(num_one) && scale <= 60 &&
+           s21_get_max_bit(res) <= 210);
   *result = res;
   *sc = scale;
 }

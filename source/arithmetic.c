@@ -122,22 +122,22 @@ int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal* result) {
     result_code = CODE_OK;
   } else {
     if (sign_one == S21_POSITIVE && sign_two == S21_POSITIVE) {
-        result_code = s21_div_util(value_1, value_2, result);
+      result_code = s21_div_util(value_1, value_2, result);
     } else if ((sign_one == S21_NEGATIVE && sign_two == S21_POSITIVE)) {
-        s21_set_sign(&value_1, 0);
-        result_code = s21_div_util(value_1, value_2, result);
-        s21_set_sign(result, 1);
+      s21_set_sign(&value_1, 0);
+      result_code = s21_div_util(value_1, value_2, result);
+      s21_set_sign(result, 1);
     } else if ((sign_one == S21_POSITIVE && sign_two == S21_NEGATIVE)) {
-        s21_set_sign(&value_2, 0);
-        result_code = s21_div_util(value_1, value_2, result);
-        s21_set_sign(result, 1);
+      s21_set_sign(&value_2, 0);
+      result_code = s21_div_util(value_1, value_2, result);
+      s21_set_sign(result, 1);
     } else if (sign_one == S21_NEGATIVE && sign_two == S21_NEGATIVE) {
-        s21_set_sign(&value_1, 0);
-        result_code = s21_div_util(value_1, value_2, result);
+      s21_set_sign(&value_1, 0);
+      result_code = s21_div_util(value_1, value_2, result);
     }
 
     if (result_code == CODE_BIG && s21_get_sign(*result) == 1) {
-        result_code = CODE_SMALL;
+      result_code = CODE_SMALL;
     }
   }
 
@@ -158,42 +158,52 @@ void s21_div_fractional(s21_big_decimal* num) {
   s21_set_scale(num, ++scale);
 }
 
-void s21_round_big_decimal(s21_big_decimal* num, s21_big_decimal num_before_div_fraction) {
-    s21_big_decimal remainder;
-    s21_null_big_decimal(&remainder);
-    s21_div_to_ten(num);
+void s21_round_big_decimal(s21_big_decimal* num,
+                           s21_big_decimal num_before_div_fraction) {
+  s21_big_decimal remainder;
+  s21_null_big_decimal(&remainder);
+  s21_div_to_ten(num);
 
-    int scale = s21_get_big_decimal_scale(*num) - 1;
-    s21_set_scale(num, scale);
-    
-    s21_big_decimal temp_res = *num;
-    s21_normalization(&num_before_div_fraction, &temp_res);
-    s21_binary_sub(num_before_div_fraction, temp_res, &remainder);
-    s21_set_scale(&remainder, s21_get_big_decimal_scale(num_before_div_fraction) - scale);
-    s21_banck_round(num, remainder);
+  int scale = s21_get_big_decimal_scale(*num) - 1;
+  s21_set_scale(num, scale);
+
+  s21_big_decimal temp_res = *num;
+  s21_normalization(&num_before_div_fraction, &temp_res);
+  s21_binary_sub(num_before_div_fraction, temp_res, &remainder);
+  s21_set_scale(&remainder,
+                s21_get_big_decimal_scale(num_before_div_fraction) - scale);
+  s21_banck_round(num, remainder);
 }
 
 void s21_truncate_and_round_decimal(s21_big_decimal* num) {
   s21_big_decimal num_before_div_fraction = *num;
   s21_div_fractional(num);
-  
+
   int scale = s21_get_big_decimal_scale(*num);
   if ((s21_get_max_bit(*num) >= 96 && scale > 0) || scale > 28) {
     s21_round_big_decimal(num, num_before_div_fraction);
   }
 }
 
-void s21_init_big_decimals(s21_decimal value_1, s21_decimal value_2, s21_big_decimal* big_value_1,s21_big_decimal* big_value_2, s21_big_decimal* big_result) {
+void s21_init_big_decimals(s21_decimal value_1, s21_decimal value_2,
+                           s21_big_decimal* big_value_1,
+                           s21_big_decimal* big_value_2,
+                           s21_big_decimal* big_result) {
   s21_decimal_to_big_decimal(value_1, big_value_1);
   s21_decimal_to_big_decimal(value_2, big_value_2);
   s21_null_big_decimal(big_result);
 }
 
-int s21_execute_operation(s21_decimal value_1, s21_decimal value_2, s21_decimal* result, void (s21_bin_operation)(s21_big_decimal, s21_big_decimal, s21_big_decimal*)) {
+int s21_execute_operation(s21_decimal value_1, s21_decimal value_2,
+                          s21_decimal* result,
+                          void(s21_bin_operation)(s21_big_decimal,
+                                                  s21_big_decimal,
+                                                  s21_big_decimal*)) {
   S21ArithmeticResultCode result_code = CODE_OK;
   s21_big_decimal big_value_1, big_value_2, big_result;
 
-  s21_init_big_decimals(value_1, value_2, &big_value_1, &big_value_2, &big_result);
+  s21_init_big_decimals(value_1, value_2, &big_value_1, &big_value_2,
+                        &big_result);
 
   s21_normalization(&big_value_1, &big_value_2);
   s21_bin_operation(big_value_1, big_value_2, &big_result);
@@ -223,7 +233,8 @@ int s21_mul_util(s21_decimal value_1, s21_decimal value_2,
   S21ArithmeticResultCode result_code = CODE_OK;
   s21_big_decimal big_value_1, big_value_2, big_result;
 
-  s21_init_big_decimals(value_1, value_2, &big_value_1, &big_value_2, &big_result);
+  s21_init_big_decimals(value_1, value_2, &big_value_1, &big_value_2,
+                        &big_result);
 
   int scale_first = s21_get_decimal_scale(value_1);
   int scale_second = s21_get_decimal_scale(value_2);
@@ -246,9 +257,10 @@ int s21_mul_util(s21_decimal value_1, s21_decimal value_2,
 int s21_div_util(s21_decimal value_1, s21_decimal value_2,
                  s21_decimal* result) {
   S21ArithmeticResultCode result_code = CODE_OK;
-  s21_big_decimal big_value_1, big_value_2,big_result;
+  s21_big_decimal big_value_1, big_value_2, big_result;
 
-  s21_init_big_decimals(value_1, value_2, &big_value_1, &big_value_2, &big_result);
+  s21_init_big_decimals(value_1, value_2, &big_value_1, &big_value_2,
+                        &big_result);
 
   int scale_from_bin_div = 0;
   s21_binary_div(big_value_1, big_value_2, &big_result, &scale_from_bin_div);
@@ -259,8 +271,9 @@ int s21_div_util(s21_decimal value_1, s21_decimal value_2,
   s21_set_scale(&big_result, scale_from_bin_div);
 
   s21_truncate_and_round_decimal(&big_result);
-  
-  if (s21_is_null_big_decimal(big_result) && s21_get_big_decimal_scale(big_result) > 1) {
+
+  if (s21_is_null_big_decimal(big_result) &&
+      s21_get_big_decimal_scale(big_result) > 1) {
     result_code = CODE_SMALL;
   }
 
