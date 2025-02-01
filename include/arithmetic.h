@@ -24,4 +24,6 @@ int s21_sub_util(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
 int s21_mul_util(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
 int s21_div_util(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
 
+void s21_truncate_and_round_decimal(s21_big_decimal* num);
+
 #endif

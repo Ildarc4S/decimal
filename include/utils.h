@@ -2,9 +2,9 @@
 #define UTILS_H
 
 #include "type.h"
-#include <stdio.h>
-
 #include "ten_functions.h"
+
+#include <stdio.h>
 
 #define SCALE_SHIFT 16
 

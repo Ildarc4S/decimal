@@ -3,7 +3,7 @@
 #include "math.h"
 #include "stdlib.h"
 
-int s21_calculate_flaot_scale(int mantissa, char *ptr_to_float_string,
+void s21_calculate_flaot_scale(int mantissa, char *ptr_to_float_string,
                               s21_big_decimal *big_decimal, int shift) {
   int scale = 0;
   char scale_sign = *ptr_to_float_string;
@@ -32,34 +32,6 @@ int s21_calculate_flaot_scale(int mantissa, char *ptr_to_float_string,
     scale = scale + shift;
     big_decimal->bits[0] = mantissa;
     s21_set_scale(big_decimal, scale);
-  }
-  return scale;
-}
-
-void s21_ockruglenie(s21_big_decimal *big_decimal) {
-  s21_big_decimal trunc_temp = *big_decimal;
-  int scale = s21_get_big_decimal_scale(*big_decimal);
-  scale--;
-  while (scale > 28) {
-    s21_div_to_ten(big_decimal);
-    scale--;
-  }
-  s21_set_scale(big_decimal, ++scale);
-
-  if (scale > 28) {
-    s21_big_decimal remainder;
-    s21_null_big_decimal(&remainder);
-    s21_div_to_ten(big_decimal);
-
-    scale--;
-    s21_set_scale(big_decimal, scale);
-    s21_big_decimal temp_res = *big_decimal;
-
-    s21_normalization(&trunc_temp, &temp_res);
-    s21_binary_sub(trunc_temp, temp_res, &remainder);
-    s21_set_scale(&remainder, s21_get_big_decimal_scale(trunc_temp) - scale);
-
-    s21_banck_round(big_decimal, remainder);
   }
 }
 
@@ -121,7 +93,8 @@ int s21_from_float_to_decimal(float src, s21_decimal *dst) {
     int mantissa = atoi(mantissa_string);
     s21_calculate_flaot_scale(mantissa, ptr_to_float_string,
                                           &big_decimal, shift);
-    s21_ockruglenie(&big_decimal);
+    s21_truncate_and_round_decimal(&big_decimal);
+    // s21_ockruglenie(&big_decimal);
     s21_big_decimal_to_decimal(big_decimal, dst);
     if (sign) {
       s21_set_sign(dst, sign);
