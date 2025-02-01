@@ -1,9 +1,5 @@
 #include "../include/arithmetic.h"
 
-int is_null_dec(s21_decimal num) {
-  return num.bits[0] == 0 && num.bits[1] == 0 && num.bits[2] == 0;
-}
-
 int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal* result) {
   S21ArithmeticResultCode result_code = CODE_OK;
   int sign_one = s21_get_sign(value_1);
@@ -27,21 +23,11 @@ int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal* result) {
       result_code = s21_sub_util(value_2, value_1, result);
       s21_set_sign(result, 1);
     }
-    if (is_null_dec(value_1) && is_null_dec(value_2) &&
-        s21_get_decimal_scale(value_2) != 0 &&
-        s21_get_decimal_scale(value_1) == 0) {
-      s21_set_sign(result, 1);
-    }
   } else if (sign_one == S21_NEGATIVE && sign_two == S21_POSITIVE) {
     s21_set_sign(&value_1, 0);
     if (s21_is_greater_or_equal(value_1, value_2)) {
       result_code = s21_sub_util(value_1, value_2, result);
       s21_set_sign(result, 1);
-      if (is_null_dec(value_1) && is_null_dec(value_2) &&
-          s21_get_decimal_scale(value_2) != 0 &&
-          s21_get_decimal_scale(value_1) == 0) {
-        s21_set_sign(result, 0);
-      }
     } else {
       result_code = s21_sub_util(value_2, value_1, result);
     }
