@@ -165,7 +165,7 @@ Yuqorida tavsiflangan kutubxona funksiyalarini amalga oshirishingiz kerak:
 - Kutubxona gcc kompilyatoridan foydalangan holda C11 standartidagi C tilida ishlab chiqilishi kerak.
 - Kutubxona kodi develop tarmog’idagi src papkasida joylashgan bo'lishi kerak.
 - Eskirgan yoki iste’moldan chiqarilgan til konstruksiyalari va kutubxona funksiyalaridan foydalanmang. Til va ishlatiluvchi kutubxonalar bo’yicha rasmiy hujjatlardagi legacy va obsolete belgilariga e'tibor bering. POSIX.1-2017 standartiga qarab mo’ljal oling.
-- Kod yozishda Google Style ga amal qilinishi kerak.
+- Kod yozishda C++ uchun Google Style ((havola)[(https://google.github.io/styleguide/cppguide.html)]) ga amal qiling.
 - Yechimni s21_decimal.a nomli statik kutubxona sifatida loyihalashtiring (s21_decimal.h sarlavha fayli bilan).
 - Kutubxona tuzilmaviy dasturlash tamoyillari asosida ishlab chiqilishi kerak.
 - Har bir funksiyadan oldin s21_ prefiksidan foydalaning.
